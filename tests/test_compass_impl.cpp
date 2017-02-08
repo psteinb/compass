@@ -40,7 +40,6 @@ BOOST_AUTO_TEST_CASE( vendor_right  ){
          value.begin(),
          ::tolower);
 
-  //  std::cout << "vendor " << value << " =?= "<<  expected_vendor << "\n";
   BOOST_CHECK(value.find(expected_vendor)!=std::string::npos);
 
 }
