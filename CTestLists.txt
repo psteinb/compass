@@ -1,0 +1,15 @@
+# include(BoostTestTargets)
+# add_boost_test(Independent
+#  SOURCES
+#  test_Independent.cpp
+#  TESTS
+#  Independent_suite)
+
+cmake_host_system_information(RESULT CURRENT_HOSTNAME QUERY HOSTNAME)
+
+if(${CURRENT_HOSTNAME} MATCHES ".*(schorle|scicomp-pc-3|recovery-station).*")
+    message(">> hostname (${CURRENT_HOSTNAME}): added compass test ")
+    add_test(NAME compass_impl COMMAND test_compass_impl)
+else()
+    message(">> unknown host (${CURRENT_HOSTNAME}): test_compass_impl is unaware of your host ")
+endif()

@@ -1,0 +1,58 @@
+# cmake compatibility issues
+CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
+
+# project name
+PROJECT(compass CXX)
+
+# this project is C++11
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+include(CheckCCompilerFlag)
+include(CheckCXXCompilerFlag)
+
+# Project information
+SET (COMPASS_NAME "Compass - drop-in header-only C++ library to detect hardware capabilities at runtime and at compiletime")
+SET (COMPASS_CODENAME "${PROJECT_NAME}")
+SET (COMPASS_COPYRIGHT_YEARS "2017")
+SET (COMPASS_VERSION_MAJOR 0)
+SET (COMPASS_VERSION_MINOR 0)
+SET (COMPASS_VERSION_PATCH 0)
+SET (COMPASS_VERSION "${COMPASS_VERSION_MAJOR}.${COMPASS_VERSION_MINOR}.${COMPASS_VERSION_PATCH}")
+SET (COMPASS_VENDOR_ID "psteinb")
+SET (COMPASS_ID "${COMPASS_VENDOR_ID}.${PROJECT_NAME}")
+
+check_cxx_compiler_flag(-Wl,-Bsymbolic HAS_BSYMBOLIC_COMPILERFLAG)
+check_cxx_compiler_flag(-ftree-vectorize HAS_GCC_TREE_VECTORIZE_COMPILERFLAG)
+check_cxx_compiler_flag(-march=native HAS_MARCH_COMPILERFLAG)
+check_cxx_compiler_flag(-ffast-math HAS_FAST_MATH_COMPILERFLAG)
+check_cxx_compiler_flag("-Xclang -march=native" HAS_XCLANG_COMPILERFLAG)
+check_cxx_compiler_flag(-fvectorize HAS_CLANG_VECTORIZE_COMPILERFLAG)
+check_cxx_compiler_flag(-ffast-math HAS_FAST_MATH_COMPILERFLAG)
+check_cxx_compiler_flag(-Wall HAS_WALL_COMPILERFLAG)
+check_cxx_compiler_flag(-ggdb HAS_GGDB_COMPILERFLAG)
+check_cxx_compiler_flag(-ggdb3 HAS_GGDB3_COMPILERFLAG)
+check_cxx_compiler_flag(-O3 HAS_O3_COMPILERFLAG)
+check_cxx_compiler_flag(/Oi HAS_OI_COMPILERFLAG)
+check_cxx_compiler_flag(-Wno-overflow HAS_WNOOVERFLOW_COMPILERFLAG)
+
+#list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
+
+
+FIND_PACKAGE (Boost 1.55 COMPONENTS system filesystem unit_test_framework REQUIRED QUIET)
+IF(Boost_FOUND)
+  MESSAGE("++ Boost libraries found  : ${Boost_LIBRARIES}")
+  ADD_SUBDIRECTORY(tests)
+  enable_testing()
+  include("CTestLists.txt")
+else()
+  MESSAGE("++ Boost not found ++ skipping tests!")
+endif()
+
+################################ EXPORT/INSTALL ################################
+
+install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
+  DESTINATION include
+  FILES_MATCHING
+  PATTERN "*.hpp"
+)
