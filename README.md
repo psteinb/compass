@@ -50,5 +50,7 @@ This project is quite small, so here is your chance to boost open-source to the 
 - [ ] is thread-safety an issue of the current implementation
 - [ ] contribute/check Intel compiler
 - [ ] contribute for GPUs and nvcc
-- [ ] contribute for OpenPower
+- [ ] contribute for OpenPower (started)
 - [ ] contribute for ARM
+
+A good place to start and to see what is needed, is llvm [`host.cpp`](http://llvm.org/docs/doxygen/html/Host_8cpp_source.html) file
