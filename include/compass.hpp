@@ -1,11 +1,13 @@
 #ifndef _COMPASS_HPP_
 #define _COMPASS_HPP_
 
+#include "detail/dispatch.hpp"
+
 #include <type_traits>
 #include <cstdint>
 #include <string>
 #include <thread>
-#include "detail/compass_detail.hpp"
+
 
 namespace compass {
 
