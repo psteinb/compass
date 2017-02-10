@@ -1,5 +1,5 @@
-#ifndef _COMPASS_GNU_IMPL_H_
-#define _COMPASS_GNU_IMPL_H_
+#ifndef COMPASS_CT_GNU_IMPL_H_
+#define COMPASS_CT_GNU_IMPL_H_
 
 #include "../tags.hpp"
 
@@ -79,4 +79,4 @@ namespace compass {
   };
 
 };
-#endif /* _COMPASS_GNU_IMPL_H_ */
+#endif /* COMPASS_CT_GNU_IMPL_H_ */
