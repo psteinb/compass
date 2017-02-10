@@ -1,5 +1,5 @@
-#ifndef _COMPASS_TAGS_H_
-#define _COMPASS_TAGS_H_
+#ifndef COMPASS_TAGS_H_
+#define COMPASS_TAGS_H_
 
 #include <string>
 #include <climits>
@@ -49,6 +49,7 @@ namespace compass {
 
     //architectures
     struct x86_tag {};
+    struct power_tag {};
     struct arm_tag {};
 
 
@@ -58,6 +59,9 @@ namespace compass {
       typedef x86_tag type;
 #endif
 
+#if (defined(__powerpc64__) || defined(__powerpc__))
+      typedef power_tag type;
+#endif
       //32 or 64bit?
       const static int bitness = sizeof(void*)*CHAR_BIT;
 
@@ -76,4 +80,4 @@ namespace compass {
   namespace ct = compiletime;
 
 };
-#endif /* _COMPASS_TAGS_H_ */
+#endif /* COMPASS_TAGS_H_ */
