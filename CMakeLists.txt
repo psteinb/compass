@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(CheckCCompilerFlag)
 include(CheckCXXCompilerFlag)
+include(CheckSymbolExists)
 
 # Project information
 SET (COMPASS_NAME "Compass - drop-in header-only C++ library to detect hardware capabilities at runtime and at compiletime")
@@ -36,10 +37,16 @@ check_cxx_compiler_flag(-O3 HAS_O3_COMPILERFLAG)
 check_cxx_compiler_flag(/Oi HAS_OI_COMPILERFLAG)
 check_cxx_compiler_flag(-Wno-overflow HAS_WNOOVERFLOW_COMPILERFLAG)
 
+IF(NOT WIN32)
+  check_symbol_exists(__get_cpuid "cpuid.h" GET_CPUID_INSTRINSIC_EXISTS)
+ELSE()
+  check_symbol_exists(__cpuid "intrin.h" GET_CPUID_INSTRINSIC_EXISTS)
+ENDIF()
+
 #list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 
 
-FIND_PACKAGE (Boost 1.55 COMPONENTS system filesystem unit_test_framework REQUIRED QUIET)
+FIND_PACKAGE (Boost 1.50 COMPONENTS system filesystem unit_test_framework QUIET)
 IF(Boost_FOUND)
   MESSAGE("++ Boost libraries found  : ${Boost_LIBRARIES}")
   ADD_SUBDIRECTORY(tests)
