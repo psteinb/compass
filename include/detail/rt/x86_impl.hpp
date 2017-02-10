@@ -1,12 +1,11 @@
 #ifndef _COMPASS_X86_IMPL_H_
 #define _COMPASS_X86_IMPL_H_
 
+#include "../tags.hpp"
+
 #include <iostream>
 #include <string>
 #include <bitset>
-
-#include "../compass_tags.hpp"
-
 
 
 namespace compass {

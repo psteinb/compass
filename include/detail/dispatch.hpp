@@ -1,7 +1,7 @@
 #ifndef _COMPASS_DETAIL_H_
 #define _COMPASS_DETAIL_H_
 
-#include <string>
+
 #include "tags.hpp"
 
 //compiletime code
@@ -13,7 +13,7 @@
 #include "ct/gnu_impl.hpp"
 #endif
 #endif
-      
+
 #ifdef _MSC_BUILD
 #include "ct/msvc_impl.hpp"
 #endif
@@ -23,5 +23,6 @@
 //runtime code
 
 #include "rt/x86_impl.hpp"
+
 
 #endif /* _COMPASS_DETAIL_H_ */
