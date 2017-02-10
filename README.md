@@ -53,4 +53,4 @@ This project is quite small, so here is your chance to boost open-source to the 
 - [ ] contribute for OpenPower (started)
 - [ ] contribute for ARM
 
-A good place to start and to see what is needed, is llvm [`host.cpp`](http://llvm.org/docs/doxygen/html/Host_8cpp_source.html) file
+A good place to start and to see what is needed, is llvm [`Host.cpp`](http://llvm.org/docs/doxygen/html/Host_8cpp_source.html) file
