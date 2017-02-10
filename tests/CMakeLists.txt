@@ -1,5 +1,12 @@
 INCLUDE_DIRECTORIES(.)
 INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
 
-add_executable(test_compass_impl test_compass_impl.cpp)
-target_link_libraries(test_compass_impl ${Boost_LIBRARIES})
+cmake_host_system_information(RESULT CURRENT_HOSTNAME QUERY HOSTNAME)
+
+if(${CURRENT_HOSTNAME} MATCHES ".*(schorle|scicomp-pc-3|recovery-station).*")
+  add_executable(test_compass_impl test_compass_impl.cpp)
+  target_link_libraries(test_compass_impl ${Boost_LIBRARIES})
+elseif(${CURRENT_HOSTNAME} MATCHES ".*(juron).*")
+  add_executable(test_power8_impl test_power8_impl.cpp)
+  target_link_libraries(test_power8_impl ${Boost_LIBRARIES})
+endif()
