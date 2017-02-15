@@ -1,18 +1,25 @@
-#ifndef COMPASS_CT_GNU_IMPL_H_
-#define COMPASS_CT_GNU_IMPL_H_
+#ifndef COMPASS_RT_X86_GNU_CPUID_H_
 
-#include "../tags.hpp"
+#include "detail/ct/detect_compiler.hpp"
+
+#ifdef COMPASS_CT_COMP_GCC
+
+#define COMPASS_RT_X86_GNU_CPUID_H_
+
+
+#include "cpuid.h"
 
 #include <array>
 #include <bitset>
 #include <cstdint>
 
-#include "cpuid.h"
+#include "detail/tags.hpp"
+#include "detail/definitions.hpp"
 
 namespace compass {
 
 
-  namespace compiletime {
+  namespace runtime {
 
 
     static std::array<std::bitset<32>,4> cpuid(std::uint32_t level,
@@ -23,10 +30,10 @@ namespace compass {
 
       std::uint32_t regs[4] = {in_eax,in_ebx,in_ecx,in_edx};
       int cpuid_rvalue = __get_cpuid(level,
-                     &regs[eax],
-                     &regs[ebx],
-                     &regs[ecx],
-                     &regs[edx]
+                     &regs[ct::eax],
+                     &regs[ct::ebx],
+                     &regs[ct::ecx],
+                     &regs[ct::edx]
                      );
 
       static std::array<std::bitset<32>,4> value;
@@ -36,10 +43,10 @@ namespace compass {
       }
 
 
-      value[eax] = regs[eax];
-      value[ebx] = regs[ebx];
-      value[ecx] = regs[ecx];
-      value[edx] = regs[edx];
+      value[ct::eax] = regs[ct::eax];
+      value[ct::ebx] = regs[ct::ebx];
+      value[ct::ecx] = regs[ct::ecx];
+      value[ct::edx] = regs[ct::edx];
 
       return value;
 
@@ -79,4 +86,5 @@ namespace compass {
   };
 
 };
+#endif /* COMPASS_CT_COMP_GCC */
 #endif /* COMPASS_CT_GNU_IMPL_H_ */

@@ -27,12 +27,14 @@ Here is a minimal code example that tries to detect SSE4 at runtime:
 #include <iostream>
 #include "compass.hpp"
 
+using namespace compass;
+
 int main(int argc, char** argv){
 
-    if(compass::runtime::has(compass::feature::sse4()))
+    if(runtime::has(feature::sse4()))
         std::cout << "SSE4 found!!\n";
     else
-        std::cout << "this is an old machine!!\n";
+        std::cout << "This is an old machine. I hope I don't break anything.\n";
         
     return 0;
 
@@ -40,15 +42,18 @@ int main(int argc, char** argv){
 
 ```
 
-
 ## Help needed 
 
 This project is quite small, so here is your chance to boost open-source to the benefit of the entire C++ community.
 
-- [ ] code review the model to extend compass to new compilers/platforms
-- [ ] code review the model to extend compass to new features
-- [ ] is thread-safety an issue of the current implementation
-- [ ] contribute/check Intel compiler
-- [ ] contribute for GPUs and nvcc
-- [ ] contribute for OpenPower
-- [ ] contribute for ARM
+- [ ] code review the model to extend compass for new compilers/platforms/OSes
+- [ ] code review the model to extend compass for new features
+- [ ] is thread-safety an issue of the current implementation ?
+- [ ] contribute for adding Intel compiler on x86
+- [ ] contribute for GPUs (nvcc)
+- [ ] contribute for OpenPower (gcc/at)
+- [ ] contribute for ARM (gcc/clang)
+
+## License
+
+This project is licensed under the BSD 3-clause open source license. See (LICENSE)[LICENSE] for details.

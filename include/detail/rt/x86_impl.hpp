@@ -1,24 +1,28 @@
 #ifndef COMPASS_RT_X86_IMPL_H_
 #define COMPASS_RT_X86_IMPL_H_
 
-#include "../tags.hpp"
+#include "detail/ct/detect_os.hpp"
+#include "detail/ct/detect_compiler.hpp"
+#include "detail/ct/detect_arch.hpp"
+
+#include "detail/rt/x86_cpuid.hpp"
+#include "detail/tags.hpp"
+#include "detail/definitions.hpp"
 
 #include <iostream>
 #include <string>
 #include <bitset>
 
-
 namespace compass {
-
-  typedef ct::x86_tag _compass_x86_impl_h_tag_t;
 
   namespace runtime {
 
     namespace detail {
 
-      static bool works(_compass_x86_impl_h_tag_t) {
 
-        auto regs = ct::cpuid(0);
+      static bool works(ct::x86_tag) {
+
+        auto regs = rt::cpuid(0);
 
         if(regs.size())
           return true;
@@ -28,10 +32,10 @@ namespace compass {
       }
 
 
-      static std::string vendor(_compass_x86_impl_h_tag_t) {
+      static std::string vendor(ct::x86_tag) {
 
 
-        std::array<std::uint32_t,4> regs = ct::cpuid_to_int(0);
+        std::array<std::uint32_t,4> regs = rt::cpuid_to_int(0);
 
         std::string vendor_name = "";
 
@@ -52,9 +56,9 @@ namespace compass {
       }
 
 
-      static bool has(feature::sse , _compass_x86_impl_h_tag_t){
+      static bool has(feature::sse , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = ct::cpuid(1);
+        std::array<std::bitset<32>,4> regs = rt::cpuid(1);
 
         if(regs.empty()){
           std::cerr << "unsupported cpuid level detected\n";
@@ -64,9 +68,9 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::sse2 , _compass_x86_impl_h_tag_t){
+      static bool has(feature::sse2 , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = ct::cpuid(1);
+        std::array<std::bitset<32>,4> regs = rt::cpuid(1);
 
         if(regs.empty()){
           std::cerr << "unsupported cpuid level detected\n";
@@ -76,9 +80,9 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::sse3 , _compass_x86_impl_h_tag_t){
+      static bool has(feature::sse3 , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = ct::cpuid(1);
+        std::array<std::bitset<32>,4> regs = rt::cpuid(1);
 
         if(regs.empty()){
           std::cerr << "unsupported cpuid level detected\n";
@@ -89,9 +93,9 @@ namespace compass {
       }
 
 
-      static bool has(feature::sse4 , _compass_x86_impl_h_tag_t){
+      static bool has(feature::sse4 , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = ct::cpuid(1);
+        std::array<std::bitset<32>,4> regs = rt::cpuid(1);
 
         if(regs.empty()){
           std::cerr << "unsupported cpuid level detected\n";
@@ -102,9 +106,9 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::avx , _compass_x86_impl_h_tag_t){
+      static bool has(feature::avx , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = ct::cpuid(1);
+        std::array<std::bitset<32>,4> regs = rt::cpuid(1);
 
         if(regs.empty()){
           std::cerr << "unsupported cpuid level detected\n";
@@ -115,9 +119,9 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::avx2 , _compass_x86_impl_h_tag_t){
+      static bool has(feature::avx2 , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = ct::cpuid(7);
+        std::array<std::bitset<32>,4> regs = rt::cpuid(7);
 
         bool value = regs[ct::ebx].test(5);
 

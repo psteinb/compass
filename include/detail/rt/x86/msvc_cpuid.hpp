@@ -1,12 +1,19 @@
 #ifndef COMPASS_CT_MSVC_IMPL_H_
+
+#include "detail/ct/detect_compiler.hpp"
+
+#ifdef COMPASS_CT_COMP_MSVC
+
 #define COMPASS_CT_MSVC_IMPL_H_
+
+#include "intrin.h"
 
 #include <array>
 #include <bitset>
 #include <cstdint>
 
-#include "intrin.h"
-#include "../compass_tags.hpp"
+
+#include "detail/tags.hpp"
 
 namespace compass {
 
@@ -69,4 +76,6 @@ namespace compass {
 
 
 };
+
+#endif /* COMPASS_CT_COMP_MSVC */
 #endif /* COMPASS_CT_MSVC_IMPL_H_ */

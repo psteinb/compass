@@ -1,44 +1,18 @@
-#ifndef COMPASS_DETAIL_H_
-#define COMPASS_DETAIL_H_
+#ifndef COMPASS_DISPATCH_H_
+#define COMPASS_DISPATCH_H_
 
+#include "detail/ct/detect_os.hpp"
+#include "detail/ct/detect_compiler.hpp"
+#include "detail/ct/detect_arch.hpp"
 
-#include "tags.hpp"
+#include "rt/unsupported_impl.hpp"
 
-//compiletime code
-#if defined(__linux__)
-
-    #if (defined(__powerpc64__) || defined(__powerpc__))
-        #include "ct/power_impl.hpp"
-    #else
-        #if defined(__clang__)
-            #include "ct/llvm_impl.hpp"
-        #else if defined(__GNUC__)
-                #include "ct/gnu_impl.hpp"
-            #endif
-        #endif
-    #endif
-
-#else //not linux
-
-    #ifdef __APPLE__
-        #include "ct/llvm_impl.hpp"
-    #else //not __APPLE__
-        #ifdef _MSC_BUILD
-            #include "ct/msvc_impl.hpp"
-        #endif
-    #endif
-
-#endif
-
-#include "ct/preprocessor_impl.hpp"
-
-//runtime code
-#if defined(__x86_64) || defined(__x86_64__) || defined(__x86)
+#ifdef COMPASS_CT_ARCH_X86
     #include "rt/x86_impl.hpp"
 #endif
 
-#if (defined(__powerpc64__) || defined(__powerpc__))
+#ifdef COMPASS_CT_ARCH_POWER
     #include "rt/power_impl.hpp"
-#else
+#endif
 
-#endif /* COMPASS_DETAIL_H_ */
+#endif /* COMPASS_DISPATCH_H_ */
