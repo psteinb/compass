@@ -41,14 +41,20 @@ IF(NOT WIN32)
   check_symbol_exists(__get_cpuid "cpuid.h" GET_CPUID_INSTRINSIC_EXISTS)
 ELSE()
   check_symbol_exists(__cpuid "intrin.h" GET_CPUID_INSTRINSIC_EXISTS)
+  add_definitions(-DBOOST_ALL_NO_LIB)
+
+set(Boost_USE_STATIC_LIBS       OFF)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+
 ENDIF()
 
 #list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 
-
 FIND_PACKAGE (Boost 1.50 COMPONENTS system filesystem unit_test_framework QUIET)
 IF(DEFINED Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIR})
+  link_directories(${Boost_LIBRARY_DIR})
   MESSAGE("++ Boost libraries found  : ${Boost_LIBRARIES}")
   ADD_SUBDIRECTORY(tests)
   enable_testing()

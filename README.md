@@ -19,6 +19,16 @@ You have 2 options:
     $ make install #depending on the contents of CMAKE_INSTALL_PREFIX, you may use sudo
     ```
     
+	- on Windows platforms (assuming that cmake and boost\lib are in your path)
+	```
+	> cd repo
+	> mkdir build
+	> cd build
+	> cmake.exe -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=C:\path\to\boost\1_59_0 ..
+	> cmake.exe --build . --target ALL_BUILD --config Release
+	> ctest.exe -C Release
+	```
+	
 ## Compass API
 
 Here is a minimal code example that tries to detect SSE4 at runtime:
