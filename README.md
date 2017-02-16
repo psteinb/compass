@@ -46,6 +46,7 @@ int main(int argc, char** argv){
 
 This project is quite small, so here is your chance to boost open-source to the benefit of the entire C++ community.
 
+
 - [ ] code review the model to extend compass for new compilers/platforms/OSes
 - [ ] code review the model to extend compass for new features
 - [ ] is thread-safety an issue of the current implementation ?
@@ -53,6 +54,8 @@ This project is quite small, so here is your chance to boost open-source to the 
 - [ ] contribute for GPUs (nvcc)
 - [ ] contribute for OpenPower (gcc/at)
 - [ ] contribute for ARM (gcc/clang)
+
+A good place to start and to see what is needed, is llvm [`Host.cpp`](http://llvm.org/docs/doxygen/html/Host_8cpp_source.html) file
 
 ## License
 

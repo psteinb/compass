@@ -31,8 +31,7 @@ namespace compass {
       static std::string vendor(_compass_power_impl_h_tag_t) {
 
 
-
-        std::string vendor_name = "";
+        std::string vendor_name = "IBM";
 
         return vendor_name;
 
