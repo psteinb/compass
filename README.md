@@ -18,9 +18,18 @@ You have 2 options:
     $ make && ctest
     $ make install #depending on the contents of CMAKE_INSTALL_PREFIX, you may use sudo
     ```
-    
-(3.) in case you have access to the test machines, you can build the compass tests (requires boost to be installed)
 
+    - on Windows platforms (assuming that `cmake` and `boost\lib` are in your `PATH`)
+	```
+	> cd repo
+	> mkdir build
+	> cd build
+	> cmake.exe -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=C:\path\to\boost\1_59_0 ..
+	> cmake.exe --build . --target ALL_BUILD --config Release
+	> ctest.exe -C Release
+	```
+
+(3.) tests can only be run if you have access to the test machines and it requires boost to be installed (if boost is not detected, the tests are skipped and a warning is issued)
 
 ## Compass API
 
