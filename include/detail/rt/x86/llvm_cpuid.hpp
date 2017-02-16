@@ -44,7 +44,7 @@ namespace compass {
       }
     }
 
-    static std::array<std::bitset<32>,4> cpuid(std::uint32_t level,
+    /*static std::array<std::bitset<32>,4> cpuid(std::uint32_t level,
                                                std::uint32_t in_eax = 0,
                                                std::uint32_t in_ebx = 0,
                                                std::uint32_t in_ecx = 0,
@@ -61,7 +61,7 @@ namespace compass {
       value[ct::edx] = regs[ct::edx];
 
       return value;
-    }
+    }*/
 
   };
 
