@@ -11,7 +11,7 @@ namespace compass {
         static const int ecx = 2;
         static const int edx = 3;
 
-        struct unsupported_tag {};
+        struct unsupported_tag { static int dummy; };
         struct through_os_tag {};
     };
 

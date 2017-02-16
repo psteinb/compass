@@ -2,21 +2,18 @@
 #define DETAIL_DETECT_OS_H
 
 //for reference see: https://sourceforge.net/p/predef/wiki/OperatingSystems/
-#define COMPASS_CT_OS_UNSUPPORTED
 
-#if (defined(__linux__) || defined(__gnu_linux__))
+
+#if (defined(__linux) || defined(__linux__) || defined(__gnu_linux__))
 #define COMPASS_CT_OS_LINUX
-#undef  COMPASS_CT_OS_UNSUPPORTED
 #endif
 
-#if (defined(__APPLE__) && defined(__MACH__))
+#if (defined(__APPLE__) || defined(__MACH__))
 #define COMPASS_CT_OS_MACOS
-#undef  COMPASS_CT_OS_UNSUPPORTED
 #endif
 
 #if (defined(_WIN16) || defined(_WIN32) || defined(_WIN64) || defined(__WIN32__))
 #define COMPASS_CT_OS_WINDOWS
-#undef  COMPASS_CT_OS_UNSUPPORTED
 #endif
 
 #include "detail/definitions.hpp"
@@ -43,11 +40,13 @@ namespace compass {
             typedef windows_tag type;
 #endif
 
-#ifdef COMPASS_CT_OS_UNSUPPORTED
+#if (!(defined(COMPASS_CT_OS_LINUX) || defined(COMPASS_CT_OS_MACOS) || defined(COMPASS_CT_OS_WINDOWS)))
             typedef unsupported_tag type;
+            static_assert(true,
+              "\ncompass is not aware of this operating system \nPlease create an issue under https://github.com/psteinb/compass\n\n");
 #endif
 
-            static_assert(std::is_same<type,unsupported_tag>::value, "\n\ncompass is not aware of this operating system \nPlease create an issue under https://github.com/psteinb/compass\n\n");
+
 
         };
 

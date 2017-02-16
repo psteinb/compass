@@ -52,11 +52,13 @@ namespace compass {
 
 #ifdef COMPASS_CT_ARCH_UNSUPPORTED
             typedef unsupported_tag type;
+            static_assert(std::is_same<compass::ct::arch::type,compass::ct::unsupported_tag>::value,
+                          "\n\ncompass is not aware of this architecture \nPlease create an issue under https://github.com/psteinb/compass\n\n");
 #endif
             //32 or 64bit?
             const static int bitness = sizeof(void*)*CHAR_BIT;
 
-            static_assert(std::is_same<type,unsupported_tag>::value, "\n\ncompass is not aware of this architecture\nPlease create an issue under https://github.com/psteinb/compass\n\n");
+
 
         };
 
