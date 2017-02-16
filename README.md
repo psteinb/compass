@@ -8,9 +8,9 @@ You have 2 options:
 
 1. you can just copy the contents of `include` into your project and off you go
 
-2. you use the cmake build infrastructure
+2. you use the cmake build infrastructure to put compass in a desired folder
 
-    - on *NIX platforms
+    - on *NIX platforms and macOS/OSX
     ```
     $ cd repo
     $ mkdir build && cd build
@@ -19,6 +19,9 @@ You have 2 options:
     $ make install #depending on the contents of CMAKE_INSTALL_PREFIX, you may use sudo
     ```
     
+(3.) in case you have access to the test machines, you can build the compass tests (requires boost to be installed)
+
+
 ## Compass API
 
 Here is a minimal code example that tries to detect SSE4 at runtime:
