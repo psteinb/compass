@@ -47,8 +47,8 @@ ENDIF()
 
 
 FIND_PACKAGE (Boost 1.50 COMPONENTS system filesystem unit_test_framework QUIET)
-IF(Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS})
+IF(DEFINED Boost_FOUND)
+  include_directories(${Boost_INCLUDE_DIR})
   MESSAGE("++ Boost libraries found  : ${Boost_LIBRARIES}")
   ADD_SUBDIRECTORY(tests)
   enable_testing()
