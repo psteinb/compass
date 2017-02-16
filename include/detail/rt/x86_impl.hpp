@@ -55,6 +55,33 @@ namespace compass {
 
       }
 
+      static std::string brand(ct::x86_tag) {
+
+        std::string value = "";
+        auto regs = rt::cpuid(0x80000000);
+        if(regs[ct::eax].to_ulong() >= 0x80000004){
+          value = "found something";
+          std::uint32_t readcpuid[3] = {regs[ct::ebx].to_ulong(),
+                                        regs[ct::edx].to_ulong(),
+                                        regs[ct::ecx].to_ulong()
+          };
+          value.resize(3*4);
+          std::copy(reinterpret_cast<char*>(&readcpuid[0]),reinterpret_cast<char*>(&readcpuid[0])+value.size(),
+                    value.begin());
+        }
+        return value;
+
+      }
+
+
+      static std::string device_name(ct::x86_tag) {
+
+        std::string value = compass::runtime::detail::brand(ct::x86_tag());
+
+        return value;
+
+      }
+
 
       static bool has(feature::sse , ct::x86_tag){
 

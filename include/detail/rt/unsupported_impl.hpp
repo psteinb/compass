@@ -38,6 +38,21 @@ namespace compass {
 
       }
 
+      static std::string brand(ct::unsupported_tag) {
+
+        std::string value = "";
+        return value;
+
+      }
+
+      static std::string device_name(ct::unsupported_tag) {
+
+        std::string vendor_name = "";
+        return vendor_name;
+
+      }
+
+
       static bool has(feature::sse , ct::unsupported_tag){
 
         return false;

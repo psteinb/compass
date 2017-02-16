@@ -44,6 +44,35 @@ BOOST_AUTO_TEST_CASE( vendor_right  ){
 
 }
 
+
+BOOST_AUTO_TEST_CASE( brand_right  ){
+
+  auto value = compass::runtime::brand();
+
+  BOOST_CHECK_NE(value.size(),0u);
+
+  std::transform(value.begin(), value.end(),
+                 value.begin(),
+                 ::tolower);
+
+  BOOST_CHECK(value.find(expected_brand)!=std::string::npos);
+
+}
+
+BOOST_AUTO_TEST_CASE( device_name_right  ){
+
+  auto value = compass::runtime::device_name();
+
+  BOOST_CHECK_NE(value.size(),0u);
+
+  std::transform(value.begin(), value.end(),
+         value.begin(),
+         ::tolower);
+
+  BOOST_CHECK(value.find(expected_device_name)!=std::string::npos);
+
+}
+
 BOOST_AUTO_TEST_CASE( ncores_right  ){
 
   auto value = compass::runtime::ncores();
