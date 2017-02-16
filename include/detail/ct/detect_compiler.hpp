@@ -3,12 +3,14 @@
 
 //for reference see: https://sourceforge.net/p/predef/wiki/Compilers/
 
+#ifdef __clang__
+#define COMPASS_CT_COMP_CLANG
+#else
+
 #ifdef __GNUC__
 #define COMPASS_CT_COMP_GCC
 #endif
 
-#ifdef __clang__
-#define COMPASS_CT_COMP_CLANG
 #endif
 
 #if (defined(_MSC_VER) || defined(_MSC_FULL_VER) || defined(_MSC_BUILD))
