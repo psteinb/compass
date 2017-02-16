@@ -11,7 +11,7 @@
 
 #include <iostream>
 #include <string>
-#include <bitset>
+
 
 namespace compass {
 
@@ -58,17 +58,23 @@ namespace compass {
       static std::string brand(ct::x86_tag) {
 
         std::string value = "";
-        auto regs = rt::cpuid(0x80000000);
-        if(regs[ct::eax].to_ulong() >= 0x80000004){
-          value = "found something";
-          std::uint32_t readcpuid[3] = {regs[ct::ebx].to_ulong(),
-                                        regs[ct::edx].to_ulong(),
-                                        regs[ct::ecx].to_ulong()
-          };
-          value.resize(3*4);
-          std::copy(reinterpret_cast<char*>(&readcpuid[0]),reinterpret_cast<char*>(&readcpuid[0])+value.size(),
-                    value.begin());
+        auto regs = rt::cpuid_to_int(0x80000000);
+        if(regs[ct::eax] >= 0x80000004){
+
+          value.resize(48);
+          char* value_begin = &value[0];
+          for(std::uint32_t i = 2; i<5;++i){
+            auto ret = rt::cpuid_to_int(0x80000000 + i);
+
+            for(std::uint32_t r = 0; r<4;++r){
+              std::uint32_t* tgt = reinterpret_cast<std::uint32_t*>(value_begin + (i-2)*16u + r*4u);
+              *tgt = ret[r];
+            }
+
+          }
+
         }
+
         return value;
 
       }
@@ -76,8 +82,25 @@ namespace compass {
 
       static std::string device_name(ct::x86_tag) {
 
-        std::string value = compass::runtime::detail::brand(ct::x86_tag());
+        std::string brand_str = compass::runtime::detail::brand(ct::x86_tag());
+        std::string vendor = compass::runtime::detail::vendor(ct::x86_tag());
+        std::size_t find_pos = 0;
+        if((find_pos = vendor.find("Genuine"))!=std::string::npos){
+            vendor.erase(find_pos,7);
+        }
 
+        std::string value = "";
+
+        if(brand_str.find(vendor) != std::string::npos){
+        //based on the Intel chip test strings that are known
+          auto second_bracket_itr = brand_str.rfind(")");
+          auto last_at_itr = brand_str.rfind("@");
+          value = brand_str.substr(second_bracket_itr,last_at_itr-second_bracket_itr);
+
+          if((find_pos = value.find(" CPU"))!=std::string::npos){
+            value.erase(find_pos,4);
+          }
+        }
         return value;
 
       }

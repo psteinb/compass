@@ -51,11 +51,9 @@ BOOST_AUTO_TEST_CASE( brand_right  ){
 
   BOOST_CHECK_NE(value.size(),0u);
 
-  std::transform(value.begin(), value.end(),
-                 value.begin(),
-                 ::tolower);
 
-  BOOST_CHECK(value.find(expected_brand)!=std::string::npos);
+  BOOST_CHECK_MESSAGE(value.find(expected_brand)!=std::string::npos,
+                      "[brand retrieved]\t_" << value.c_str() << "_");
 
 }
 
@@ -65,11 +63,8 @@ BOOST_AUTO_TEST_CASE( device_name_right  ){
 
   BOOST_CHECK_NE(value.size(),0u);
 
-  std::transform(value.begin(), value.end(),
-         value.begin(),
-         ::tolower);
-
-  BOOST_CHECK(value.find(expected_device_name)!=std::string::npos);
+  BOOST_CHECK_MESSAGE(value.find(expected_device_name)!=std::string::npos,
+                      "[device_name]\t_"<<value<<"_ is not "<< expected_device_name);
 
 }
 
