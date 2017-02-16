@@ -60,11 +60,11 @@ This project is quite small, so here is your chance to boost open-source to the 
 
 - [ ] code review the model to extend compass for new compilers/platforms/OSes
 - [ ] code review the model to extend compass for new features
-- [ ] contribute adding detection of the cache hierarchy and associated cache sizes
+- [ ] contribute adding detection of the cache hierarchy and associated cache sizes on x86 
 - [ ] is thread-safety an issue of the current implementation ?
 - [ ] contribute for adding Intel compiler on x86
 - [ ] contribute for GPUs (nvcc)
-- [ ] contribute for OpenPower (gcc/at)
+- [ ] extend support for OpenPower (gcc)
 - [ ] contribute for ARM (gcc/clang) if you have according hardware available
 
 A good place to start and to see what is needed, is llvm [`Host.cpp`](http://llvm.org/docs/doxygen/html/Host_8cpp_source.html) file
