@@ -59,4 +59,4 @@ A good place to start and to see what is needed, is llvm [`Host.cpp`](http://llv
 
 ## License
 
-This project is licensed under the BSD 3-clause open source license. See (LICENSE)[LICENSE] for details.
+This project is licensed under the BSD 3-clause open source license. See [LICENSE](LICENSE) for details.
