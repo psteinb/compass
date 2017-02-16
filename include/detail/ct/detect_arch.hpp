@@ -27,6 +27,8 @@
 #undef  COMPASS_CT_ARCH_UNSUPPORTED
 #endif
 
+#include "detail/definitions.hpp"
+
 #include <climits> //for CHAR_BIT
 
 namespace compass {
@@ -34,7 +36,7 @@ namespace compass {
     namespace compiletime {
 
         //architectures
-        struct unsupported_tag {};
+
         struct x86_tag {};
         struct power_tag {};
 
@@ -53,6 +55,8 @@ namespace compass {
 #endif
             //32 or 64bit?
             const static int bitness = sizeof(void*)*CHAR_BIT;
+
+            static_assert(std::is_same<type,unsupported_tag>::value, "\n\ncompass is not aware of this architecture\nPlease create an issue under https://github.com/psteinb/compass\n\n");
 
         };
 

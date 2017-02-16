@@ -11,7 +11,8 @@ namespace compass {
         static const int ecx = 2;
         static const int edx = 3;
 
-
+        struct unsupported_tag {};
+        struct through_os_tag {};
     };
 
     namespace runtime {
