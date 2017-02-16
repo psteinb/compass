@@ -1,5 +1,5 @@
 #define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE TEST_POWER8
+#define BOOST_TEST_MODULE TEST_POWER8_IMPL
 #include "boost/test/unit_test.hpp"
 
 #include <vector>

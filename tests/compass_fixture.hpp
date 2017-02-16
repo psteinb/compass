@@ -90,6 +90,20 @@ struct host_reference
       expected_ncores = 4;
     }
 
+    if(hostname.find("juronb") != std::string::npos){
+      expected_vendor = "IBM";
+      expected_brand  = "POWER8 (raw), altivec supported";
+      expected_device_name = "POWER8";
+      expected_has_sse = false ;
+      expected_has_sse2= false ;
+      expected_has_sse3= false ;
+      expected_has_sse4= false ;
+      expected_has_avx = false ;
+      expected_has_avx2= false ;
+      expected_ncores = 160;
+    }
+
+
   }
 
 };

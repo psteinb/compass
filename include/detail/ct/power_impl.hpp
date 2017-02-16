@@ -1,5 +1,5 @@
-#ifndef COMPASS_CT_CT_POWER_IMPL_H_
-#define COMPASS_CT_CT_POWER_IMPL_H_
+#ifndef COMPASS_CT_POWER_IMPL_H_
+#define COMPASS_CT_POWER_IMPL_H_
 
 
 #include <array>

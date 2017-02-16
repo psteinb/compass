@@ -47,7 +47,9 @@ namespace compass {
 #endif
 
 #ifdef COMPASS_CT_ARCH_POWER
-            typedef power_tag type;
+            //NOTE  power has no direct support for cpuid like registers for unprivileged users
+            //      any information needs to be retrieved through the OS
+            typedef through_os_tag type;
 #endif
 
 #ifdef COMPASS_CT_ARCH_UNSUPPORTED

@@ -1,11 +1,11 @@
-#ifndef COMPASS_RT_LINUX_BASED_IMPL_H_
+#ifndef COMPASS_RT_LINUX_OS_IMPL_H_
 
 
 #include "detail/ct/detect_os.hpp"
 
 #ifdef COMPASS_CT_OS_LINUX
 
-#define COMPASS_RT_LINUX_BASED_IMPL_H_
+#define COMPASS_RT_LINUX_OS_IMPL_H_
 #include "detail/ct/detect_arch.hpp"
 
 #include "detail/definitions.hpp"
@@ -13,7 +13,7 @@
 
 #include <iostream>
 #include <string>
-#include <bitset>
+#include <fstream>
 
 
 
@@ -26,7 +26,7 @@ namespace compass {
 
       static bool works(ct::through_os_tag) {
 
-        std::fstream proc_cpuinfo("/proc/cpuinfo");
+        std::ifstream proc_cpuinfo("/proc/cpuinfo");
 
         if(proc_cpuinfo.is_open())
           return true;
@@ -102,4 +102,4 @@ namespace compass {
 };
 
 #endif /* COMPASS_CT_OS_LINUX */
-#endif /* COMPASS_RT_LINUX_BASED_IMPL_H_ */
+#endif /* COMPASS_RT_LINUX_OS_IMPL_H_ */
