@@ -91,7 +91,7 @@ struct host_reference
     }
 
     if(hostname.find("juronb") != std::string::npos){
-      expected_vendor = "IBM";
+      expected_vendor = "";
       expected_brand  = "POWER8 (raw), altivec supported";
       expected_device_name = "POWER8";
       expected_has_sse = false ;

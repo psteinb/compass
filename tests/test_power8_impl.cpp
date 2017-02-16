@@ -26,39 +26,35 @@ BOOST_AUTO_TEST_CASE( compass_works_at_runtime ){
 //   BOOST_CHECK_NE(value.size(),0u);
 
 // }
-// BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_SUITE_END()
 
-// BOOST_FIXTURE_TEST_SUITE( machine_specific, host_reference )
+BOOST_FIXTURE_TEST_SUITE( machine_specific, host_reference )
 
-// BOOST_AUTO_TEST_CASE( vendor_right  ){
+BOOST_AUTO_TEST_CASE( vendor_right  ){
 
-//   auto value = compass::runtime::vendor();
+  auto value = compass::runtime::vendor();
 
-//   BOOST_CHECK_NE(value.size(),0u);
+  BOOST_CHECK_EQUAL(value.size(),expected_vendor.size());
 
-//   std::transform(value.begin(), value.end(),
-//          value.begin(),
-//          ::tolower);
+  BOOST_CHECK(value.find(expected_vendor)!=std::string::npos);
 
-//   BOOST_CHECK(value.find(expected_vendor)!=std::string::npos);
+}
 
-// }
+BOOST_AUTO_TEST_CASE( ncores_right  ){
 
-// BOOST_AUTO_TEST_CASE( ncores_right  ){
+  auto value = compass::runtime::ncores();
 
-//   auto value = compass::runtime::ncores();
+  BOOST_CHECK_NE(value,0);
+  BOOST_CHECK_EQUAL(value,expected_ncores);
+}
 
-//   BOOST_CHECK_NE(value,0);
-//   BOOST_CHECK_EQUAL(value,expected_ncores);
-// }
+BOOST_AUTO_TEST_CASE( has_sse_right  ){
 
-// BOOST_AUTO_TEST_CASE( has_sse_right  ){
+  auto value = compass::runtime::has(compass::feature::sse());
 
-//   auto value = compass::runtime::has(compass::feature::sse());
+  BOOST_CHECK_EQUAL(value,expected_has_sse);
 
-//   BOOST_CHECK_EQUAL(value,expected_has_sse);
-
-// }
+}
 
 // BOOST_AUTO_TEST_CASE( has_sse2_right  ){
 
