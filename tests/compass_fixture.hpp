@@ -66,7 +66,7 @@ struct host_reference
     if (hostname.find("scicomp-pc-3") != std::string::npos) {
       expected_vendor = "intel";
       expected_brand = "Intel(R) Xeon(R) CPU E3-1245 v3 @ 3.40GHz";
-      expected_device_name = "";
+      expected_device_name = "E3-1245v3";
       expected_has_sse = true;
       expected_has_sse2 = true;
       expected_has_sse3 = true;
@@ -103,7 +103,19 @@ struct host_reference
       expected_ncores = 160;
     }
 
+    if(hostname.find("falcon2") == 0){
+      expected_vendor = "intel";
+      expected_brand = "Intel(R) Xeon(R) CPU E5-2670 v3 @ 2.30GHz";
+      expected_device_name = "E5-2670v3";
+      expected_has_sse = true;
+      expected_has_sse2 = true;
+      expected_has_sse3 = true;
+      expected_has_sse4 = true;
+      expected_has_avx = true;
+      expected_has_avx2 = true;
+      expected_ncores = 24;
 
+    }
   }
 
 };
