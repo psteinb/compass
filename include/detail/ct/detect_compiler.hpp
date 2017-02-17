@@ -4,12 +4,18 @@
 //for reference see: https://sourceforge.net/p/predef/wiki/Compilers/
 
 #ifdef __clang__
-#define COMPASS_CT_COMP_CLANG
+    #define COMPASS_CT_COMP_CLANG
 #else
 
-#ifdef __GNUC__
-#define COMPASS_CT_COMP_GCC
-#endif
+    #ifdef __INTEL_COMPILER
+        #define COMPASS_CT_COMP_INTEL
+    #else
+
+      #ifdef __GNUC__
+      #define COMPASS_CT_COMP_GCC
+      #endif
+
+   #endif
 
 #endif
 
@@ -17,9 +23,6 @@
 #define COMPASS_CT_COMP_MSVC
 #endif
 
-#ifdef __INTEL_COMPILER
-#define COMPASS_CT_COMP_INTEL
-#endif
 
 //TODO: if needed, this is the header where the compiler version could be inferred
 
