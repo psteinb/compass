@@ -32,6 +32,8 @@ check_cxx_compiler_flag(-O3 HAS_O3_COMPILERFLAG)
 check_cxx_compiler_flag(/Oi HAS_OI_COMPILERFLAG)
 check_cxx_compiler_flag(-Wno-overflow HAS_WNOOVERFLOW_COMPILERFLAG)
 
+
+
 IF(NOT WIN32)
   check_symbol_exists(__get_cpuid "cpuid.h" GET_CPUID_INSTRINSIC_EXISTS)
 ELSE()
@@ -48,6 +50,12 @@ ENDIF()
 
 FIND_PACKAGE (Boost 1.50 COMPONENTS system filesystem unit_test_framework QUIET)
 IF(DEFINED Boost_FOUND)
+
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+      add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+      message(">> [gnu compiler detected] CXX11_ABI enabled.")
+  endif()
+
   include_directories(${Boost_INCLUDE_DIR})
   link_directories(${Boost_LIBRARY_DIR})
   MESSAGE("++ Boost libraries found  : ${Boost_LIBRARIES}")
