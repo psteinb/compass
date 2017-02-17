@@ -27,7 +27,7 @@ namespace compass {
 
       static std::array<std::uint32_t,4> value = {~0u};
 
-      int cpuid_rvalue = extended_get_cpud(&value[0],in_eax,in_ecx);
+      int cpuid_rvalue = extended_get_cpuid(&value[0],in_eax,in_ecx);
 
       if(cpuid_rvalue < 1){
         value = {0,0,0,0};
