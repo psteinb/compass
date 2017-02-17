@@ -23,19 +23,19 @@ namespace compass {
 
 
 
-    static std::array<std::uint32_t,4> cpuid_to_int(std::uint32_t level,
-                                                    std::uint32_t in_eax = 0,
+    static std::array<std::uint32_t,4> cpuid_to_int(std::uint32_t in_eax = 0,
                                                     std::uint32_t in_ebx = 0,
                                                     std::uint32_t in_ecx = 0,
                                                     std::uint32_t in_edx = 0){
 
       static std::array<std::uint32_t,4> value = {in_eax,in_ebx,in_ecx,in_edx};
 
-      int cpuid_rvalue = __get_cpuid(level,
-                                     &value[ct::eax],
-                                     &value[ct::ebx],
-                                     &value[ct::ecx],
-                                     &value[ct::edx]);
+      int cpuid_rvalue = __get_cpuid_count(in_eax,
+                                           in_ecx,
+                                           &value[ct::eax],
+                                           &value[ct::ebx],
+                                           &value[ct::ecx],
+                                           &value[ct::edx]);
       if(cpuid_rvalue < 1){
         value = {0,0,0,0};
         return value;
@@ -44,8 +44,6 @@ namespace compass {
       }
 
     }
-
-    
 
 
   };
