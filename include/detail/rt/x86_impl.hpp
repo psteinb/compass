@@ -7,6 +7,7 @@
 
 #include "detail/rt/x86_cpuid.hpp"
 #include "detail/tags.hpp"
+#include "detail/bit_view.hpp"
 #include "detail/definitions.hpp"
 
 #include <iostream>
@@ -171,9 +172,9 @@ namespace compass {
 
       static bool has(feature::avx2 , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = rt::cpuid(7,7,0,0);
+        auto regs = rt::cpuid_to_int(7,7,0,0);
 
-        bool value = regs[ct::ebx].test(5);
+        bool value = compass::utility::bit_view<std::uint32_t>(regs[ct::ebx]).test(5);
 
         return value;
       }
