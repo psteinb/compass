@@ -121,7 +121,7 @@ BOOST_AUTO_TEST_CASE( has_avx2_right  ){
 
   auto value = compass::runtime::has(compass::feature::avx2());
 
-  BOOST_CHECK_MESSAGE(value==expected_has_avx2, "detected " << (value ? "AVX2" : "no AVX2") << " on " << hostname << " (expected: " <<  (expected_has_avx2 ? "AVX2" : "no AVX2"));
+  BOOST_CHECK_MESSAGE(value==expected_has_avx2, "detected " << (value ? "AVX2" : "no AVX2") << " on " << hostname << " (expected: " <<  (expected_has_avx2 ? "AVX2" : "no AVX2") << ")");
 
 }
 BOOST_AUTO_TEST_SUITE_END()
