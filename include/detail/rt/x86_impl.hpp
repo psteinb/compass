@@ -171,7 +171,7 @@ namespace compass {
 
       static bool has(feature::avx2 , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = rt::cpuid(7);
+        std::array<std::bitset<32>,4> regs = rt::cpuid(7,7,0,0);
 
         bool value = regs[ct::ebx].test(5);
 
