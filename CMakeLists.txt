@@ -36,8 +36,10 @@ check_cxx_compiler_flag(-Wno-overflow HAS_WNOOVERFLOW_COMPILERFLAG)
 
 IF(NOT WIN32)
   check_symbol_exists(__get_cpuid "cpuid.h" GET_CPUID_INSTRINSIC_EXISTS)
+  check_symbol_exists(__get_cpuid_count "cpuid.h" GET_CPUID_COUND_INSTRINSIC_EXISTS)
 ELSE()
   check_symbol_exists(__cpuid "intrin.h" GET_CPUID_INSTRINSIC_EXISTS)
+  check_symbol_exists(__cpuidex "intrin.h" GET_CPUIDEX_INSTRINSIC_EXISTS)
   add_definitions(-DBOOST_ALL_NO_LIB)
 
 set(Boost_USE_STATIC_LIBS       OFF)
