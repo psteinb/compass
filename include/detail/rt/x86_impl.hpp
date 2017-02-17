@@ -96,11 +96,17 @@ namespace compass {
         //based on the Intel chip test strings that are known
           auto second_bracket_itr = brand_str.rfind(")");
           auto last_at_itr = brand_str.rfind("@");
-          value = brand_str.substr(second_bracket_itr,last_at_itr-second_bracket_itr);
+          value = brand_str.substr(second_bracket_itr+1,last_at_itr-(second_bracket_itr+1));
 
-          if((find_pos = value.find(" CPU"))!=std::string::npos){
-            value.erase(find_pos,4);
+          if((find_pos = value.find(" CPU "))!=std::string::npos){
+            value.erase(find_pos,5);
           }
+
+          if((find_pos = value.find(" CPU "))!=std::string::npos){
+            value.erase(find_pos,5);
+          }
+
+          value.erase(remove_if(value.begin(), value.end(), isspace), value.end());
         }
         return value;
 
