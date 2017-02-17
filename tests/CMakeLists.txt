@@ -12,3 +12,6 @@ elseif(${CURRENT_HOSTNAME} MATCHES "juronb.*")
   add_executable(test_power8_impl test_power8_impl.cpp)
   target_link_libraries(test_power8_impl ${Boost_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 endif()
+
+add_executable(test_bitview test_bitview.cpp)
+target_link_libraries(test_bitview ${Boost_LIBRARIES})
