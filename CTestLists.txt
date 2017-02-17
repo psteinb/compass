@@ -17,3 +17,4 @@ else()
     message(">> unknown host (${CURRENT_HOSTNAME}): no tests were written for your host ")
 endif()
 
+    add_test(NAME bitview COMMAND test_bitview)
