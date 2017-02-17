@@ -7,8 +7,6 @@
 #define COMPASS_RT_X86_INTEL_CPUID_H_
 
 
-#include "cpuid.h"
-
 #include <array>
 #include <bitset>
 #include <cstdint>
