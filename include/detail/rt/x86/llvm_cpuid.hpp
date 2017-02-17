@@ -28,7 +28,7 @@ namespace compass {
                                                     std::uint32_t in_ecx = 0,
                                                     std::uint32_t in_edx = 0){
 
-      static std::array<std::uint32_t,4> value = {~0};
+      static std::array<std::uint32_t,4> value = {~0u};
 
       int cpuid_rvalue = __get_cpuid_count(in_eax,in_ecx,
                                            &value[ct::eax],
