@@ -22,26 +22,53 @@ namespace compass {
   namespace runtime {
 
 
+    static std::array<std::bitset<32>,4> cpuid(std::uint32_t level,
+					       std::uint32_t in_eax = 0,
+					       std::uint32_t in_ebx = 0,
+					       std::uint32_t in_ecx = 0,
+					       std::uint32_t in_edx = 0){
+
+      std::uint32_t regs[4] = {in_eax,in_ebx,in_ecx,in_edx};
+      int cpuid_rvalue = __get_cpuid(level,
+				     &regs[eax],
+				     &regs[ebx],
+				     &regs[ecx],
+				     &regs[edx]
+				     );
+
+      static std::array<std::bitset<32>,4> value;
+
+      if(cpuid_rvalue < 1){
+	return value;
+      }
+
+
+      value[eax] = regs[eax];
+      value[ebx] = regs[ebx];
+      value[ecx] = regs[ecx];
+      value[edx] = regs[edx];
+
+      return value;
+
+    }
 
     static std::array<std::uint32_t,4> cpuid_to_int(std::uint32_t in_eax = 0,
                                                     std::uint32_t in_ebx = 0,
                                                     std::uint32_t in_ecx = 0,
                                                     std::uint32_t in_edx = 0){
+      static std::array<std::bitset<32>,4> temp = cpuid(level,
+      							in_eax,
+      							in_ebx,
+      							in_ecx,
+      							in_edx);
 
-      static std::array<std::uint32_t,4> value = {in_eax,in_ebx,in_ecx,in_edx};
+      static std::array<std::uint32_t,4> value;
+      for(std::uint32_t i = 0 ; i < temp.size();++i)
+      	value[i] = temp[i].to_ulong();
 
-      int cpuid_rvalue = extended_get_cpuid(&value[0],in_eax,in_ecx);
-
-
-      if(cpuid_rvalue < 1){
-        value = {0,0,0,0};
-        return value;
-      } else {
-        return value;
-      }
+      return value;
 
     }
-
 
   };
 
