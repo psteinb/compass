@@ -11,12 +11,5 @@
     #include "rt/x86_impl.hpp"
 #endif
 
-#ifdef COMPASS_CT_ARCH_POWER
-
-#ifdef COMPASS_CT_OS_LINUX
-    #include "rt/through_os_impl.hpp"
-#endif
-
-#endif
 
 #endif /* COMPASS_DISPATCH_H_ */

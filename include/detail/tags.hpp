@@ -1,29 +1,26 @@
 #ifndef COMPASS_TAGS_H_
 #define COMPASS_TAGS_H_
 
-#include <string>
-
 
 namespace compass {
 
 
-  namespace feature {
+    namespace feature {
 
 
-    //SIMD instruction sets
-    //128bit wide
-    struct sse  {};
-    struct sse2 {};
-    struct sse3 {};
-    struct sse4 {};
+        //SIMD instruction sets
+        //128bit wide
+        struct sse  {};
+        struct sse2 {};
+        struct sse3 {};
+        struct sse4 {};
 
-    //256bit wide
-    struct avx  {};
-    struct avx2 {};
+        //256bit wide
+        struct avx  {};
+        struct avx2 {};
 
 
-  };
-
+    };
 
 
 };

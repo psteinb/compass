@@ -38,18 +38,13 @@ namespace compass {
         //architectures
 
         struct x86_tag {};
+        struct arm_tag {};
         struct power_tag {};
 
         struct arch {
 
 #ifdef COMPASS_CT_ARCH_X86
             typedef x86_tag type;
-#endif
-
-#ifdef COMPASS_CT_ARCH_POWER
-            //NOTE  power has no direct support for cpuid like registers for unprivileged users
-            //      any information needs to be retrieved through the OS
-            typedef through_os_tag type;
 #endif
 
 #ifdef COMPASS_CT_ARCH_UNSUPPORTED
