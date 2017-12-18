@@ -15,6 +15,7 @@
 #include "detail/definitions.hpp"
 #include "detail/rt/x86/cpuid_common.hpp"
 
+namespace ct = compass::compiletime;
 
 namespace compass {
 
@@ -30,10 +31,10 @@ namespace compass {
 
       std::uint32_t regs[4] = {in_eax,in_ebx,in_ecx,in_edx};
       int cpuid_rvalue = __get_cpuid(level,
-				     &regs[eax],
-				     &regs[ebx],
-				     &regs[ecx],
-				     &regs[edx]
+				     &regs[ct::eax],
+				     &regs[ct::ebx],
+				     &regs[ct::ecx],
+				     &regs[ct::edx]
 				     );
 
       static std::array<std::bitset<32>,4> value;
@@ -43,16 +44,17 @@ namespace compass {
       }
 
 
-      value[eax] = regs[eax];
-      value[ebx] = regs[ebx];
-      value[ecx] = regs[ecx];
-      value[edx] = regs[edx];
+      value[ct::eax] = regs[ct::eax];
+      value[ct::ebx] = regs[ct::ebx];
+      value[ct::ecx] = regs[ct::ecx];
+      value[ct::edx] = regs[ct::edx];
 
       return value;
 
     }
 
-    static std::array<std::uint32_t,4> cpuid_to_int(std::uint32_t in_eax = 0,
+    static std::array<std::uint32_t,4> cpuid_to_int(std::uint32_t level,
+                                                    std::uint32_t in_eax = 0,
                                                     std::uint32_t in_ebx = 0,
                                                     std::uint32_t in_ecx = 0,
                                                     std::uint32_t in_edx = 0){

@@ -20,6 +20,23 @@ namespace compass {
 
   namespace runtime {
 
+    static std::array<std::bitset<32>, 4> cpuid(std::uint32_t in_eax = 0,
+													std::uint32_t in_ebx = 0,
+													std::uint32_t in_ecx = 0,
+													std::uint32_t in_edx = 0) {
+
+			auto regs = cpuid_to_int(in_eax, in_ebx, in_ecx, in_edx);
+
+			static std::array<std::bitset<32>, 4> value;
+
+			value[ct::eax] = regs[ct::eax];
+			value[ct::ebx] = regs[ct::ebx];
+			value[ct::ecx] = regs[ct::ecx];
+			value[ct::edx] = regs[ct::edx];
+
+			return value;
+
+    }
 
 
     static std::array<std::uint32_t,4> cpuid_to_int(std::uint32_t in_eax = 0,

@@ -14,10 +14,13 @@
 #include "detail/definitions.hpp"
 #include "detail/rt/x86/cpuid_common.hpp"
 
+using ct = compass::compiletime;
+
 namespace compass {
 
 
   namespace runtime {
+
 
 
     static std::array<std::bitset<32>,4> cpuid(std::uint32_t level,
@@ -28,10 +31,10 @@ namespace compass {
 
       std::uint32_t regs[4] = {in_eax,in_ebx,in_ecx,in_edx};
       int cpuid_rvalue = __get_cpuid(level,
-				 &regs[eax],
-				 &regs[ebx],
-				 &regs[ecx],
-				 &regs[edx]
+				 &regs[ct::eax],
+				 &regs[ct::ebx],
+				 &regs[ct::ecx],
+				 &regs[ct::edx]
 				 );
 
       static std::array<std::bitset<32>,4> value;
@@ -41,18 +44,18 @@ namespace compass {
       }
 
       if (level >= 13)
-        __cpuid_count (level, 1, regs[eax], regs[ebx], regs[ecx], regs[edx]);
+        __cpuid_count (level, 1, regs[ct::eax], regs[ct::ebx], regs[ct::ecx], regs[ct::edx]);
       else if (level >= 7)
-        __cpuid_count (level, 0, regs[eax], regs[ebx], regs[ecx], regs[edx]);
+        __cpuid_count (level, 0, regs[ct::eax], regs[ct::ebx], regs[ct::ecx], regs[ct::edx]);
       else
-        __cpuid (level, regs[eax], regs[ebx], regs[ecx], regs[edx]);
+        __cpuid (level, regs[ct::eax], regs[ct::ebx], regs[ct::ecx], regs[ct::edx]);
 
       if(level>=7)
 
-      value[eax] = regs[eax];
-      value[ebx] = regs[ebx];
-      value[ecx] = regs[ecx];
-      value[edx] = regs[edx];
+      value[ct::eax] = regs[ct::eax];
+      value[ct::ebx] = regs[ct::ebx];
+      value[ct::ecx] = regs[ct::ecx];
+      value[ct::edx] = regs[ct::edx];
 
       return value;
 

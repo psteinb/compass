@@ -16,9 +16,12 @@
 #include "detail/tags.hpp"
 #include "detail/definitions.hpp"
 
+using ct = compass::compiletime;
+
 namespace compass {
 
   namespace runtime {
+
 
 
     static std::array<std::bitset<32>, 4> cpuid(std::uint32_t level,
@@ -39,15 +42,15 @@ namespace compass {
 
       static std::array<std::bitset<32>, 4> value;
 
-      if (!(regs[eax] || regs[ebx] || regs[ecx] || regs[edx])) {
+      if (!(regs[ct::eax] || regs[ct::ebx] || regs[ct::ecx] || regs[ct::edx])) {
         return value;
       }
 
 
-      value[eax] = regs[eax];
-      value[ebx] = regs[ebx];
-      value[ecx] = regs[ecx];
-      value[edx] = regs[edx];
+      value[ct::eax] = regs[ct::eax];
+      value[ct::ebx] = regs[ct::ebx];
+      value[ct::ecx] = regs[ct::ecx];
+      value[ct::edx] = regs[ct::edx];
 
       return value;
 
