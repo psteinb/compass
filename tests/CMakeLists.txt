@@ -2,7 +2,7 @@ include(ExternalProject)
 
 ExternalProject_Add(
     catch2
-    PREFIX ${CMAKE_BINARY_DIR}/tests/
+    PREFIX ${CMAKE_BINARY_DIR}/tests
     URL https://raw.githubusercontent.com/catchorg/Catch2/v2.0.1/single_include/catch.hpp
     URL_MD5 9b3d2cb5c0f9532cddfbbfd0a622f0af
     DOWNLOAD_NO_EXTRACT TRUE
@@ -14,7 +14,7 @@ ExternalProject_Add(
 ExternalProject_Get_Property(catch2 DOWNLOAD_DIR)
 set(CATCH2_HEADER_PATH ${DOWNLOAD_DIR})
 
-message("catch2 header file download to ${CATCH2_HEADER_PATH}")
+message(STATUS "catch2 header file download to ${CATCH2_HEADER_PATH}")
 
 
 cmake_host_system_information(RESULT CURRENT_HOSTNAME QUERY HOSTNAME)

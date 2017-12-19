@@ -49,13 +49,10 @@ IF(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_
 endif()
 
 IF(NOT WIN32)
-  # check_symbol_exists(__get_cpuid "cpuid.h" GET_CPUID_INSTRINSIC_EXISTS)
-  # check_symbol_exists(__get_cpuid_count "cpuid.h" GET_CPUID_COUNT_INSTRINSIC_EXISTS)
   check_symbol_exists(__get_cpuid_max "cpuid.h" GET_CPUID_MAX_INSTRINSIC_EXISTS)
   check_symbol_exists(__cpuid_count "cpuid.h" GET_CPUID_COUNT_MACRO_INSTRINSIC_EXISTS)
 ELSE()
   check_symbol_exists(__cpuid "intrin.h" GET_CPUID_INSTRINSIC_EXISTS)
-  check_symbol_exists(__cpuidex "intrin.h" GET_CPUIDEX_INSTRINSIC_EXISTS)
 ENDIF()
 
 if(WITH_TESTS)
