@@ -182,7 +182,7 @@ namespace compass {
 
       static bool has(feature::avx2 , ct::x86_tag){
 
-        auto regs = rt::cpuid_to_int(7,0,0,0);
+        auto regs = rt::cpuid(7,7,0,0,0);
 
         bool value = bitview(regs[ct::ebx]).test(5);
 
