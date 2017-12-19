@@ -24,6 +24,7 @@ SET (COMPASS_VENDOR_ID "psteinb")
 SET (COMPASS_ID "${COMPASS_VENDOR_ID}.${PROJECT_NAME}")
 
 option(WITH_CXX11_ABI "enable _GLIBCXX_USE_CXX11_ABI in GCC 5.0+" ON)
+option(WITH_TESTS     "enable unit tests" ON)
 
 check_cxx_compiler_flag(-Wl,-Bsymbolic HAS_BSYMBOLIC_COMPILERFLAG)
 check_cxx_compiler_flag("-Xclang -march=native" HAS_XCLANG_COMPILERFLAG)
@@ -55,27 +56,17 @@ IF(NOT WIN32)
 ELSE()
   check_symbol_exists(__cpuid "intrin.h" GET_CPUID_INSTRINSIC_EXISTS)
   check_symbol_exists(__cpuidex "intrin.h" GET_CPUIDEX_INSTRINSIC_EXISTS)
-  add_definitions(-DBOOST_ALL_NO_LIB)
+ENDIF()
 
+if(WITH_TESTS)
+  add_definitions(-DBOOST_ALL_NO_LIB)
   set(Boost_USE_STATIC_LIBS       OFF)
   set(Boost_USE_MULTITHREADED      ON)
   set(Boost_USE_STATIC_RUNTIME    OFF)
 
-ENDIF()
-
-#list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
-
-FIND_PACKAGE (Boost 1.50 COMPONENTS system filesystem unit_test_framework QUIET)
-IF(DEFINED Boost_FOUND)
-
-  include_directories(${Boost_INCLUDE_DIR})
-  link_directories(${Boost_LIBRARY_DIR})
-  MESSAGE("++ Boost libraries found  : ${Boost_LIBRARIES}")
-  ADD_SUBDIRECTORY(tests)
+  add_subdirectory(tests)
   enable_testing()
   include("CTestLists.txt")
-else()
-  MESSAGE("++ Boost not found ++ skipping tests!")
 endif()
 
 ################################ EXPORT/INSTALL ################################
