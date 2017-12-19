@@ -21,6 +21,7 @@ struct host_reference
   bool      expected_has_avx	;
   bool      expected_has_avx2	;
   int       expected_ncores		;
+  int       expected_L1d_linesize		;
 
   host_reference():
     hostname(compass::tests::hostname()),
@@ -46,6 +47,8 @@ struct host_reference
       expected_has_sse4= true ;
       expected_has_avx = true ;
       expected_has_avx2= false ;
+      expected_L1d_linesize= 42 ;
+
       expected_ncores = 4;
     }
 

@@ -10,6 +10,8 @@
 #include "detail/bit_view.hpp"
 #include "detail/definitions.hpp"
 
+#include "detail/rt/x86_sizes.hpp"
+
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -189,8 +191,9 @@ namespace compass {
         return value;
       }
 
-    };
-  };
+    };//detail
+
+  };//runtime
 
 };
 #endif /* COMPASS_RT_X86_IMPL_H_ */

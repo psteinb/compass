@@ -120,4 +120,13 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
     REQUIRE(value==expected_has_avx2);
 
   }
+
+  SECTION( "L1d_cacheline_size" ){
+
+    auto value = compass::runtime::size::cacheline::level(1);
+
+    REQUIRE(value==expected_L1d_linesize);
+
+  }
+
 }
