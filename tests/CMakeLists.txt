@@ -28,5 +28,10 @@ if(${CURRENT_HOSTNAME} MATCHES ".*(falcon2|schorle|scicomp-pc-3|recovery-station
   target_include_directories(test_compass_impl PRIVATE ${PROJECT_SOURCE_DIR}/include ${CATCH2_HEADER_PATH})
 endif()
 
+#idea for generating test fixture at cmake-invocation
+#Windows 7: use `wmic cpu GET Name` to obtain clearname of CPU model
+#Linux    : use `lscpu` or `/proc/cpuinfo` to obtain more data about
+#macOS    : not sure yet what to use
+
 add_executable(test_bitview test_bitview.cpp $<TARGET_OBJECTS:catcho>)
 target_include_directories(test_bitview PRIVATE ${PROJECT_SOURCE_DIR}/include ${CATCH2_HEADER_PATH})
