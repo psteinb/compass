@@ -23,6 +23,8 @@ SET (COMPASS_VERSION "${COMPASS_VERSION_MAJOR}.${COMPASS_VERSION_MINOR}.${COMPAS
 SET (COMPASS_VENDOR_ID "psteinb")
 SET (COMPASS_ID "${COMPASS_VENDOR_ID}.${PROJECT_NAME}")
 
+option(WITH_CXX11_ABI "enable _GLIBCXX_USE_CXX11_ABI in GCC 5.0+" ON)
+
 check_cxx_compiler_flag(-Wl,-Bsymbolic HAS_BSYMBOLIC_COMPILERFLAG)
 check_cxx_compiler_flag("-Xclang -march=native" HAS_XCLANG_COMPILERFLAG)
 check_cxx_compiler_flag(-Wall HAS_WALL_COMPILERFLAG)
@@ -32,7 +34,18 @@ check_cxx_compiler_flag(-O3 HAS_O3_COMPILERFLAG)
 check_cxx_compiler_flag(/Oi HAS_OI_COMPILERFLAG)
 check_cxx_compiler_flag(-Wno-overflow HAS_WNOOVERFLOW_COMPILERFLAG)
 
-
+IF(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "5.0")
+    set(WITH_CXX11_ABI ON)
+  endif()
+  if(${WITH_CXX11_ABI})
+    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
+    message(">> [GCC ${CMAKE_CXX_COMPILER_VERSION}] adding -D_GLIBCXX_USE_CXX11_ABI=1")
+  else()
+    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
+    message(">> [GCC ${CMAKE_CXX_COMPILER_VERSION}] adding -D_GLIBCXX_USE_CXX11_ABI=1")
+  endif()
+endif()
 
 IF(NOT WIN32)
   # check_symbol_exists(__get_cpuid "cpuid.h" GET_CPUID_INSTRINSIC_EXISTS)
@@ -54,11 +67,6 @@ ENDIF()
 
 FIND_PACKAGE (Boost 1.50 COMPONENTS system filesystem unit_test_framework QUIET)
 IF(DEFINED Boost_FOUND)
-
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-      add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-      message(">> [gnu compiler detected] CXX11_ABI enabled.")
-  endif()
 
   include_directories(${Boost_INCLUDE_DIR})
   link_directories(${Boost_LIBRARY_DIR})
