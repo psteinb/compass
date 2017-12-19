@@ -3,7 +3,9 @@
 
 #include <iostream>
 #include <string>
-#include "boost/asio.hpp"
+
+//using suggestion from https://stackoverflow.com/questions/504810/how-do-i-find-the-current-machines-full-hostname-in-c-hostname-and-domain-info
+#include "unistd.h"
 
 struct host_reference
 {
@@ -22,7 +24,7 @@ struct host_reference
   int       expected_ncores		;
 
   host_reference():
-    hostname(boost::asio::ip::host_name()),
+    hostname(),
     expected_vendor  (""),
     expected_brand   (""),
     expected_device_name   (""),
@@ -34,6 +36,9 @@ struct host_reference
     expected_has_avx2(false),
     expected_ncores  (-1)
   {
+
+    hostname.resize(255);
+    gethostname(&hostname[0],255);
 
     if(hostname.find("schorle") != std::string::npos){
       expected_vendor = "intel";
@@ -90,19 +95,6 @@ struct host_reference
       expected_ncores = 4;
     }
 
-    if(hostname.find("juronb") != std::string::npos){
-      expected_vendor = "";
-      expected_brand  = "POWER8 (raw), altivec supported";
-      expected_device_name = "POWER8";
-      expected_has_sse = false ;
-      expected_has_sse2= false ;
-      expected_has_sse3= false ;
-      expected_has_sse4= false ;
-      expected_has_avx = false ;
-      expected_has_avx2= false ;
-      expected_ncores = 160;
-    }
-
     if(hostname.find("falcon2") == 0){
       expected_vendor = "intel";
       expected_brand = "Intel(R) Xeon(R) CPU E5-2670 v3 @ 2.30GHz";
@@ -114,6 +106,20 @@ struct host_reference
       expected_has_avx = true;
       expected_has_avx2 = true;
       expected_ncores = 24;
+
+    }
+
+    if(hostname.find("talisker") == 0){
+      expected_vendor = "intel";
+      expected_brand = "Intel(R) Xeon(R) CPU E5-2698 v4 @ 2.20GHz";
+      expected_device_name = "E5-2698v4";
+      expected_has_sse = true;
+      expected_has_sse2 = true;
+      expected_has_sse3 = true;
+      expected_has_sse4 = true;
+      expected_has_avx = true;
+      expected_has_avx2 = true;
+      expected_ncores = 40;
 
     }
   }
