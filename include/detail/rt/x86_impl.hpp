@@ -56,22 +56,22 @@ namespace compass {
 
       }
 
+      //for details, see https://en.wikipedia.org/wiki/CPUID#EAX=80000002h,80000003h,80000004h:_Processor_Brand_String
       static std::string brand(ct::x86_tag) {
 
         std::string value = "";
         auto regs = rt::cpuid_to_int(0x80000000);
-        if(regs[ct::eax] >= 0x80000004){
+        if(regs[ct::eax] < 0x80000004)
+          return value;
 
-          value.resize(48);
-          char* value_begin = &value[0];
-          for(std::uint32_t i = 2; i<5;++i){
-            auto ret = rt::cpuid_to_int(0x80000000 + i);
+        value.resize(48);
+        char* value_begin = &value[0];
+        for(std::uint32_t i = 2; i<5;++i){
+          auto ret = rt::cpuid_to_int(0x80000000 + i);
 
-            for(std::uint32_t r = 0; r<4;++r){
-              std::uint32_t* tgt = reinterpret_cast<std::uint32_t*>(value_begin + (i-2)*16u + r*4u);
-              *tgt = ret[r];
-            }
-
+          for(std::uint32_t r = 0; r<4;++r){
+            std::uint32_t* tgt = reinterpret_cast<std::uint32_t*>(value_begin + (i-2)*16u + r*4u);
+            *tgt = ret[r];
           }
 
         }
