@@ -11,16 +11,14 @@ else()
 endif()
 
 
-
-INCLUDE_DIRECTORIES(.)
-INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include)
-
 cmake_host_system_information(RESULT CURRENT_HOSTNAME QUERY HOSTNAME)
 
 if(${CURRENT_HOSTNAME} MATCHES ".*(falcon2|schorle|scicomp-pc-3|recovery-station).*")
   add_executable(test_compass_impl test_compass_impl.cpp)
   target_link_libraries(test_compass_impl ${Boost_LIBRARIES})
+  target_include_directories(test_compass_impl PRIVATE ${PROJECT_SOURCE_DIR}/include)
 endif()
 
 add_executable(test_bitview test_bitview.cpp)
 target_link_libraries(test_bitview ${Boost_LIBRARIES})
+target_include_directories(test_bitview PRIVATE ${PROJECT_SOURCE_DIR}/include)
