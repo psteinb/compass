@@ -1,3 +1,20 @@
+include(ExternalProject)
+
+ExternalProject_Add(
+    catch2
+    PREFIX ${CMAKE_BINARY_DIR}/tests/
+    URL https://raw.githubusercontent.com/catchorg/Catch2/v2.0.1/single_include/catch.hpp
+    URL_MD5 9b3d2cb5c0f9532cddfbbfd0a622f0af
+    DOWNLOAD_NO_EXTRACT TRUE
+    TIMEOUT 10
+    CONFIGURE_COMMAND ""
+    BUILD_COMMAND ""
+    INSTALL_COMMAND ""
+    )
+ExternalProject_Get_Property(catch2 DOWNLOAD_DIR)
+set(CATCH2_HEADER_PATH ${DOWNLOAD_DIR})
+
+message("catch2 header file download to ${CATCH2_HEADER_PATH}")
 
 FIND_PACKAGE (Boost 1.50 COMPONENTS system filesystem unit_test_framework QUIET)
 IF(DEFINED Boost_FOUND)
@@ -12,12 +29,16 @@ endif()
 
 cmake_host_system_information(RESULT CURRENT_HOSTNAME QUERY HOSTNAME)
 
+add_library(catcho OBJECT catch.cpp)
+target_include_directories(catcho PRIVATE ${CATCH2_HEADER_PATH})
+add_dependencies(catcho catch2)
+
 if(${CURRENT_HOSTNAME} MATCHES ".*(falcon2|schorle|scicomp-pc-3|recovery-station).*")
   add_executable(test_compass_impl test_compass_impl.cpp)
   target_link_libraries(test_compass_impl ${Boost_LIBRARIES})
   target_include_directories(test_compass_impl PRIVATE ${PROJECT_SOURCE_DIR}/include ${Boost_INCLUDE_DIR})
 endif()
 
-add_executable(test_bitview test_bitview.cpp)
-target_link_libraries(test_bitview ${Boost_LIBRARIES})
-target_include_directories(test_bitview PRIVATE ${PROJECT_SOURCE_DIR}/include ${Boost_INCLUDE_DIR})
+add_executable(test_bitview test_bitview.cpp $<TARGET_OBJECTS:catcho>)
+#target_link_libraries(test_bitview ${Boost_LIBRARIES})
+target_include_directories(test_bitview PRIVATE ${PROJECT_SOURCE_DIR}/include ${CATCH2_HEADER_PATH})
