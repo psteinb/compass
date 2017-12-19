@@ -1,126 +1,123 @@
-#define BOOST_TEST_DYN_LINK
-#define BOOST_TEST_MODULE TEST_COMPASS
-#include "boost/test/unit_test.hpp"
+#include "catch.hpp"
+#include "compass_fixture.hpp"
+
+#include "compass.hpp"
 
 #include <vector>
 #include <iostream>
 #include <string>
 #include <algorithm>
 
-#include "compass.hpp"
-#include "compass_fixture.hpp"
 
-BOOST_AUTO_TEST_SUITE( compass_fundamentals )
+TEST_CASE( "compass_fundamentals" ){
 
-BOOST_AUTO_TEST_CASE( compass_works_at_runtime ){
+  SECTION( "compass_works_at_runtime" ){
 
-  auto value = compass::runtime::works();
+    auto value = compass::runtime::works();
 
-  BOOST_CHECK(value);
+    REQUIRE(value);
 
-}
+  }
 
-BOOST_AUTO_TEST_CASE( compass_yields_vendor_name ){
+  SECTION( "compass_yields_vendor_name" ){
 
-  auto value = compass::runtime::vendor();
-  BOOST_CHECK_NE(value.size(),0u);
+    auto value = compass::runtime::vendor();
+    REQUIRE(value.size()!=0u);
 
-}
-BOOST_AUTO_TEST_SUITE_END()
-
-BOOST_FIXTURE_TEST_SUITE( machine_specific, host_reference )
-
-BOOST_AUTO_TEST_CASE( vendor_right  ){
-
-  auto value = compass::runtime::vendor();
-
-  BOOST_CHECK_NE(value.size(),0u);
-
-  std::transform(value.begin(), value.end(),
-         value.begin(),
-         ::tolower);
-
-  BOOST_CHECK(value.find(expected_vendor)!=std::string::npos);
-
+  }
 }
 
 
-BOOST_AUTO_TEST_CASE( brand_right  ){
 
-  auto value = compass::runtime::brand();
+TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
-  BOOST_CHECK_NE(value.empty(),true);
+  SECTION( "vendor_right" ){
 
-  BOOST_CHECK_MESSAGE(value.find(expected_brand)!=std::string::npos,
-                      "[brand retrieved]\t_" << value.c_str() << "_");
+    auto value = compass::runtime::vendor();
 
+    REQUIRE(value.size()!=0u);
+
+    std::transform(value.begin(), value.end(),
+                   value.begin(),
+                   ::tolower);
+
+    REQUIRE(value.find(expected_vendor)!=std::string::npos);
+
+  }
+
+
+  SECTION( "brand_right" ){
+
+    auto value = compass::runtime::brand();
+
+    REQUIRE(value.empty()!=true);
+    REQUIRE_THAT(value, Catch::Matchers::Contains(expected_brand) );
+
+  }
+
+  SECTION( "device_name_right" ){
+
+    auto value = compass::runtime::device_name();
+
+    REQUIRE(value.empty()!=true);
+    REQUIRE_THAT(value, Catch::Matchers::Contains(expected_device_name) );
+
+  }
+
+  SECTION( "ncores_right" ){
+
+    auto value = compass::runtime::ncores();
+
+    REQUIRE(value!=0);
+    REQUIRE(value==expected_ncores);
+  }
+
+  SECTION( "has_sse_right" ){
+
+    auto value = compass::runtime::has(compass::feature::sse());
+
+    REQUIRE(value==expected_has_sse);
+
+  }
+
+  SECTION( "has_sse2_right" ){
+
+    auto value = compass::runtime::has(compass::feature::sse2());
+
+    REQUIRE(value==expected_has_sse2);
+
+  }
+
+  SECTION( "has_sse3_right" ){
+
+    auto value = compass::runtime::has(compass::feature::sse3());
+
+    REQUIRE(value==expected_has_sse3);
+
+  }
+
+  SECTION( "has_sse4_right" ){
+
+    auto value = compass::runtime::has(compass::feature::sse4());
+
+    REQUIRE(value==expected_has_sse4);
+
+  }
+
+  SECTION( "has_avx_right" ){
+
+    auto value = compass::runtime::has(compass::feature::avx());
+
+    REQUIRE(value==expected_has_avx);
+
+  }
+
+
+  SECTION( "has_avx2_right" ){
+
+    auto value = compass::runtime::has(compass::feature::avx2());
+
+    REQUIRE(value==expected_has_avx2);
+
+  }
 }
-
-BOOST_AUTO_TEST_CASE( device_name_right  ){
-
-  auto value = compass::runtime::device_name();
-
-  BOOST_CHECK_NE(value.empty(),true);
-
-  BOOST_CHECK_MESSAGE(value.find(expected_device_name)!=std::string::npos,
-                      "[device_name]\t_"<<value<<"_ is not "<< expected_device_name);
-
-}
-
-BOOST_AUTO_TEST_CASE( ncores_right  ){
-
-  auto value = compass::runtime::ncores();
-
-  BOOST_CHECK_NE(value,0);
-  BOOST_CHECK_EQUAL(value,expected_ncores);
-}
-
-BOOST_AUTO_TEST_CASE( has_sse_right  ){
-
-  auto value = compass::runtime::has(compass::feature::sse());
-
-  BOOST_CHECK_EQUAL(value,expected_has_sse);
-
-}
-
-BOOST_AUTO_TEST_CASE( has_sse2_right  ){
-
-  auto value = compass::runtime::has(compass::feature::sse2());
-
-  BOOST_CHECK_EQUAL(value,expected_has_sse2);
-
-}
-
-BOOST_AUTO_TEST_CASE( has_sse3_right  ){
-
-  auto value = compass::runtime::has(compass::feature::sse3());
-
-  BOOST_CHECK_EQUAL(value,expected_has_sse3);
-
-}
-
-BOOST_AUTO_TEST_CASE( has_sse4_right  ){
-
-  auto value = compass::runtime::has(compass::feature::sse4());
-
-  BOOST_CHECK_EQUAL(value,expected_has_sse4);
-
-}
-
-BOOST_AUTO_TEST_CASE( has_avx_right  ){
-
-  auto value = compass::runtime::has(compass::feature::avx());
-
-  BOOST_CHECK_EQUAL(value,expected_has_avx);
-
-}
-
-
-BOOST_AUTO_TEST_CASE( has_avx2_right  ){
-
-  auto value = compass::runtime::has(compass::feature::avx2());
-
-  BOOST_CHECK_MESSAGE(value==expected_has_avx2, "detected " << (value ? "AVX2" : "no AVX2") << " on " << hostname << " (expected: " <<  (expected_has_avx2 ? "AVX2" : "no AVX2") << ")");
-
-}
-BOOST_AUTO_TEST_SUITE_END()

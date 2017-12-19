@@ -12,7 +12,7 @@
 
 #include <iostream>
 #include <string>
-
+#include <algorithm>
 
 namespace compass {
 
@@ -107,7 +107,7 @@ namespace compass {
             value.erase(find_pos,5);
           }
 
-          value.erase(remove_if(value.begin(), value.end(), isspace), value.end());
+          value.erase(std::remove_if(value.begin(), value.end(), isspace), value.end());
         }
         return value;
 
