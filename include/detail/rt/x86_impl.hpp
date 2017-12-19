@@ -20,6 +20,7 @@ namespace compass {
 
     namespace detail {
 
+      using bitview = compass::utility::bit_view<std::uint32_t>;
 
       static bool works(ct::x86_tag) {
 
@@ -36,7 +37,7 @@ namespace compass {
       static std::string vendor(ct::x86_tag) {
 
 
-        std::array<std::uint32_t,4> regs = rt::cpuid_to_int(0);
+        std::array<std::uint32_t,4> regs = rt::cpuid(0);
 
         std::string vendor_name = "";
 
@@ -60,14 +61,14 @@ namespace compass {
       static std::string brand(ct::x86_tag) {
 
         std::string value = "";
-        auto regs = rt::cpuid_to_int(0x80000000);
+        auto regs = rt::cpuid(0x80000000);
         if(regs[ct::eax] < 0x80000004)
           return value;
 
         value.resize(48);
         char* value_begin = &value[0];
         for(std::uint32_t i = 2; i<5;++i){
-          auto ret = rt::cpuid_to_int(0x80000000 + i);
+          auto ret = rt::cpuid(0x80000000 + i);
 
           for(std::uint32_t r = 0; r<4;++r){
             std::uint32_t* tgt = reinterpret_cast<std::uint32_t*>(value_begin + (i-2)*16u + r*4u);
@@ -115,63 +116,66 @@ namespace compass {
 
       static bool has(feature::sse , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = rt::cpuid(1);
+        auto regs = rt::cpuid(1);
 
-        if(regs.empty()){
+        if(std::count(regs.cbegin(), regs.cend(),0) == regs.size()){
           std::cerr << "unsupported cpuid level detected\n";
         }
 
-        bool value = regs[ct::edx].test(25);
+        bool value = bitview(regs[ct::edx]).test(25);
         return value;
       }
 
       static bool has(feature::sse2 , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = rt::cpuid(1);
+        auto regs = rt::cpuid(1);
 
         if(regs.empty()){
           std::cerr << "unsupported cpuid level detected\n";
         }
 
-        bool value = regs[ct::edx].test(26);
+        bool value = bitview(regs[ct::edx]).test(26);
         return value;
       }
 
       static bool has(feature::sse3 , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = rt::cpuid(1);
+        auto regs = rt::cpuid(1);
 
         if(regs.empty()){
           std::cerr << "unsupported cpuid level detected\n";
         }
 
-        bool value = regs[ct::ecx].test(9) | regs[ct::ecx].test(0) | regs[ct::ecx].test(3);
+        bool value = bitview(regs[ct::ecx]).test(9) |
+          bitview(regs[ct::ecx]).test(0) |
+          bitview(regs[ct::ecx]).test(3);
         return value;
       }
 
 
       static bool has(feature::sse4 , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = rt::cpuid(1);
+        auto regs = rt::cpuid(1);
 
         if(regs.empty()){
           std::cerr << "unsupported cpuid level detected\n";
         }
 
-        bool value = regs[ct::ecx].test(19) | regs[ct::ecx].test(20);
+        bool value = bitview(regs[ct::ecx]).test(19) |
+          bitview(regs[ct::ecx]).test(20);
 
         return value;
       }
 
       static bool has(feature::avx , ct::x86_tag){
 
-        std::array<std::bitset<32>,4> regs = rt::cpuid(1);
+        auto regs = rt::cpuid(1);
 
         if(regs.empty()){
           std::cerr << "unsupported cpuid level detected\n";
         }
 
-        bool value = regs[ct::ecx].test(28);
+        bool value = bitview(regs[ct::ecx]).test(28);
 
         return value;
       }
@@ -180,7 +184,7 @@ namespace compass {
 
         auto regs = rt::cpuid_to_int(7,0,0,0);
 
-        bool value = compass::utility::bit_view<std::uint32_t>(regs[ct::ebx]).test(5);
+        bool value = bitview(regs[ct::ebx]).test(5);
 
         return value;
       }
