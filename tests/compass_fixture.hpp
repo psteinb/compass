@@ -91,7 +91,7 @@ struct host_reference
       expected_has_sse3 = true;
       expected_has_sse4 = true;
       expected_has_avx = true;
-      expected_has_avx2 = false;
+      expected_has_avx2 = true;
       expected_ncores = 4;
     }
 
