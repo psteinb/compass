@@ -4,8 +4,7 @@
 #include <iostream>
 #include <string>
 
-//using suggestion from https://stackoverflow.com/questions/504810/how-do-i-find-the-current-machines-full-hostname-in-c-hostname-and-domain-info
-#include "unistd.h"
+#include "machine_info.hpp"
 
 struct host_reference
 {
@@ -24,7 +23,7 @@ struct host_reference
   int       expected_ncores		;
 
   host_reference():
-    hostname(),
+    hostname(compass::tests::hostname()),
     expected_vendor  (""),
     expected_brand   (""),
     expected_device_name   (""),
@@ -36,9 +35,6 @@ struct host_reference
     expected_has_avx2(false),
     expected_ncores  (-1)
   {
-
-    hostname.resize(255);
-    gethostname(&hostname[0],255);
 
     if(hostname.find("schorle") != std::string::npos){
       expected_vendor = "intel";
