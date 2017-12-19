@@ -49,8 +49,7 @@ BOOST_AUTO_TEST_CASE( brand_right  ){
 
   auto value = compass::runtime::brand();
 
-  BOOST_CHECK_NE(value.size(),0u);
-
+  BOOST_CHECK_NE(value.empty(),true);
 
   BOOST_CHECK_MESSAGE(value.find(expected_brand)!=std::string::npos,
                       "[brand retrieved]\t_" << value.c_str() << "_");
@@ -61,7 +60,7 @@ BOOST_AUTO_TEST_CASE( device_name_right  ){
 
   auto value = compass::runtime::device_name();
 
-  BOOST_CHECK_NE(value.size(),0u);
+  BOOST_CHECK_NE(value.empty(),true);
 
   BOOST_CHECK_MESSAGE(value.find(expected_device_name)!=std::string::npos,
                       "[device_name]\t_"<<value<<"_ is not "<< expected_device_name);
