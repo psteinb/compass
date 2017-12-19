@@ -28,7 +28,6 @@ namespace compass {
 			std::fill(value.begin(), value.end(), ' ');
             if( GetComputerName( infoBuf, &bufCharCount ) )
             {
-            
                 std::copy(&infoBuf[0],&infoBuf[0] + 150, value.begin());
             }
 #else
