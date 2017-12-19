@@ -74,7 +74,7 @@ struct host_reference
       expected_has_sse4 = true;
       expected_has_avx = true;
       expected_has_avx2 = true;
-      expected_ncores = 4;
+      expected_ncores = 8;
     }
 
     //OSX machine
