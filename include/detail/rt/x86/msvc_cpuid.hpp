@@ -16,65 +16,34 @@
 #include "detail/tags.hpp"
 #include "detail/definitions.hpp"
 
-using ct = compass::compiletime;
-
 namespace compass {
 
   namespace runtime {
 
 
 
-    static std::array<std::bitset<32>, 4> cpuid(std::uint32_t level,
-                                                std::uint32_t in_eax = 0,
-                                                std::uint32_t in_ebx = 0,
-                                                std::uint32_t in_ecx = 0,
-                                                std::uint32_t in_edx = 0) {
-
-      std::int32_t regs[4] = { static_cast<std::int32_t>(in_eax),
-                               static_cast<std::int32_t>(in_ebx),
-                               static_cast<std::int32_t>(in_ecx),
-                               static_cast<std::int32_t>(in_edx)
-      };
-
-      __cpuid(regs,
+    static std::array<std::uint32_t, 4> cpuid(std::uint32_t level,
+                                              std::uint32_t in_eax = 0,
+                                              std::uint32_t in_ebx = 0,
+                                              std::uint32_t in_ecx = 0,
+                                              std::uint32_t in_edx = 0) {
+		
+	  std::array<std::uint32_t, 4> regs = { in_eax,in_ebx,in_ecx,in_edx };
+      
+	  std::int32_t* regs_ptr = reinterpret_cast<std::int32_t*>(regs.data());
+      __cpuid(regs_ptr,
               (std::int32_t)level);
-
-
-      static std::array<std::bitset<32>, 4> value;
-
+	      
+/*
       if (!(regs[ct::eax] || regs[ct::ebx] || regs[ct::ecx] || regs[ct::edx])) {
-        return value;
-      }
-
-
-      value[ct::eax] = regs[ct::eax];
-      value[ct::ebx] = regs[ct::ebx];
-      value[ct::ecx] = regs[ct::ecx];
-      value[ct::edx] = regs[ct::edx];
-
-      return value;
+		  
+        return regs;
+      }*/
+	  
+      return regs;
 
     }
 
-    static std::array<std::uint32_t,4> cpuid_to_int(std::uint32_t level,
-                                                    std::uint32_t in_eax = 0,
-                                                    std::uint32_t in_ebx = 0,
-                                                    std::uint32_t in_ecx = 0,
-                                                    std::uint32_t in_edx = 0){
-
-      static std::array<std::bitset<32>,4> temp = cpuid(level,
-                                                        in_eax,
-                                                        in_ebx,
-                                                        in_ecx,
-                                                        in_edx);
-
-      static std::array<std::uint32_t,4> value;
-      for(std::uint32_t i = 0 ; i < temp.size();++i)
-        value[i] = temp[i].to_ulong();
-
-      return value;
-
-    }
 
   };
 
