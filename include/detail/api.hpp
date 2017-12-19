@@ -69,6 +69,17 @@ namespace compass {
                 }
             };
 
+            struct cache{
+
+                static std::uint32_t level(int _lvl){
+
+                    using current_arch_t = ct::arch::type;
+                    return compass::runtime::detail::size::cache::level(_lvl,current_arch_t());
+
+                }
+            };
+
+
         };//size
 
     };//namespace runtime

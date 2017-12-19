@@ -26,6 +26,9 @@ add_dependencies(catcho catch2)
 if(${CURRENT_HOSTNAME} MATCHES ".*(falcon2|schorle|scicomp-pc-3|recovery-station).*")
   add_executable(test_compass_impl test_compass_impl.cpp $<TARGET_OBJECTS:catcho>)
   target_include_directories(test_compass_impl PRIVATE ${PROJECT_SOURCE_DIR}/include ${CATCH2_HEADER_PATH})
+
+  add_executable(test_compass_sizes test_compass_sizes.cpp $<TARGET_OBJECTS:catcho>)
+  target_include_directories(test_compass_sizes PRIVATE ${PROJECT_SOURCE_DIR}/include ${CATCH2_HEADER_PATH})
 endif()
 
 #idea for generating test fixture at cmake-invocation
