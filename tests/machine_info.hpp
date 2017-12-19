@@ -10,6 +10,8 @@
 #include <unistd.h>
 #endif
 
+#include <cctype>
+#include <algorithm>
 
 namespace compass {
 
@@ -19,26 +21,24 @@ namespace compass {
 
             std::string value = "";
             value.resize(255);
-            char Name[150];
 
 #ifdef WIN32
             TCHAR infoBuf[150];
             DWORD bufCharCount = 150;
-            // memset(Name, 0, 150);
-            std::fill()
+			std::fill(value.begin(), value.end(), ' ');
             if( GetComputerName( infoBuf, &bufCharCount ) )
             {
-                // for(int i=0; i<150; i++)
-                // {
-                //     Name[i] = infoBuf[i];
-                // }
-                std::copy(&infoBuf[0],&infoBuf[0] + 150, value.data());
+            
+                std::copy(&infoBuf[0],&infoBuf[0] + 150, value.begin());
             }
 #else
             gethostname(&value[0], 255);
 #endif
-            //strncpy(machineName,Name, 150);
+			std::transform(value.begin(), value.end(), value.begin(),
+				[](unsigned char c) {return std::tolower(c); }
+				);
             return value;
+
         }
 
     };
