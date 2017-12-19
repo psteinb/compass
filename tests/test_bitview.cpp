@@ -128,3 +128,54 @@ SECTION( "set_msb_correct" ){
 }
 
 }
+
+
+TEST_CASE( "conversion" ){
+
+SECTION( "range" ){
+
+  int num = 42;
+
+  compass::utility::bit_view<int> view(num);
+  int r = view.range(0,2);
+
+  REQUIRE(r!=42);
+
+  REQUIRE(r==2);
+}
+
+SECTION( "invalid_range" ){
+
+  int num = 42;
+
+  compass::utility::bit_view<int> view(num);
+  int r = view.range(50,52);
+
+  REQUIRE(r!=42);
+  REQUIRE(r==0);
+
+  r = view.range(52,50);
+
+  REQUIRE(r!=num);
+  REQUIRE(r==0);
+
+  r = view.range(4,2);
+
+  REQUIRE(r!=num);
+  REQUIRE(r==0);
+
+
+}
+
+SECTION( "inmiddle" ){
+
+  int num = 42;
+
+  compass::utility::bit_view<int> view(num);
+  int r = view.range(1,4);
+
+  REQUIRE(r!=num);
+
+  REQUIRE(r==5);
+}
+}
