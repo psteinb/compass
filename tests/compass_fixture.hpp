@@ -74,20 +74,6 @@ struct host_reference
       expected_ncores = 4;
     }
 
-    //travis host
-    if(hostname.find("-gce-") != std::string::npos){
-      expected_vendor = "intel";
-      expected_brand  = "Intel(R) Xeon(R) CPU @ 2.30GHz";
-      expected_device_name = "";
-      expected_has_sse = true ;
-      expected_has_sse2= true ;
-      expected_has_sse3= true ;
-      expected_has_sse4= true ;
-      expected_has_avx = true ;
-      expected_has_avx2= true ;
-      expected_ncores = 2;
-    }
-
     //windows machine
     if (hostname.find("scicomp-pc-3") != std::string::npos) {
       expected_vendor = "intel";
