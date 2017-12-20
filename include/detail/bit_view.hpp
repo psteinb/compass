@@ -44,7 +44,7 @@ namespace compass {
                 return;
             }
 
-            T range(std::uint32_t _begin, std::uint32_t _end){
+            T range(std::uint32_t _begin, std::uint32_t _end) const {
 
                 T value = 0;
                 if(_begin >= width || _end <= _begin)
