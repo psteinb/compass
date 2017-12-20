@@ -14,21 +14,23 @@ struct host_reference
   std::string   expected_vendor         ;
   std::string   expected_brand          ;
   std::string   expected_device_name    ;
+
   bool      expected_has_sse	;
   bool      expected_has_sse2	;
   bool      expected_has_sse3	;
   bool      expected_has_sse4	;
   bool      expected_has_avx	;
   bool      expected_has_avx2	;
-  int       expected_ncores		;
+  std::uint32_t       expected_L1d_linesize		;
+  std::uint32_t       expected_L2_linesize		;
+  std::uint32_t       expected_L3_linesize		;
 
-  int       expected_L1d_linesize		;
-  int       expected_L2_linesize		;
-  int       expected_L3_linesize		;
+  std::uint32_t       expected_L1d_size_kB		;
+  std::uint32_t       expected_L2_size_kB		;
+  std::uint32_t       expected_L3_size_kB		;
 
-  int       expected_L1d_size_kB		;
-  int       expected_L2_size_kB		;
-  int       expected_L3_size_kB		;
+  std::uint32_t       expected_ncores		;
+  std::uint32_t       expected_nphyscores		;
 
 
   host_reference():
@@ -48,7 +50,8 @@ struct host_reference
     expected_L1d_size_kB(0) ,
     expected_L2_size_kB(0),
     expected_L3_size_kB(0),
-    expected_ncores  (-1)
+    expected_ncores  (0),
+    expected_nphyscores  (0)
   {
 
     if(hostname.find("schorle") != std::string::npos){
@@ -72,6 +75,8 @@ struct host_reference
       expected_L3_size_kB= 4096 ;
 
       expected_ncores = 4;
+      expected_nphyscores = 2;
+
     }
 
     //windows machine
@@ -96,6 +101,7 @@ struct host_reference
       expected_L3_size_kB= 2*4096 ;
 
       expected_ncores = 8;
+      expected_nphyscores = 4;
     }
 
     //OSX machine
@@ -120,6 +126,7 @@ struct host_reference
       expected_L3_size_kB= 6*1024 ;
 
       expected_ncores = 4;
+      expected_nphyscores = 4;
     }
 
     //centos
@@ -143,6 +150,7 @@ struct host_reference
       expected_L3_size_kB= 30720;
 
       expected_ncores = 24;
+      expected_nphyscores = 24;
 
     }
 
@@ -167,6 +175,7 @@ struct host_reference
       expected_L3_size_kB= 51200;
 
       expected_ncores = 40;
+      expected_nphyscores = 40;
 
     }
   }

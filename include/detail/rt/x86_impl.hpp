@@ -115,6 +115,17 @@ namespace compass {
 
       }
 
+      static std::uint32_t physical_threads(ct::x86_tag) {
+
+        const auto regs = rt::cpuid(4,0,2);
+        auto eax = regs[ct::eax];
+
+        std::uint32_t value = 1+bitview(eax).range(26,32);
+
+        return value;
+
+      }
+
 
       static bool has(feature::sse , ct::x86_tag){
 
