@@ -61,12 +61,15 @@ struct host_reference
       expected_has_sse4= true ;
       expected_has_avx = true ;
       expected_has_avx2= false ;
+
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size`
       expected_L1d_linesize= 64 ;
       expected_L2_linesize= 64 ;
       expected_L3_linesize= 64 ;
-      expected_L1d_size_kB= 64 ;
-      expected_L2_size_kB= 0 ;
-      expected_L3_size_kB= 0 ;
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/size`
+      expected_L1d_size_kB= 32 ;
+      expected_L2_size_kB= 256;
+      expected_L3_size_kB= 4096 ;
 
       expected_ncores = 4;
     }
@@ -96,6 +99,16 @@ struct host_reference
       expected_has_sse4 = true;
       expected_has_avx = true;
       expected_has_avx2 = true;
+
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size`
+      expected_L1d_linesize= 64 ;
+      expected_L2_linesize= 64 ;
+      expected_L3_linesize= 64 ;
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/size`
+      expected_L1d_size_kB= 32 ;
+      expected_L2_size_kB= 256;
+      expected_L3_size_kB= 2*4096 ;
+
       expected_ncores = 8;
     }
 
@@ -110,9 +123,20 @@ struct host_reference
       expected_has_sse4 = true;
       expected_has_avx = true;
       expected_has_avx2 = true;
+
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size`
+      expected_L1d_linesize= 64 ;
+      expected_L2_linesize= 64 ;
+      expected_L3_linesize= 64 ;
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/size`
+      expected_L1d_size_kB= 32 ;
+      expected_L2_size_kB= 256;
+      expected_L3_size_kB= 6*1024 ;
+
       expected_ncores = 4;
     }
 
+    //centos
     if(hostname.find("falcon2") == 0){
       expected_vendor = "intel";
       expected_brand = "Intel(R) Xeon(R) CPU E5-2670 v3 @ 2.30GHz";
@@ -123,6 +147,15 @@ struct host_reference
       expected_has_sse4 = true;
       expected_has_avx = true;
       expected_has_avx2 = true;
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size`
+      expected_L1d_linesize= 64 ;
+      expected_L2_linesize= 64 ;
+      expected_L3_linesize= 64 ;
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/size`
+      expected_L1d_size_kB= 32 ;
+      expected_L2_size_kB= 256;
+      expected_L3_size_kB= 30720;
+
       expected_ncores = 24;
 
     }
@@ -137,6 +170,16 @@ struct host_reference
       expected_has_sse4 = true;
       expected_has_avx = true;
       expected_has_avx2 = true;
+
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size`
+      expected_L1d_linesize= 64 ;
+      expected_L2_linesize= 64 ;
+      expected_L3_linesize= 64 ;
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/size`
+      expected_L1d_size_kB= 32 ;
+      expected_L2_size_kB= 256;
+      expected_L3_size_kB= 51200;
+
       expected_ncores = 40;
 
     }
