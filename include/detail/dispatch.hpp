@@ -8,7 +8,8 @@
 #include "detail/definitions.hpp"
 
 #ifdef COMPASS_CT_ARCH_X86
-    #include "rt/x86_impl.hpp"
+#include "rt/x86_impl.hpp"
+#include "rt/x86_sizes.hpp"
 #endif
 
 

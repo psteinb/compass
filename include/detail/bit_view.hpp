@@ -15,7 +15,7 @@ namespace compass {
             T& value_;
 
             static const int width = sizeof(T)*CHAR_BIT;
-            static_assert(std::is_integral<T>::value, "compass ");
+            static_assert(std::is_integral<T>::value, "compass bitview used with non-integral type (not supported)");
 
             bit_view(T& _val):
                 value_(_val){}
@@ -42,6 +42,19 @@ namespace compass {
                 value_ = value_ | mask;
 
                 return;
+            }
+
+            T range(std::uint32_t _begin, std::uint32_t _end) const {
+
+                T value = 0;
+                if(_begin >= width || _end <= _begin)
+                    return value;
+
+                const T mask = ~(~0 << (_end - _begin));
+                value = (value_ >> _begin) & mask;
+                return value;
+
+
             }
 
 

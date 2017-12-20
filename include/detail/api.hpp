@@ -43,11 +43,12 @@ namespace compass {
         }
 
 
-        static int ncores() {
+        static std::uint32_t threads() {
 
             return std::thread::hardware_concurrency();
 
         }
+
 
         template <typename feature_t>
         static bool has(feature_t) {
@@ -56,6 +57,31 @@ namespace compass {
             return detail::has(feature_t(),current_arch_t());
 
         }
+
+        namespace size {
+
+            struct cacheline{
+
+                static std::uint32_t level(int _lvl){
+
+                    using current_arch_t = ct::arch::type;
+                    return compass::runtime::detail::size::cacheline::level(_lvl,current_arch_t());
+
+                }
+            };
+
+            struct cache{
+
+                static std::uint32_t level(int _lvl){
+
+                    using current_arch_t = ct::arch::type;
+                    return compass::runtime::detail::size::cache::level(_lvl,current_arch_t());
+
+                }
+            };
+
+
+        };//size
 
     };//namespace runtime
 

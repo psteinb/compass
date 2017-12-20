@@ -19,14 +19,14 @@ namespace compass {
 
   namespace runtime {
 
-    static std::array<std::uint32_t,4> cpuid(std::uint32_t level,
-                                             std::uint32_t in_eax = 0,
+    static std::array<std::uint32_t,4> cpuid(std::uint32_t in_eax = 0,
                                              std::uint32_t in_ebx = 0,
                                              std::uint32_t in_ecx = 0,
                                              std::uint32_t in_edx = 0){
 
-      std::array<std::uint32_t,4> regs = {in_eax,in_ebx,in_ecx,in_edx};
-      int cpuid_rvalue = __get_cpuid(level,
+      std::array<std::uint32_t,4> regs = {in_eax,0,in_ecx,0};
+      int cpuid_rvalue = __get_cpuid_count(in_eax,
+                                     in_ecx,
                                      &regs[ct::eax],
                                      &regs[ct::ebx],
                                      &regs[ct::ecx],

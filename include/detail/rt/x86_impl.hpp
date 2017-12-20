@@ -10,9 +10,12 @@
 #include "detail/bit_view.hpp"
 #include "detail/definitions.hpp"
 
+#include "detail/rt/x86_sizes.hpp"
+
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <thread>
 
 namespace compass {
 
@@ -113,6 +116,22 @@ namespace compass {
 
       }
 
+      // //too difficult for now
+      // //https://stackoverflow.com/questions/2901694/programmatically-detect-number-of-physical-processors-cores-or-if-hyper-threadin
+      // static std::uint32_t physical_threads(ct::x86_tag) {
+
+      //   std::uint32_t value = 0;
+
+      //   for(std::uint32_t c = 0;c<std::thread::hardware_concurrency();++c){
+      //     auto regs = rt::cpuid(11);
+      //     if(!(regs[ct::edx]&1)) value++;
+      //   }
+
+
+      //   return value;
+
+      // }
+
 
       static bool has(feature::sse , ct::x86_tag){
 
@@ -182,15 +201,16 @@ namespace compass {
 
       static bool has(feature::avx2 , ct::x86_tag){
 
-        auto regs = rt::cpuid(7,7,0,0,0);
+        auto regs = rt::cpuid(7,0,0,0);
 
         bool value = bitview(regs[ct::ebx]).test(5);
 
         return value;
       }
 
-    };
-  };
+    };//detail
+
+  };//runtime
 
 };
 #endif /* COMPASS_RT_X86_IMPL_H_ */
