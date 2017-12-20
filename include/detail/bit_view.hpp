@@ -50,8 +50,8 @@ namespace compass {
                 if(_begin >= width || _end <= _begin)
                     return value;
 
-                const T mask = ( (~value) - 1 ) << (_end-1);
-                value = (value_ >> _begin) & ~mask;
+                const T mask = ~(~0 << (_end - _begin));
+                value = (value_ >> _begin) & mask;
                 return value;
 
 

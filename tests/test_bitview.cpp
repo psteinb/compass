@@ -178,4 +178,19 @@ SECTION( "inmiddle" ){
 
   REQUIRE(r==5);
 }
+
+}
+
+TEST_CASE( "bugs" ){
+  SECTION( "inmiddle" ){
+
+    int num = 469778722;
+
+    compass::utility::bit_view<int> view(num);
+    int r = view.range(5,8);
+
+    REQUIRE(r!=num);
+
+    REQUIRE(r==1);
+  }
 }
