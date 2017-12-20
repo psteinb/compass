@@ -15,6 +15,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <thread>
 
 namespace compass {
 
@@ -115,16 +116,21 @@ namespace compass {
 
       }
 
-      static std::uint32_t physical_threads(ct::x86_tag) {
+      // //too difficult for now
+      // //https://stackoverflow.com/questions/2901694/programmatically-detect-number-of-physical-processors-cores-or-if-hyper-threadin
+      // static std::uint32_t physical_threads(ct::x86_tag) {
 
-        const auto regs = rt::cpuid(4,0,2);
-        auto eax = regs[ct::eax];
+      //   std::uint32_t value = 0;
 
-        std::uint32_t value = 1+bitview(eax).range(26,32);
+      //   for(std::uint32_t c = 0;c<std::thread::hardware_concurrency();++c){
+      //     auto regs = rt::cpuid(11);
+      //     if(!(regs[ct::edx]&1)) value++;
+      //   }
 
-        return value;
 
-      }
+      //   return value;
+
+      // }
 
 
       static bool has(feature::sse , ct::x86_tag){

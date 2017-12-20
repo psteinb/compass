@@ -49,13 +49,6 @@ namespace compass {
 
         }
 
-        static std::uint32_t physical_threads() {
-
-            using current_arch_t = ct::arch::type;
-            return detail::physical_threads(current_arch_t());
-
-        }
-
 
         template <typename feature_t>
         static bool has(feature_t) {
