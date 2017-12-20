@@ -17,31 +17,25 @@ namespace compass {
 
   namespace runtime {
 
-    static std::array<std::uint32_t,4> cpuid(std::uint32_t level,
-                                             std::uint32_t in_eax = 0,
+    static std::array<std::uint32_t,4> cpuid(std::uint32_t in_eax = 0,
                                              std::uint32_t in_ebx = 0,
                                              std::uint32_t in_ecx = 0,
                                              std::uint32_t in_edx = 0){
 
-      std::array<std::uint32_t,4> regs = {in_eax,in_ebx,in_ecx,in_edx};
+      std::array<std::uint32_t,4> regs = {in_eax,0,in_ecx,0};
 
-      int cpuid_rvalue = __get_cpuid(level,
-                                     &regs[ct::eax],
-                                     &regs[ct::ebx],
-                                     &regs[ct::ecx],
-                                     &regs[ct::edx]
+      __cpuid_count(in_eax,
+                    in_ecx,
+                    regs[ct::eax],
+                    regs[ct::ebx],
+                    regs[ct::ecx],
+                    regs[ct::edx]
         );
 
-      if(cpuid_rvalue < 1){
-        return {0,0,0,0};
-      }
-
-      if (level >= 13)
-        __cpuid_count (level, 1, regs[ct::eax], regs[ct::ebx], regs[ct::ecx], regs[ct::edx]);
-      else if (level >= 7)
-        __cpuid_count (level, 0, regs[ct::eax], regs[ct::ebx], regs[ct::ecx], regs[ct::edx]);
-      else
-        __cpuid (level, regs[ct::eax], regs[ct::ebx], regs[ct::ecx], regs[ct::edx]);
+      if (in_eax >= 13)
+        __cpuid_count (in_eax, 1, regs[ct::eax], regs[ct::ebx], regs[ct::ecx], regs[ct::edx]);
+      else if (in_eax >= 7)
+        __cpuid_count (in_eax, 0, regs[ct::eax], regs[ct::ebx], regs[ct::ecx], regs[ct::edx]);
 
       return regs;
 
