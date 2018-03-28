@@ -23,8 +23,9 @@ SET (COMPASS_VERSION "${COMPASS_VERSION_MAJOR}.${COMPASS_VERSION_MINOR}.${COMPAS
 SET (COMPASS_VENDOR_ID "psteinb")
 SET (COMPASS_ID "${COMPASS_VENDOR_ID}.${PROJECT_NAME}")
 
-option(WITH_CXX11_ABI "enable _GLIBCXX_USE_CXX11_ABI in GCC 5.0+" ON)
-option(WITH_TESTS     "enable unit tests" ON)
+option(WITH_CXX11_ABI       "enable _GLIBCXX_USE_CXX11_ABI in GCC 5.0+" ON)
+option(WITH_TESTS           "enable unit tests" ON)
+option(WITH_SINGLE_HEADER   "produce single header file from include/" ON)
 
 check_cxx_compiler_flag(-Wl,-Bsymbolic HAS_BSYMBOLIC_COMPILERFLAG)
 check_cxx_compiler_flag("-Xclang -march=native" HAS_XCLANG_COMPILERFLAG)
@@ -59,6 +60,8 @@ if(WITH_TESTS)
   add_subdirectory(tests)
   enable_testing()
   include("CTestLists.txt")
+
+
 endif()
 
 ################################ EXPORT/INSTALL ################################
