@@ -25,8 +25,7 @@
     #define COMPASS_HAS_SSE4
 #endif
 
-#include "../tags.hpp"
-
+#include "detail/tags.hpp"
 
 namespace compass {
 
