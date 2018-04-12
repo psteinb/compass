@@ -7,7 +7,6 @@
 
 #include "detail/tags.hpp"
 #include "detail/definitions.hpp"
-#include "detail/rt/x86/cpuid_common.hpp"
 
 #include <array>
 #include <cstdint>

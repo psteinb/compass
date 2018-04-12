@@ -5,6 +5,8 @@
 #ifdef COMPASS_CT_ARCH_X86
 #define COMPASS_RT_X86_CPUID_H
 
+#include "detail/rt/x86/cpuid_common.hpp"
+
 #include "detail/rt/x86/llvm_cpuid.hpp"
 #include "detail/rt/x86/gnu_cpuid.hpp"
 #include "detail/rt/x86/msvc_cpuid.hpp"

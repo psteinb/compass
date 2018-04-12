@@ -8,14 +8,13 @@
 
 #include "detail/tags.hpp"
 #include "detail/definitions.hpp"
-#include "detail/rt/x86/cpuid_common.hpp"
+//#include "detail/rt/x86/cpuid_common.hpp"
 
 #include <array>
 #include <cstdint>
 
 
 namespace compass {
-
 
   namespace runtime {
 
@@ -25,15 +24,17 @@ namespace compass {
                                              std::uint32_t in_edx = 0){
 
       std::array<std::uint32_t,4> regs = {in_eax,0,in_ecx,0};
-      int cpuid_rvalue = __get_cpuid_count(in_eax,
-                                     in_ecx,
-                                     &regs[ct::eax],
-                                     &regs[ct::ebx],
-                                     &regs[ct::ecx],
-                                     &regs[ct::edx]
-        );
-
-      if(cpuid_rvalue < 1){
+      // int cpuid_rvalue = __get_cpuid_count(in_eax,
+      //                                in_ecx,
+      //                                &regs[ct::eax],
+      //                                &regs[ct::ebx],
+      //                                &regs[ct::ecx],
+      //                                &regs[ct::edx]
+      //   );
+      int gnu_cpuid_rvalue = compass::runtime::extended_get_cpuid(regs.data(),
+                                                              in_eax,
+                                                              in_ecx);
+      if(gnu_cpuid_rvalue < 1){
         return {0,0,0,0};
       }
 
