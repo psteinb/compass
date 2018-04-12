@@ -5,9 +5,7 @@
 
 #ifdef COMPASS_CT_COMP_CLANG
 
-#include "detail/tags.hpp"
 #include "detail/definitions.hpp"
-#include "detail/rt/x86/cpuid_common.hpp"
 
 #include <array>
 #include <cstdint>

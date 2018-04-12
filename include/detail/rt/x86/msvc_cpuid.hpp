@@ -12,8 +12,6 @@
 #include <bitset>
 #include <cstdint>
 
-
-#include "detail/tags.hpp"
 #include "detail/definitions.hpp"
 
 namespace compass {
@@ -26,17 +24,17 @@ namespace compass {
                                               std::uint32_t in_ebx = 0,
                                               std::uint32_t in_ecx = 0,
                                               std::uint32_t in_edx = 0) {
-		
-	  std::array<std::uint32_t, 4> regs = { in_eax,in_ebx,in_ecx,in_edx };
-      
-	  std::int32_t* regs_ptr = reinterpret_cast<std::int32_t*>(regs.data());
-      __cpuidex(regs_ptr,
-				(std::int32_t)in_eax, 
-		  (std::int32_t)in_ecx
-		  );
-	
 
-	  
+      std::array<std::uint32_t, 4> regs = { in_eax,in_ebx,in_ecx,in_edx };
+
+      std::int32_t* regs_ptr = reinterpret_cast<std::int32_t*>(regs.data());
+      __cpuidex(regs_ptr,
+                (std::int32_t)in_eax,
+          (std::int32_t)in_ecx
+          );
+
+
+
       return regs;
 
     }

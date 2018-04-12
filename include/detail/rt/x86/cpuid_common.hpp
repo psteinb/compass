@@ -5,7 +5,6 @@
 
 namespace compass {
 
-
   namespace runtime {
 
     static int extended_get_cpuid(std::uint32_t* regs,
@@ -13,12 +12,12 @@ namespace compass {
                                   std::uint32_t in_ecx = 0){
 
 #ifdef __get_cpuid_count
-        return __get_cpuid_count(in_eax,
-                                 in_ecx,
-                                 &regs[ct::eax],
-                                 &regs[ct::ebx],
-                                 &regs[ct::ecx],
-                                 &regs[ct::edx]);
+      return __get_cpuid_count(in_eax,
+                               in_ecx,
+                               &regs[ct::eax],
+                               &regs[ct::ebx],
+                               &regs[ct::ecx],
+                               &regs[ct::edx]);
 #endif
 
 
