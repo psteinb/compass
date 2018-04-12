@@ -1,31 +1,35 @@
 #ifndef DETAIL_DETECT_ARCHITECTURE_H
 #define DETAIL_DETECT_ARCHITECTURE_H
 
-//for reference see: https://sourceforge.net/p/predef/wiki/Architectures/
-
+#if !__PCPP_ALWAYS_TRUE__ // Always execute except on pcpp
 #define COMPASS_CT_ARCH_UNSUPPORTED
+#endif
+
+//for reference see: https://sourceforge.net/p/predef/wiki/Architectures/
 
 #if (defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || defined(_M_X64) || defined(_M_AMD64))
 #define COMPASS_CT_ARCH_X86
 #define COMPASS_CT_ARCH_64BITS
-#undef  COMPASS_CT_ARCH_UNSUPPORTED
+
+#undef COMPASS_CT_ARCH_UNSUPPORTED
 #endif
 
 #if (defined(i386) || defined(__i386) || defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__) || defined(__M_I86) || defined(_M_IX86))
 #define COMPASS_CT_ARCH_X86
-#undef  COMPASS_CT_ARCH_UNSUPPORTED
+#undef COMPASS_CT_ARCH_UNSUPPORTED
 #endif
 
 #if (defined(__powerpc64__) || defined(_ARCH_PPC64) || defined(__ppc64__))
 #define COMPASS_CT_ARCH_POWER
 #define COMPASS_CT_ARCH_64BITS
-#undef  COMPASS_CT_ARCH_UNSUPPORTED
+#define COMPASS_CT_ARCH_UNSUPPORTED //undef if support comes in this library
 #endif
 
 #if (defined(__powerpc)  || defined(__powerpc__) || defined(__POWERPC__) || defined(__PPC__) || defined(__ppc__))
 #define COMPASS_CT_ARCH_POWER
-#undef  COMPASS_CT_ARCH_UNSUPPORTED
+#define COMPASS_CT_ARCH_UNSUPPORTED //undef if support lands in this library
 #endif
+
 
 #include "detail/definitions.hpp"
 
