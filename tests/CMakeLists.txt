@@ -45,7 +45,7 @@ if(WITH_SINGLE_HEADER)
   find_program(PCPP NAME pcpp HINT ${PCPP_PATH})
   if(PCPP_FOUND OR EXISTS ${PCPP_PATH})
     add_custom_target(sh
-      COMMAND pcpp --passthru-unfound-includes -I${PROJECT_SOURCE_DIR}/include/detail -o "${PROJECT_BINARY_DIR}/tests/compass-sh.hpp" "${PROJECT_SOURCE_DIR}/include/compass.hpp"
+      COMMAND pcpp -o ${PROJECT_BINARY_DIR}/tests/compass-sh.hpp --line-directive --passthru-defines --passthru-unfound-includes --passthru-unknown-exprs ${PROJECT_SOURCE_DIR}/include/compass.hpp
       BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/compass-sh.hpp
       COMMENT "Preprocessing ${PROJECT_SOURCE_DIR}/include/compass.hpp into ${CMAKE_CURRENT_BINARY_DIR}/tests/compass-sh.hpp ..."
       USES_TERMINAL)
