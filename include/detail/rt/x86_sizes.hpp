@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <vector>
 
 namespace compass {
 
