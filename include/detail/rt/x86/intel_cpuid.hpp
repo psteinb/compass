@@ -11,7 +11,6 @@
 #include <bitset>
 #include <cstdint>
 
-#include "detail/tags.hpp"
 #include "detail/definitions.hpp"
 
 namespace compass {

@@ -6,7 +6,6 @@
 
 #define COMPASS_RT_X86_GNU_CPUID_H_
 
-#include "detail/tags.hpp"
 #include "detail/definitions.hpp"
 //#include "detail/rt/x86/cpuid_common.hpp"
 
