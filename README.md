@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/psteinb/compass.svg?branch=master)](https://travis-ci.org/psteinb/compass)
+[![Build status](https://ci.appveyor.com/api/projects/status/dvgk88ynuuvx1ldi/branch/master?svg=true)](https://ci.appveyor.com/project/psteinb/compass/branch/master)
 
 # compass 
 
