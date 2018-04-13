@@ -1,4 +1,6 @@
-# compass
+[![Build Status](https://travis-ci.org/psteinb/compass.svg?branch=master)](https://travis-ci.org/psteinb/compass)
+
+# compass 
 
 A drop-in header-only C++ library to detect hardware capabilities at runtime and at compiletime.
 
