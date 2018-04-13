@@ -1,0 +1,10 @@
+# C++ project
+language: cpp
+dist: trusty
+
+script:
+  - mkdir -p build && cd build
+  - cmake ..
+  - make
+  - ctest -V -j
+  - cd ..
