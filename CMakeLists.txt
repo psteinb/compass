@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(CheckCCompilerFlag)
 include(CheckCXXCompilerFlag)
 include(CheckSymbolExists)
+include(CheckCXXSourceCompiles)
 
 # Project information
 SET (COMPASS_NAME "Compass - drop-in header-only C++ library to detect hardware capabilities at runtime and at compiletime")
@@ -36,6 +37,20 @@ check_cxx_compiler_flag(-Wl,-Bsymbolic HAS_BSYMBOLIC_COMPILERFLAG)
 check_cxx_compiler_flag("-Xclang -march=native" HAS_XCLANG_COMPILERFLAG)
 check_cxx_compiler_flag(-Wall HAS_WALL_COMPILERFLAG)
 check_cxx_compiler_flag(-ggdb HAS_GGDB_COMPILERFLAG)
+
+set(CXX11_CODE_EXAMPLE "\
+#include <string>\n\
+\
+int main(int argc,char** argv){std::string msg;return msg.size();}")
+set(CMAKE_REQUIRED_LIBRARIES -lc++ -lc++abi)
+CHECK_CXX_SOURCE_COMPILES("${CXX11_CODE_EXAMPLE}" COMPILES_WITH_LIBCXX)
+set(CMAKE_REQUIRED_LIBRARIES -lstdc++)
+CHECK_CXX_SOURCE_COMPILES("${CXX11_CODE_EXAMPLE}" COMPILES_WITH_LIBSTDCXX)
+unset(CMAKE_REQUIRED_LIBRARIES)
+CHECK_CXX_SOURCE_COMPILES("${CXX11_CODE_EXAMPLE}" COMPILES_WITH_NO_EXTRAL)
+
+check_cxx_compiler_flag(-lc++ HAS_LIBCXX_COMPILERFLAG)
+check_cxx_compiler_flag(-lc++abi HAS_LIBCXXABI_COMPILERFLAG)
 check_cxx_compiler_flag(-ggdb3 HAS_GGDB3_COMPILERFLAG)
 check_cxx_compiler_flag(-O3 HAS_O3_COMPILERFLAG)
 check_cxx_compiler_flag(/Oi HAS_OI_COMPILERFLAG)
@@ -73,7 +88,7 @@ target_include_directories(
 target_compile_definitions(${COMPASS_TARGET_NAME}
   INTERFACE LIBRARY_HEADER_ONLY
   INTERFACE cxx_std_11
-    )
+  )
 
 ## ============== generate single-header ================
  if (${GENERATE_SINGLE_HEADER})
@@ -103,7 +118,7 @@ endif()
 
 
 IF(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "5.0")
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "5.0")
     set(WITH_CXX11_ABI ON)
   endif()
 
@@ -114,8 +129,9 @@ IF(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_
   endif()
 
   target_compile_definitions(${COMPASS_TARGET_NAME} INTERFACE -D_GLIBCXX_USE_CXX11_ABI=${CXX11_ABI_VALUE})
-  message(">> [GCC ${CMAKE_CXX_COMPILER_VERSION}] adding -D_GLIBCXX_USE_CXX11_ABI=${CXX11_ABI_VALUE}")
+  message(">> [${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}] adding -D_GLIBCXX_USE_CXX11_ABI=${CXX11_ABI_VALUE}")
 endif()
+
 
 IF(NOT WIN32)
   check_symbol_exists(__get_cpuid_max "cpuid.h" GET_CPUID_MAX_INSTRINSIC_EXISTS)

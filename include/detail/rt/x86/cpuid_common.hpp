@@ -1,6 +1,7 @@
 #ifndef COMPASS_X86_CPUID_COMMON_H
 #define COMPASS_X86_CPUID_COMMON_H
 
+#ifndef COMPASS_CT_COMP_MSVC
 #include "cpuid.h"
 
 namespace compass {
@@ -39,5 +40,5 @@ namespace compass {
   }; // runtime
 
 }; //compass
-
+#endif /* COMPASS_CT_COMP_MSVC */
 #endif /* COMPASS_X86_CPUID_COMMON_H */
