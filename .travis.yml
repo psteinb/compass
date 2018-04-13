@@ -1,6 +1,8 @@
 # C++ project
 language: cpp
 dist: trusty
+rvm:
+  - 2.2
 
 matrix:
   include:
@@ -51,27 +53,17 @@ matrix:
     - os: osx
       osx_image: xcode9
       env:
-        - MATRIX_EVAL="brew install cmake && CC=gcc-4.9 && CXX=g++-4.9"
-
-    # - os: osx
-    #   osx_image: xcode9
-    #   env:
-    #     - MATRIX_EVAL="brew install gcc5 && CC=gcc-5 && CXX=g++-5"
-
-    # - os: osx
-    #   osx_image: xcode9
-    #   env:
-    #     - MATRIX_EVAL="brew install gcc6 && CC=gcc-6 && CXX=g++-6"
+        - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
 
     - os: osx
       osx_image: xcode9
       env:
-        - MATRIX_EVAL="brew install gcc cmake && CC=gcc-7 && CXX=g++-7"
+        - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"
 
     - os: osx
       osx_image: xcode9
       env:
-        - MATRIX_EVAL="brew install cmake && CC=clang && CXX=clang"
+        - MATRIX_EVAL="CC=clang && CXX=clang"
 
 before_install:
     - eval "${MATRIX_EVAL}"
