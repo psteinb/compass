@@ -25,7 +25,7 @@ target_include_directories(test_compass_impl PRIVATE ${CATCH2_HEADER_PATH} ${COM
 add_executable(test_bitview test_bitview.cpp $<TARGET_OBJECTS:catcho>)
 target_include_directories(test_bitview PRIVATE ${CATCH2_HEADER_PATH} ${COMPASS_INCLUDE_BUILD_DIR} )
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang")
   if(NOT "${COMPILES_WITH_NO_EXTRAL}")
     message(STATUS "detected malacious support of libc++/libstdc++")
 
@@ -61,7 +61,7 @@ if(${CURRENT_HOSTNAME} MATCHES ".*(falcon2|talisker|schorle|scicomp-pc-3|recover
   add_executable(test_compass_sizes test_compass_sizes.cpp $<TARGET_OBJECTS:catcho>)
   target_include_directories(test_compass_sizes PRIVATE ${CATCH2_HEADER_PATH} ${COMPASS_INCLUDE_BUILD_DIR})
 
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" AND NOT "${COMPILES_WITH_NO_EXTRAL}")
+  if("${CMAKE_CXX_COMPILER_ID}" MATCHES ".*Clang" AND NOT "${COMPILES_WITH_NO_EXTRAL}")
     if(${COMPILES_WITH_LIBCXX})
       target_link_libraries(test_compass_sizes c++ c++abi)
       target_link_libraries(test_machine c++ c++abi)
