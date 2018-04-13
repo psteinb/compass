@@ -26,14 +26,11 @@ add_dependencies(catcho catch2)
 cmake_host_system_information(RESULT CURRENT_HOSTNAME QUERY HOSTNAME)
 
 if(${CURRENT_HOSTNAME} MATCHES ".*(falcon2|talisker|schorle|scicomp-pc-3|recovery-station).*")
-  add_executable(test_compass_impl test_compass_impl.cpp $<TARGET_OBJECTS:catcho>)
-  add_dependencies(test_compass_impl catcho compass)
-  target_include_directories(test_compass_impl PRIVATE ${CATCH2_HEADER_PATH} ${COMPASS_INCLUDE_BUILD_DIR})
 
-  # add_executable(test_compass_sizes test_compass_sizes.cpp $<TARGET_OBJECTS:catcho>)
-  # target_include_directories(test_compass_sizes PRIVATE ${PROJECT_SOURCE_DIR}/include ${CATCH2_HEADER_PATH})
+  add_executable(test_machine test_machine.cpp $<TARGET_OBJECTS:catcho>)
+  target_include_directories(test_machine PRIVATE ${CATCH2_HEADER_PATH} ${COMPASS_INCLUDE_BUILD_DIR})
+
   add_executable(test_compass_sizes test_compass_sizes.cpp $<TARGET_OBJECTS:catcho>)
-  add_dependencies(test_compass_sizes catcho compass)
   target_include_directories(test_compass_sizes PRIVATE ${CATCH2_HEADER_PATH} ${COMPASS_INCLUDE_BUILD_DIR})
 
 endif()
@@ -42,6 +39,8 @@ endif()
 #Windows 7: use `wmic cpu GET Name` to obtain clearname of CPU model
 #Linux    : use `lscpu` or `/proc/cpuinfo` to obtain more data about
 #macOS    : not sure yet what to use
+add_executable(test_compass_impl test_compass_impl.cpp $<TARGET_OBJECTS:catcho>)
+target_include_directories(test_compass_impl PRIVATE ${CATCH2_HEADER_PATH} ${COMPASS_INCLUDE_BUILD_DIR})
 
 add_executable(test_bitview test_bitview.cpp $<TARGET_OBJECTS:catcho>)
 target_include_directories(test_bitview PRIVATE ${PROJECT_SOURCE_DIR}/include ${CATCH2_HEADER_PATH})
