@@ -25,7 +25,7 @@ SET (COMPASS_ID "${COMPASS_VENDOR_ID}.${PROJECT_NAME}")
 
 option(WITH_CXX11_ABI       "enable _GLIBCXX_USE_CXX11_ABI in GCC 5.0+" ON)
 option(WITH_TESTS           "enable unit tests" ON)
-option(WITH_SINGLE_HEADER   "produce single header file from include/" ON)
+option(WITH_SINGLE_HEADER   "produce single header file from include/" OFF)
 
 check_cxx_compiler_flag(-Wl,-Bsymbolic HAS_BSYMBOLIC_COMPILERFLAG)
 check_cxx_compiler_flag("-Xclang -march=native" HAS_XCLANG_COMPILERFLAG)
@@ -36,17 +36,55 @@ check_cxx_compiler_flag(-O3 HAS_O3_COMPILERFLAG)
 check_cxx_compiler_flag(/Oi HAS_OI_COMPILERFLAG)
 check_cxx_compiler_flag(-Wno-overflow HAS_WNOOVERFLOW_COMPILERFLAG)
 
+
+set(COMPASS_TARGET_NAME               ${PROJECT_NAME})
+set(COMPASS_CONFIG_INSTALL_DIR        "lib/cmake/${PROJECT_NAME}"
+  CACHE INTERNAL "")
+set(COMPASS_INCLUDE_INSTALL_DIR       "include")
+set(COMPASS_TARGETS_EXPORT_NAME       "${PROJECT_NAME}Targets")
+set(COMPASS_CMAKE_CONFIG_TEMPLATE     "cmake/config.cmake.in")
+set(COMPASS_CMAKE_CONFIG_DIR          "${CMAKE_CURRENT_BINARY_DIR}")
+set(COMPASS_CMAKE_VERSION_CONFIG_FILE "${COMPASS_CMAKE_CONFIG_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
+set(COMPASS_CMAKE_PROJECT_CONFIG_FILE "${COMPASS_CMAKE_CONFIG_DIR}/${PROJECT_NAME}Config.cmake")
+set(COMPASS_CMAKE_PROJECT_TARGETS_FILE "${COMPASS_CMAKE_CONFIG_DIR}/${PROJECT_NAME}Targets.cmake")
+
+if (NOT WITH_SINGLE_HEADER)
+    set(COMPASS_INCLUDE_BUILD_DIR "${PROJECT_SOURCE_DIR}/include/")
+    message(STATUS "Using the multi-header code from ${COMPASS_INCLUDE_BUILD_DIR}")
+else()
+    set(COMPASS_INCLUDE_BUILD_DIR "${PROJECT_SOURCE_DIR}/single_include/")
+    message(STATUS "Using the single-header code from ${COMPASS_INCLUDE_BUILD_DIR}")
+endif()
+
+add_library(${COMPASS_TARGET_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${COMPASS_TARGET_NAME} ALIAS ${COMPASS_TARGET_NAME})
+target_include_directories(
+    ${COMPASS_TARGET_NAME}
+    INTERFACE
+    $<BUILD_INTERFACE:${COMPASS_INCLUDE_BUILD_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
+target_compile_definitions(${COMPASS_TARGET_NAME}
+  INTERFACE LIBRARY_HEADER_ONLY
+  INTERFACE cxx_std_11
+    )
+
+#target_sources(compass INTERFACE include/compass.hpp)
+
+
 IF(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_GNUCC OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER "5.0")
     set(WITH_CXX11_ABI ON)
   endif()
+
   if(${WITH_CXX11_ABI})
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=1)
-    message(">> [GCC ${CMAKE_CXX_COMPILER_VERSION}] adding -D_GLIBCXX_USE_CXX11_ABI=1")
+    set(CXX11_ABI_VALUE 1)
   else()
-    add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
-    message(">> [GCC ${CMAKE_CXX_COMPILER_VERSION}] adding -D_GLIBCXX_USE_CXX11_ABI=1")
+    set(CXX11_ABI_VALUE 0)
   endif()
+
+  target_compile_definitions(${COMPASS_TARGET_NAME} INTERFACE -D_GLIBCXX_USE_CXX11_ABI=${CXX11_ABI_VALUE})
+  message(">> [GCC ${CMAKE_CXX_COMPILER_VERSION}] adding -D_GLIBCXX_USE_CXX11_ABI=${CXX11_ABI_VALUE}")
 endif()
 
 IF(NOT WIN32)
@@ -60,14 +98,26 @@ if(WITH_TESTS)
   add_subdirectory(tests)
   enable_testing()
   include("CTestLists.txt")
-
-
 endif()
 
 ################################ EXPORT/INSTALL ################################
-
+export(
+  TARGETS ${COMPASS_TARGET_NAME}
+  NAMESPACE ${PROJECT_NAME}::
+  FILE ${COMPASS_CMAKE_PROJECT_TARGETS_FILE}
+  )
+install(
+  TARGETS ${COMPASS_TARGET_NAME}
+  EXPORT ${PROJECT_NAME}Targets
+  INCLUDES DESTINATION ${COMPASS_INCLUDE_INSTALL_DIR}
+  )
+install(
+  EXPORT ${COMPASS_TARGETS_EXPORT_NAME}
+  NAMESPACE ${PROJECT_NAME}::
+  DESTINATION ${COMPASS_CONFIG_INSTALL_DIR}
+  )
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/include/"
   DESTINATION include
   FILES_MATCHING
   PATTERN "*.hpp"
-)
+  )
