@@ -2,7 +2,7 @@
 language: cpp
 dist: trusty
 rvm:
-  - 2.2
+  - 2.3
 
 matrix:
   include:
@@ -56,7 +56,7 @@ matrix:
         - MATRIX_EVAL="CC=gcc && CXX=g++"
 
     - os: osx
-      osx_image: xcode9
+      osx_image: xcode9.3
       env:
         - MATRIX_EVAL="brew install gcc && CC=gcc-7 && CXX=g++-7"
 
