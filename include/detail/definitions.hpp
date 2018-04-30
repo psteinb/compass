@@ -24,6 +24,4 @@ namespace compass {
 
 };
 
-//#include "ct/preprocessor_impl.hpp"
-
 #endif /* DEFINITIONS_H */
