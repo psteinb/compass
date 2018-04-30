@@ -86,3 +86,20 @@ configure_file(${PROJECT_SOURCE_DIR}/tests/build_machine.hpp.in ${CMAKE_CURRENT_
 
 add_executable(test_build_machine test_build_machine.cpp $<TARGET_OBJECTS:catcho>)
 target_include_directories(test_build_machine PRIVATE ${CATCH2_HEADER_PATH} ${COMPASS_INCLUDE_BUILD_DIR} ${CMAKE_CURRENT_BINARY_DIR})
+if(HAS_MARCH_COMPILERFLAG)
+  target_compile_options(test_build_machine PRIVATE "-march=native")
+endif()
+
+if(HAS_XHOST_COMPILERFLAG)
+  target_compile_options(test_build_machine PRIVATE "-xHost")
+endif()
+
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "MSVC")
+  if(SSE2_FOUND)
+    target_compile_options(test_build_machine PRIVATE "/arch:SSE2")
+  elseif(AVX_FOUND)
+    target_compile_options(test_build_machine PRIVATE "/arch:AVX")
+  elseif(AVX2_FOUND)
+    target_compile_options(test_build_machine PRIVATE "/arch:AVX2")
+  endif()
+endif()

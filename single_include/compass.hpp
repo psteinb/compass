@@ -47,8 +47,6 @@ namespace compass {
 
 };
 
-
-
 #endif
 namespace compass {
 
@@ -252,6 +250,106 @@ namespace compass {
 
 #endif
 #ifdef COMPASS_CT_ARCH_X86
+#ifndef COMPASS_CT_PREPROCESSOR_IMPL_H_
+#define COMPASS_CT_PREPROCESSOR_IMPL_H_
+
+
+
+#ifndef WIN32
+
+#if defined(__SSE2__) || defined(__SSE2_MATH__)
+    #define COMPASS_CT_HAS_SSE2 1
+   #endif
+
+#if defined(__SSE3__) && defined(__SSSE3__)
+    #define COMPASS_CT_HAS_SSE3 1
+   #endif
+
+#if defined(__SSE4_2__) && defined(__SSE4_1__)
+    #define COMPASS_CT_HAS_SSE4 1
+   #endif
+
+#else
+
+    #if _M_IX86_FP >= 2
+        #define COMPASS_CT_HAS_SSE2 1
+        #define COMPASS_CT_HAS_SSE3 1
+        #define COMPASS_CT_HAS_SSE4 1
+    #endif
+#endif
+#ifndef COMPASS_TAGS_H_
+#define COMPASS_TAGS_H_
+
+
+namespace compass {
+
+
+    namespace feature {
+
+
+
+
+        struct sse {};
+        struct sse2 {};
+        struct sse3 {};
+        struct sse4 {};
+
+
+        struct avx {};
+        struct avx2 {};
+
+
+    };
+
+
+};
+#endif
+namespace compass {
+
+  namespace compiletime {
+
+    template<typename feature_t>
+    struct has{
+      static const bool enabled = false;
+    };
+
+    template<>
+    struct has<feature::sse2>{
+      static const bool enabled=
+#ifdef COMPASS_CT_HAS_SSE2
+     true;
+#else
+     false;
+#endif
+
+    };
+
+    template<>
+    struct has<feature::sse3>{
+      static const bool enabled=
+#ifdef COMPASS_CT_HAS_SSE3
+     true;
+#else
+     false;
+#endif
+
+    };
+
+    template<>
+    struct has<feature::sse4>{
+      static const bool enabled=
+#ifdef COMPASS_CT_HAS_SSE4
+     true;
+#else
+     false;
+#endif
+
+    };
+
+  };
+};
+
+#endif
 #ifndef COMPASS_RT_X86_IMPL_H_
 #define COMPASS_RT_X86_IMPL_H_
 #ifndef COMPASS_RT_X86_CPUID_H
@@ -515,33 +613,6 @@ namespace compass {
 #endif
 #endif
 
-#endif
-#ifndef COMPASS_TAGS_H_
-#define COMPASS_TAGS_H_
-
-
-namespace compass {
-
-
-    namespace feature {
-
-
-
-
-        struct sse {};
-        struct sse2 {};
-        struct sse3 {};
-        struct sse4 {};
-
-
-        struct avx {};
-        struct avx2 {};
-
-
-    };
-
-
-};
 #endif
 #ifndef COMPASS_BIT_VIEW_H
 #define COMPASS_BIT_VIEW_H
