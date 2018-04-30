@@ -17,3 +17,4 @@ endif()
 
 add_test(NAME compass_impl COMMAND test_compass_impl)
 add_test(NAME bitview COMMAND test_bitview)
+add_test(NAME build_machine COMMAND test_build_machine)
