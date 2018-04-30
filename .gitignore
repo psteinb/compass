@@ -1,2 +1,7 @@
 *~
-build
+build/*
+debug/*
+*sln
+*.vcxproj*
+x64
+x32

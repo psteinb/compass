@@ -1,0 +1,83 @@
+#ifndef _COMPASS_FIXTURES_H_
+#define _COMPASS_FIXTURES_H_
+
+#include <iostream>
+#include <string>
+#include <thread>
+
+
+struct host_reference
+{
+
+  std::string	hostname		;
+
+  std::string   expected_vendor         ;
+  std::string   expected_brand          ;
+  std::string   expected_device_name    ;
+
+  bool      expected_has_sse	;
+  bool      expected_has_sse2	;
+  bool      expected_has_sse3	;
+  bool      expected_has_sse4	;
+  bool      expected_has_avx	;
+  bool      expected_has_avx2	;
+  std::uint32_t       expected_L1d_linesize		;
+  std::uint32_t       expected_L2_linesize		;
+  std::uint32_t       expected_L3_linesize		;
+
+  std::uint32_t       expected_L1d_size_kB		;
+  std::uint32_t       expected_L2_size_kB		;
+  std::uint32_t       expected_L3_size_kB		;
+
+  std::uint32_t       expected_ncores		;
+  std::uint32_t       expected_nphyscores		;
+
+
+  host_reference():
+    hostname(""),
+    expected_vendor  (""),
+    expected_brand   (""),
+    expected_device_name   (""),
+    expected_has_sse (false),
+    expected_has_sse2(false),
+    expected_has_sse3(false),
+    expected_has_sse4(false),
+    expected_has_avx (false),
+    expected_has_avx2(false),
+    expected_L1d_linesize(0) ,
+    expected_L2_linesize(0) ,
+    expected_L3_linesize(0) ,
+    expected_L1d_size_kB(0) ,
+    expected_L2_size_kB(0),
+    expected_L3_size_kB(0),
+    expected_ncores  (std::thread::hardware_concurrency()),
+    expected_nphyscores  (0)
+  {
+
+      expected_vendor = "@CPU_VENDOR@";
+      expected_brand  = "@CPU_MODEL_NAME@";
+      expected_device_name = "";
+
+      expected_has_sse= @SSE_FOUND@ ;
+      expected_has_sse2= @SSE2_FOUND@ ;
+      expected_has_sse3= @SSE3_FOUND@ ;
+      expected_has_sse4= @SSE4_1_FOUND@ ;
+
+      expected_has_avx = @AVX_FOUND@ ;
+      expected_has_avx2= @AVX2_FOUND@ ;
+
+      //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size`
+      // expected_L1d_linesize= 64 ;
+      // expected_L2_linesize= 64 ;
+      // expected_L3_linesize= 64 ;
+      // //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/size`
+      // expected_L1d_size_kB= 32 ;
+      expected_L2_size_kB= @CPU_L2_SIZE_KB@;
+      // expected_L3_size_kB= 4096 ; /sys/devices/system/cpu/cpu0/cache/index3/size
+
+      // expected_nphyscores = 2;
+  }
+
+};
+
+#endif /* _COMPASS_FIXTURES_H_ */

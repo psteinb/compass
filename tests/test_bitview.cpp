@@ -1,6 +1,6 @@
 #include "catch.hpp"
 
-#include "detail/bit_view.hpp"
+#include "compass.hpp"
 
 #include <bitset>
 

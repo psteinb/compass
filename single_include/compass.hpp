@@ -47,6 +47,8 @@ namespace compass {
 
 };
 
+
+
 #endif
 namespace compass {
 
@@ -261,6 +263,7 @@ namespace compass {
 #ifndef COMPASS_X86_CPUID_COMMON_H
 #define COMPASS_X86_CPUID_COMMON_H
 
+#ifndef COMPASS_CT_COMP_MSVC
 #include "cpuid.h"
 
 namespace compass {
@@ -299,7 +302,7 @@ namespace compass {
   };
 
 };
-
+#endif
 #endif
 #ifndef COMPASS_RT_X86_LLVM_CPUID_H_
 #define COMPASS_RT_X86_LLVM_CPUID_H_
