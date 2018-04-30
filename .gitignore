@@ -5,4 +5,3 @@ debug/*
 *.vcxproj*
 x64
 x32
-cmake
