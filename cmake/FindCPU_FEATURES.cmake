@@ -115,6 +115,9 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
   EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.features" OUTPUT_VARIABLE
     CPUINFO)
 
+  EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.leaf7_features" OUTPUT_VARIABLE
+    LEAF7_CPUINFO)
+
   EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.vendor" OUTPUT_VARIABLE
     VENDOR_TITLE)
 
@@ -175,7 +178,15 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     set(SSE4_1_FOUND false CACHE BOOL "SSE4.1 available on host")
   ENDIF (SSE41_TRUE)
 
-  if("${CPUINFO}" MATCHES ".*AVX .*")
+  STRING(REGEX REPLACE "^.*(SSE4.2).*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "SSE4.2" "${SSE_THERE}" SSE42_TRUE)
+  IF (SSE42_TRUE)
+    set(SSE4_2_FOUND true CACHE BOOL "SSE4.2 available on host")
+  ELSE (SSE42_TRUE)
+    set(SSE4_2_FOUND false CACHE BOOL "SSE4.2 available on host")
+  ENDIF (SSE42_TRUE)
+
+  if("${CPUINFO}" MATCHES ".*AVX.*")
     set(AVX_FOUND true CACHE BOOL "AVX available on host")
   else()
     set(AVX_FOUND false CACHE BOOL "AVX available on host")
@@ -184,7 +195,11 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
   if("${CPUINFO}" MATCHES ".*AVX2 .*")
     set(AVX2_FOUND true CACHE BOOL "AVX2 available on host")
   else()
-    set(AVX2_FOUND false CACHE BOOL "AVX2 available on host")
+    if("${LEAF7_CPUINFO}" MATCHES ".*AVX2 .*")
+      set(AVX2_FOUND true CACHE BOOL "AVX2 available on host")
+    else()
+      set(AVX2_FOUND false CACHE BOOL "AVX2 available on host")
+    endif()
   endif()
 
 ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
