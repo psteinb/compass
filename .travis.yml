@@ -50,7 +50,7 @@ matrix:
     - os: osx
       osx_image: xcode9
       env:
-        - MATRIX_EVAL="CC=clang && CXX=clang"
+        - MATRIX_EVAL="CC=clang && CXX=clang++"
 
 before_install:
     - eval "${MATRIX_EVAL}"
@@ -58,7 +58,7 @@ before_install:
 script:
   - mkdir -p build && cd build
   - cmake ..
-  - cat /proc/cpuinfo && cat tests/build_machine.hpp
+  - cat tests/build_machine.hpp
   - make VERBOSE=1
   - ctest -V -j
   - cd ..
