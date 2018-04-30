@@ -66,6 +66,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
     REQUIRE(value==expected_has_sse);
 
+
   }
 
   SECTION( "has_sse2_right" ){
@@ -73,6 +74,9 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
     auto value = compass::runtime::has(compass::feature::sse2());
 
     REQUIRE(value==expected_has_sse2);
+    if(expected_has_sse2){
+      REQUIRE(compass::compiletime::has<compass::feature::sse2>::enabled==expected_has_sse2);
+    }
 
   }
 
@@ -81,6 +85,8 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
     auto value = compass::runtime::has(compass::feature::sse3());
 
     REQUIRE(value==expected_has_sse3);
+    if(expected_has_sse3)
+      REQUIRE(compass::compiletime::has<compass::feature::sse3>::enabled==expected_has_sse3);
 
   }
 
@@ -89,6 +95,8 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
     auto value = compass::runtime::has(compass::feature::sse4());
 
     REQUIRE(value==expected_has_sse4);
+    if(expected_has_sse4)
+      REQUIRE(compass::compiletime::has<compass::feature::sse4>::enabled==expected_has_sse4);
 
   }
 

@@ -38,6 +38,6 @@ TEST_CASE( "compass_fundamentals" ){
     REQUIRE(value>0u);
 
   }
+
+
 }
-
-

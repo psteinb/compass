@@ -1,29 +1,31 @@
 #ifndef COMPASS_CT_PREPROCESSOR_IMPL_H_
 #define COMPASS_CT_PREPROCESSOR_IMPL_H_
 
-#ifndef WIN32
-    #if defined __SSE2__ && defined __SSE2_MATH__
-        #define COMPASS_HAS_SSE2
-    #endif
-#else
-    #if _M_IX86_FP >= 2
-        #define COMPASS_HAS_SSE2
-    #endif
-#endif
+
 
 #ifndef WIN32
-    #if defined __SSE3__ && defined __SSSE3__
-        #define COMPASS_HAS_SSE3
-    #endif
 
-    #if defined __SSE4_2__ && defined __SSE4_1__
-        #define COMPASS_HAS_SSE4
-    #endif
+#if defined(__SSE2__) || defined(__SSE2_MATH__) //  && __SSE2__ != 0 && __SSE2_MATH__ != 0
+    #define COMPASS_CT_HAS_SSE2 1
+   #endif
+
+#if defined(__SSE3__) && defined(__SSSE3__)
+    #define COMPASS_CT_HAS_SSE3 1
+   #endif
+
+#if defined(__SSE4_2__) && defined(__SSE4_1__)
+    #define COMPASS_CT_HAS_SSE4 1
+   #endif
+
 #else
 //TODO: try to warn users on Windows that we are enabling SSE3 + SSE4 upon assumption here
-    #define COMPASS_HAS_SSE3
-    #define COMPASS_HAS_SSE4
+    #if _M_IX86_FP >= 2
+        #define COMPASS_CT_HAS_SSE2 1
+        #define COMPASS_CT_HAS_SSE3 1
+        #define COMPASS_CT_HAS_SSE4 1
+    #endif
 #endif
+
 
 #include "detail/tags.hpp"
 

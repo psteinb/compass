@@ -35,6 +35,8 @@ endif()
 
 check_cxx_compiler_flag(-Wl,-Bsymbolic HAS_BSYMBOLIC_COMPILERFLAG)
 check_cxx_compiler_flag("-Xclang -march=native" HAS_XCLANG_COMPILERFLAG)
+check_cxx_compiler_flag("-march=native" HAS_MARCH_COMPILERFLAG)
+check_cxx_compiler_flag("-xHost" HAS_XHOST_COMPILERFLAG)
 check_cxx_compiler_flag(-Wall HAS_WALL_COMPILERFLAG)
 check_cxx_compiler_flag(-ggdb HAS_GGDB_COMPILERFLAG)
 
