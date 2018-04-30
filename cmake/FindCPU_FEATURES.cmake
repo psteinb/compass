@@ -240,7 +240,7 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
   wmic_get("NumberOfCores" CPU_NPHYS_CORES)
 
   #dirty hack that I need to validate with other machines in Win7
-  if(NOT "${L2_CACHE_SIZE}" STR_EQUAL "")
+  if(NOT "${L2_CACHE_SIZE}" STREQUAL "")
     if(${CPU_NPHYS_CORES} GREATER 1)
       math(EXPR L2_CACHE_SIZE "${L2_CACHE_SIZE}/${CPU_NPHYS_CORES}")
     endif()
