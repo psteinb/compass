@@ -113,7 +113,10 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
     auto value = compass::runtime::size::cache::level(2);
 
-    REQUIRE(value >> 10 ==expected_L2_size_kB);
+    REQUIRE(value > 0);
+    if(expected_L2_size_kB){
+      REQUIRE(value >> 10 ==expected_L2_size_kB);
+    }
 
   }
 }
