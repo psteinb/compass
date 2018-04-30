@@ -16,9 +16,9 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
     REQUIRE(value.size()!=0u);
 
-    std::transform(value.begin(), value.end(),
-                   value.begin(),
-                   ::tolower);
+    // std::transform(value.begin(), value.end(),
+    //                value.begin(),
+    //                ::tolower);
 
     REQUIRE(value.find(expected_vendor)!=std::string::npos);
 
@@ -109,5 +109,11 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   }
 
+  SECTION( "correct_l2_cache_size" ){
 
+    auto value = compass::runtime::size::cache::level(2);
+
+    REQUIRE(value >> 10 ==expected_L2_size_kB);
+
+  }
 }

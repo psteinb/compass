@@ -1,0 +1,229 @@
+# Check if SSE instructions are available on the machine where 
+# the project is compiled.
+
+IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  EXEC_PROGRAM(cat ARGS "/proc/cpuinfo" OUTPUT_VARIABLE CPUINFO)
+
+  ##FIND VENDOR
+  STRING(FIND ${CPUINFO} "vendor" VENDOR_TITLE_OFFSET)
+  STRING(SUBSTRING ${CPUINFO} ${VENDOR_TITLE_OFFSET} 50 GUESSED_VENDOR_LINE)
+  STRING(REGEX REPLACE "^vendor.*: ([a-zA-Z]+)\n.*" "\\1" VENDOR_TITLE ${GUESSED_VENDOR_LINE})
+  message(STATUS "vendor found: ${VENDOR_TITLE}")
+  set(CPU_VENDOR "${VENDOR_TITLE}" CACHE STRING "cpu vendor")
+
+  ##FIND MODEL NAME
+  STRING(FIND ${CPUINFO} "model name" MODEL_NAME_OFFSET)
+  STRING(SUBSTRING ${CPUINFO} ${MODEL_NAME_OFFSET} 100 GUESSED_MODEL_NAME_LINE)
+  STRING(FIND ${GUESSED_MODEL_NAME_LINE} "\n" MODEL_NAME_RETURN_OFFSET)
+  STRING(SUBSTRING ${GUESSED_MODEL_NAME_LINE} 0 ${MODEL_NAME_RETURN_OFFSET} GUESSED_MODEL_NAME_LINE)
+
+  STRING(REGEX REPLACE "^model name.*: ([a-zA-Z]+.*)$" "\\1" MODEL_NAME ${GUESSED_MODEL_NAME_LINE})
+  message(STATUS "model name found: ${MODEL_NAME}")
+  set(CPU_MODEL_NAME "${MODEL_NAME}" CACHE STRING "cpu model name")
+
+  ##FIND INSTRUCTIONS
+  STRING(REGEX REPLACE "^.*(sse) .*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "sse" "${SSE_THERE}" SSE_TRUE)
+  IF (SSE_TRUE)
+    set(SSE_FOUND true CACHE BOOL "SSE available on host")
+  ELSE (SSE_TRUE)
+    set(SSE_FOUND false CACHE BOOL "SSE available on host")
+  ENDIF (SSE_TRUE)
+
+  STRING(REGEX REPLACE "^.*(sse2) .*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "sse2" "${SSE_THERE}" SSE2_TRUE)
+  IF (SSE2_TRUE)
+    set(SSE2_FOUND true CACHE BOOL "SSE2 available on host")
+  ELSE (SSE2_TRUE)
+    set(SSE2_FOUND false CACHE BOOL "SSE2 available on host")
+  ENDIF (SSE2_TRUE)
+
+  # /proc/cpuinfo apparently omits sse3 :(
+  STRING(REGEX REPLACE "^.*[^s](sse3) .*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "sse3" "${SSE_THERE}" SSE3_TRUE)
+  IF (NOT SSE3_TRUE)
+    STRING(REGEX REPLACE "^.*(T2300).*$" "\\1" SSE_THERE ${CPUINFO})
+    STRING(COMPARE EQUAL "T2300" "${SSE_THERE}" SSE3_TRUE)
+  ENDIF (NOT SSE3_TRUE)
+
+  STRING(REGEX REPLACE "^.* (ssse3) .*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "ssse3" "${SSE_THERE}" SSSE3_TRUE)
+  IF (SSE3_TRUE OR SSSE3_TRUE)
+    set(SSE3_FOUND true CACHE BOOL "SSE3 available on host")
+  ELSE (SSE3_TRUE OR SSSE3_TRUE)
+    set(SSE3_FOUND false CACHE BOOL "SSE3 available on host")
+  ENDIF (SSE3_TRUE OR SSSE3_TRUE)
+  IF (SSSE3_TRUE)
+    set(SSSE3_FOUND true CACHE BOOL "SSSE3 available on host")
+  ELSE (SSSE3_TRUE)
+    set(SSSE3_FOUND false CACHE BOOL "SSSE3 available on host")
+  ENDIF (SSSE3_TRUE)
+
+  STRING(REGEX REPLACE "^.* (sse4_1) .*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "sse4_1" "${SSE_THERE}" SSE41_TRUE)
+  IF (SSE41_TRUE)
+    set(SSE4_1_FOUND true CACHE BOOL "SSE4.1 available on host")
+  ELSE (SSE41_TRUE)
+    set(SSE4_1_FOUND false CACHE BOOL "SSE4.1 available on host")
+  ENDIF (SSE41_TRUE)
+
+  STRING(REGEX REPLACE "^.* (sse4_2) .*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "sse4_2" "${SSE_THERE}" SSE42_TRUE)
+  IF (SSE42_TRUE)
+    set(SSE4_2_FOUND true CACHE BOOL "SSE4.2 available on host")
+  ELSE (SSE42_TRUE)
+    set(SSE4_2_FOUND false CACHE BOOL "SSE4.2 available on host")
+  ENDIF (SSE42_TRUE)
+
+  if("${CPUINFO}" MATCHES ".*avx .*")
+    set(AVX_FOUND true CACHE BOOL "AVX available on host")
+  else()
+    set(AVX_FOUND false CACHE BOOL "AVX available on host")
+  endif()
+
+  if("${CPUINFO}" MATCHES ".*avx2 .*")
+    set(AVX2_FOUND true CACHE BOOL "AVX2 available on host")
+  else()
+    set(AVX2_FOUND false CACHE BOOL "AVX2 available on host")
+  endif()
+
+#
+  if(EXISTS "/sys/devices/system/cpu/cpu0/cache/index2/size")
+    EXEC_PROGRAM(cat ARGS "/sys/devices/system/cpu/cpu0/cache/index2/size" OUTPUT_VARIABLE L2_SIZE_KB_STRING)
+
+    if(${L2_SIZE_KB_STRING} MATCHES ".*[K|k]")
+      string(REGEX REPLACE "[K|k]" "" L2_SIZE_KB ${L2_SIZE_KB_STRING})
+      set(CPU_L2_SIZE_KB "${L2_SIZE_KB}" CACHE STRING "cpu L2 cache size in kB")
+    else()
+      if(${L2_SIZE_KB_STRING} MATCHES ".*[M|m]")
+        string(REGEX REPLACE "[M|m]" "000" L2_SIZE_KB ${L2_SIZE_KB_STRING})
+        set(CPU_L2_SIZE_KB "${L2_SIZE_KB}" CACHE STRING "cpu L2 cache size in kB")
+      else()
+        message(WARNING "unable to find unit prefix (K|M) in /sys/devices/system/cpu/cpu0/cache/index2/size:${L2_SIZE_KB_STRING} (assuming it's contents as expressed in kB, crossing fingers)")
+        set(CPU_L2_SIZE_KB "${L2_SIZE_KB_STRING}" CACHE STRING "cpu L2 cache size in kB")
+      endif()
+
+    endif()
+
+  else()
+    message("unable to find /sys/devices/system/cpu/cpu0/cache/index2/size")
+    set(CPU_L2_SIZE_KB "0" CACHE STRING "cpu L2 cache size in kB")
+  endif()
+
+
+ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+  EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.features" OUTPUT_VARIABLE
+    CPUINFO)
+
+  EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.vendor" OUTPUT_VARIABLE
+    VENDOR_TITLE)
+
+  EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.brand_string" OUTPUT_VARIABLE
+    MODEL_NAME)
+
+  EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.cache.size" OUTPUT_VARIABLE
+    CPU_L2_SIZE_KB)
+
+  set(CPU_VENDOR "${VENDOR_TITLE}" CACHE STRING "cpu vendor")
+  set(CPU_MODEL_NAME "${MODEL_NAME}" CACHE STRING "cpu model name")
+
+  STRING(REGEX REPLACE "^.*[^S](SSE) .*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "SSE" "${SSE_THERE}" SSE_TRUE)
+  IF (SSE_TRUE)
+    set(SSE_FOUND true CACHE BOOL "SSE2 available on host")
+  ELSE (SSE_TRUE)
+    set(SSE_FOUND false CACHE BOOL "SSE2 available on host")
+  ENDIF (SSE_TRUE)
+
+  STRING(REGEX REPLACE "^.*[^S](SSE2) .*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "SSE2" "${SSE_THERE}" SSE2_TRUE)
+  IF (SSE2_TRUE)
+    set(SSE2_FOUND true CACHE BOOL "SSE2 available on host")
+  ELSE (SSE2_TRUE)
+    set(SSE2_FOUND false CACHE BOOL "SSE2 available on host")
+  ENDIF (SSE2_TRUE)
+
+  STRING(REGEX REPLACE "^.*[^S](SSE2).*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "SSE2" "${SSE_THERE}" SSE2_TRUE)
+  IF (SSE2_TRUE)
+    set(SSE2_FOUND true CACHE BOOL "SSE2 available on host")
+  ELSE (SSE2_TRUE)
+    set(SSE2_FOUND false CACHE BOOL "SSE2 available on host")
+  ENDIF (SSE2_TRUE)
+
+  STRING(REGEX REPLACE "^.*[^S](SSE3).*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "SSE3" "${SSE_THERE}" SSE3_TRUE)
+  IF (SSE3_TRUE)
+    set(SSE3_FOUND true CACHE BOOL "SSE3 available on host")
+  ELSE (SSE3_TRUE)
+    set(SSE3_FOUND false CACHE BOOL "SSE3 available on host")
+  ENDIF (SSE3_TRUE)
+
+  STRING(REGEX REPLACE "^.*(SSSE3).*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "SSSE3" "${SSE_THERE}" SSSE3_TRUE)
+  IF (SSSE3_TRUE)
+    set(SSSE3_FOUND true CACHE BOOL "SSSE3 available on host")
+  ELSE (SSSE3_TRUE)
+    set(SSSE3_FOUND false CACHE BOOL "SSSE3 available on host")
+  ENDIF (SSSE3_TRUE)
+
+  STRING(REGEX REPLACE "^.*(SSE4.1).*$" "\\1" SSE_THERE ${CPUINFO})
+  STRING(COMPARE EQUAL "SSE4.1" "${SSE_THERE}" SSE41_TRUE)
+  IF (SSE41_TRUE)
+    set(SSE4_1_FOUND true CACHE BOOL "SSE4.1 available on host")
+  ELSE (SSE41_TRUE)
+    set(SSE4_1_FOUND false CACHE BOOL "SSE4.1 available on host")
+  ENDIF (SSE41_TRUE)
+
+  if("${CPUINFO}" MATCHES ".*AVX .*")
+    set(AVX_FOUND true CACHE BOOL "AVX available on host")
+  else()
+    set(AVX_FOUND false CACHE BOOL "AVX available on host")
+  endif()
+
+  if("${CPUINFO}" MATCHES ".*AVX2 .*")
+    set(AVX2_FOUND true CACHE BOOL "AVX2 available on host")
+  else()
+    set(AVX2_FOUND false CACHE BOOL "AVX2 available on host")
+  endif()
+
+ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
+  # TODO
+  set(SSE2_FOUND   true  CACHE BOOL "SSE2 available on host")
+  set(SSE3_FOUND   false CACHE BOOL "SSE3 available on host")
+  set(SSSE3_FOUND  false CACHE BOOL "SSSE3 available on host")
+  set(SSE4_1_FOUND false CACHE BOOL "SSE4.1 available on host")
+ELSE(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  set(SSE2_FOUND   true  CACHE BOOL "SSE2 available on host")
+  set(SSE3_FOUND   false CACHE BOOL "SSE3 available on host")
+  set(SSSE3_FOUND  false CACHE BOOL "SSSE3 available on host")
+  set(SSE4_1_FOUND false CACHE BOOL "SSE4.1 available on host")
+ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
+
+if(NOT SSE_FOUND)
+  MESSAGE(STATUS "Could not find hardware support for SSE on this machine.")
+endif(NOT SSE_FOUND)
+if(NOT SSE2_FOUND)
+  MESSAGE(STATUS "Could not find hardware support for SSE2 on this machine.")
+endif(NOT SSE2_FOUND)
+if(NOT SSE3_FOUND)
+  MESSAGE(STATUS "Could not find hardware support for SSE3 on this machine.")
+endif(NOT SSE3_FOUND)
+if(NOT SSSE3_FOUND)
+  MESSAGE(STATUS "Could not find hardware support for SSSE3 on this machine.")
+endif(NOT SSSE3_FOUND)
+if(NOT SSE4_1_FOUND)
+  MESSAGE(STATUS "Could not find hardware support for SSE4.1 on this machine.")
+endif(NOT SSE4_1_FOUND)
+if(NOT SSE4_2_FOUND)
+  MESSAGE(STATUS "Could not find hardware support for SSE4.2 on this machine.")
+endif(NOT SSE4_2_FOUND)
+if(NOT AVX_FOUND)
+  MESSAGE(STATUS "Could not find hardware support for AVX on this machine.")
+endif(NOT AVX_FOUND)
+if(NOT AVX2_FOUND)
+  MESSAGE(STATUS "Could not find hardware support for AVX2 on this machine.")
+endif(NOT AVX2_FOUND)
+
+
+mark_as_advanced(SSE_FOUND SSE2_FOUND SSE3_FOUND SSSE3_FOUND SSE4_1_FOUND SSE4_2_FOUND AVX_FOUND AVX2_FOUND CPU_VENDOR CPU_MODEL_NAME CPU_L2_SIZE_KB)

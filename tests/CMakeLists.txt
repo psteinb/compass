@@ -80,9 +80,8 @@ endif()
 
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
-find_package(SSE)
+find_package(CPU_FEATURES)
 
-message(STATUS "${PROJECT_SOURCE_DIR}/tests/build_machine.hpp.in --> ${CMAKE_CURRENT_BINARY_DIR}/build_machine.hpp")
 configure_file(${PROJECT_SOURCE_DIR}/tests/build_machine.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/build_machine.hpp)
 
 add_executable(test_build_machine test_build_machine.cpp $<TARGET_OBJECTS:catcho>)
