@@ -1,4 +1,3 @@
-
 ##extract a single line that contains the given pattern (starting from that patter)
 function(extract_line LINESTART_PATTERN MULTILINE_STRING OUTPUT_VARIABLE)
 
@@ -226,10 +225,10 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
 ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
-  #as an alternative to wmic, use 
+  #as an alternative to wmic, use
   #get_filename_component(_vendor_id "[HKEY_LOCAL_MACHINE\\Hardware\\Description\\System\\CentralProcessor\\0;VendorIdentifier]" NAME CACHE)
   #get_filename_component(_cpu_id "[HKEY_LOCAL_MACHINE\\Hardware\\Description\\System\\CentralProcessor\\0;Identifier]" NAME CACHE)
-  
+
   wmic_get("Name" MODEL_NAME)
   string(STRIP ${MODEL_NAME} MODEL_NAME)
   set(CPU_MODEL_NAME "${MODEL_NAME}" CACHE STRING "cpu model name")
@@ -241,19 +240,25 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
   wmic_get("NumberOfCores" CPU_NPHYS_CORES)
 
   #dirty hack that I need to validate with other machines in Win7
-  if(${CPU_NPHYS_CORES} GREATER 1)
-  math(EXPR L2_CACHE_SIZE "${L2_CACHE_SIZE}/${CPU_NPHYS_CORES}")
+  if(NOT "${L2_CACHE_SIZE}" STR_EQUAL "")
+    if(${CPU_NPHYS_CORES} GREATER 1)
+      math(EXPR L2_CACHE_SIZE "${L2_CACHE_SIZE}/${CPU_NPHYS_CORES}")
+    endif()
+    set(CPU_L2_SIZE_KB "${L2_CACHE_SIZE}" CACHE STRING "cpu L2 cache size in kB")
+  else()
+    message("unable to decipher L2 cache size")
   endif()
-  
-  set(CPU_L2_SIZE_KB "${L2_CACHE_SIZE}" CACHE STRING "cpu L2 cache size in kB")
+  set(CPU_L2_SIZE_KB "0" CACHE STRING "cpu L2 cache size in kB")
+  set(CPU_VENDOR "" CACHE STRING "cpu model vendor")
+  set(CPU_MODEL_NAME "" CACHE STRING "cpu model name")
 
   #thanks to the wonderful VC project (https://github.com/VcDevel/Vc)
   include (OptimizeForArchitecture)
-  
+
   OFA_AutodetectHostArchitecture()
   OFA_HandleX86Options()
-  
-    
+
+
   list(FIND _available_vector_units_list "sse" SSE_INDEX)
   list(FIND _available_vector_units_list "sse2" SSE2_INDEX)
   list(FIND _available_vector_units_list "sse3" SSE3_INDEX)
