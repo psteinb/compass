@@ -58,7 +58,7 @@ before_install:
 script:
   - mkdir -p build && cd build
   - cmake ..
-  - cat /proc/cpuinfo && cat tests/build_machine.hpp
+  - cat tests/build_machine.hpp
   - make VERBOSE=1
   - ctest -V -j
   - cd ..
