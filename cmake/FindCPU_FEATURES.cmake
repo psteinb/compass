@@ -252,7 +252,7 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
   
   OFA_AutodetectHostArchitecture()
   OFA_HandleX86Options()
-  message("++ _available_vector_units_list = ${_available_vector_units_list}")
+  
     
   list(FIND _available_vector_units_list "sse" SSE_INDEX)
   list(FIND _available_vector_units_list "sse2" SSE2_INDEX)
@@ -296,7 +296,7 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
   set(SSE4_2_FOUND false CACHE BOOL "SSE4.2 available on host")
   set(AVX_FOUND false CACHE BOOL "AVX available on host")
   set(AVX2_FOUND false CACHE BOOL "AVX2 available on host")
-  
+
 ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 message(STATUS "found hardware: ${CPU_VENDOR} ${CPU_MODEL_NAME}")
