@@ -1,8 +1,6 @@
 #ifndef COMPASS_DEFINITIONS_H
 #define COMPASS_DEFINITIONS_H
 
-#include "ct/preprocessor_impl.hpp"
-
 namespace compass {
 
     namespace compiletime {
@@ -25,5 +23,7 @@ namespace compass {
     namespace ct = compiletime;
 
 };
+
+//#include "ct/preprocessor_impl.hpp"
 
 #endif /* DEFINITIONS_H */
