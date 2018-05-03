@@ -1,6 +1,7 @@
 version: '{build}'
 
-os: 
+os:
+  - Visual Studio 2014
   - Visual Studio 2015
   - Visual Studio 2017
 
