@@ -59,6 +59,13 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
   //   REQUIRE(value==expected_nphyscores);
   // }
 
+  SECTION( "has_sse_right_at_ct" ){
+
+    auto value = compass::compiletime::has<compass::feature::sse()>::enabled;
+
+    REQUIRE(true);//this just needs to compile
+
+  }
 
   SECTION( "has_sse_right" ){
 
