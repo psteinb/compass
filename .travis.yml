@@ -45,7 +45,7 @@ matrix:
     - os: osx
       osx_image: xcode9.3
       env:
-        - MATRIX_EVAL="brew search gcc;brew install gcc6; brew link --overwrite gcc && gcc --version && CC=gcc && CXX=g++"
+        - MATRIX_EVAL="brew search gcc;brew install gcc6; brew link --overwrite gcc@6 && gcc --version && CC=gcc && CXX=g++"
 
     - os: osx
       osx_image: xcode9
