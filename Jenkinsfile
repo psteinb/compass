@@ -6,7 +6,7 @@ pipeline {
 
   }
   stages {
-    stage('') {
+    stage('error') {
       steps {
         sh '''#!/bin/bash
 date'''
