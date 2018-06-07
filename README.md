@@ -57,6 +57,8 @@ int main(int argc, char** argv){
 
 ```
 
+if you want to learn more supported features, check this [test file](tests/test_build_machine.cpp).
+
 ## Help needed 
 
 This project is quite small, so here is your chance to boost open-source to the benefit of the entire C++ community.
