@@ -1116,6 +1116,40 @@ namespace compass {
 
         }
 
+
+        namespace detail {
+
+            static std::uint32_t accumulate(std::uint32_t value){
+                return value;
+            }
+
+            template < typename T, typename... features_t >
+            static std::uint32_t accumulate(std::uint32_t value,
+                                        T head,
+                                        features_t... tail)
+            {
+
+                std::uint32_t local = compass::runtime::has(head);
+                value = (value <<= 1) | local;
+
+                return accumulate(value,tail...);
+
+            }
+
+        };
+
+
+        template <typename... feature_t>
+        static std::uint32_t accumulate(feature_t... features) {
+
+            static const int pack_size = sizeof...(features);
+            static_assert(pack_size <= 32, "[compass::runtime::accumulate] unable to handle more than 32 features" );
+
+            std::uint32_t value = compass::runtime::detail::accumulate( 0u, features...);
+            return value;
+
+        }
+
         namespace size {
 
             struct cacheline{

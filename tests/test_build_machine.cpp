@@ -3,6 +3,7 @@
 
 #include "compass.hpp"
 
+#include <bitset>
 #include <vector>
 #include <iostream>
 #include <string>
@@ -112,6 +113,20 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
     auto value = compass::runtime::has(compass::feature::avx());
 
     REQUIRE(value==expected_has_avx);
+
+  }
+
+  SECTION( "has_multiple_features" ){
+
+    auto value = compass::runtime::accumulate(compass::feature::avx(),compass::feature::sse4(),compass::feature::sse3());
+
+    const bool expected = (expected_has_avx || expected_has_sse4 || expected_has_sse3 );
+    REQUIRE(bool(value) == expected );
+    std::bitset<3> mask((unsigned long)value);
+
+    REQUIRE(mask[0] ==  expected_has_avx);
+    REQUIRE(mask[1] ==  expected_has_sse4);
+    REQUIRE(mask[2] ==  expected_has_sse3);
 
   }
 
