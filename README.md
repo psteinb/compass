@@ -9,7 +9,7 @@ A drop-in header-only C++ library to detect hardware capabilities at runtime and
 
 You have 2 options:
 
-1. you can just copy the contents of `include` into your project and off you go
+1. you can just copy the contents of `single_include` (or `include` if you like to have multiple folders and source code files)  into your project and off you go
 
 2. you use the cmake build infrastructure to put compass in a desired folder
 
@@ -22,17 +22,17 @@ You have 2 options:
     $ make install #depending on the contents of CMAKE_INSTALL_PREFIX, you may use sudo
     ```
 
-    - on Windows platforms (assuming that `cmake` and `boost\lib` are in your `PATH`)
+    - on Windows platforms (assuming that `cmake` is in your `PATH`)
 	```
 	> cd repo
 	> mkdir build
 	> cd build
-	> cmake.exe -G "Visual Studio 14 2015 Win64" -DBOOST_ROOT=C:\path\to\boost\1_59_0 ..
+	> cmake.exe -G "Visual Studio 14 2015 Win64" ..
 	> cmake.exe --build . --target ALL_BUILD --config Release
 	> ctest.exe -C Release
 	```
 
-(3.) tests can only be run if you have access to the test machines and it requires boost to be installed (if boost is not detected, the tests are skipped and a warning is issued)
+(3.) tests should only be run on the hardware where `cmake` was called. `CMakeLists.txt` is trying hard to detect the hardware features at `cmake` invocation. They are then included in the unit test suite. 
 
 ## Compass API
 
@@ -71,7 +71,7 @@ This project is quite small, so here is your chance to boost open-source to the 
 - [ ] extend support for OpenPower (gcc)
 - [ ] contribute for ARM (gcc/clang) if you have according hardware available
 
-A good place to start and to see what is needed, is llvm [`Host.cpp`](http://llvm.org/docs/doxygen/html/Host_8cpp_source.html) file
+A good place to start and to see what is needed, is llvm [`Host.cpp`](http://llvm.org/docs/doxygen/html/Host_8cpp_source.html) file.
 
 ## License
 
