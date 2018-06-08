@@ -19,10 +19,18 @@
 
 #else
 //TODO: try to warn users on Windows that we are enabling SSE3 + SSE4 upon assumption here
-    #if _M_IX86_FP >= 2
-        #define COMPASS_CT_HAS_SSE2 1
-        #define COMPASS_CT_HAS_SSE3 1
-        #define COMPASS_CT_HAS_SSE4 1
+    #ifdef _M_IX86_FP
+		#if _M_IX86_FP >= 2
+			#define COMPASS_CT_HAS_SSE2 1
+			#define COMPASS_CT_HAS_SSE3 1
+			#define COMPASS_CT_HAS_SSE4 1
+		#endif
+	#else
+		#if defined(__AVX__) || defined(__AVX2__)
+			#define COMPASS_CT_HAS_SSE2 1
+			#define COMPASS_CT_HAS_SSE3 1
+			#define COMPASS_CT_HAS_SSE4 1
+		#endif
     #endif
 #endif
 
