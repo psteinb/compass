@@ -6,15 +6,21 @@ pipeline {
             failFast true
             parallel {
                 stage("linux-clean") {
-                    node ("linux") {
+                    agent {
+                        label "linux"
+                    }
+                    steps {
                         dir("build") {
                             deleteDir()
                         }
                         sh 'hostname'
                     }
                 }
-                stage( "windows-clean") {
-                    node('windows') {
+                stage("win-clean") {
+                    agent {
+                        label "windows"
+                    }
+                    steps {
                         dir("build") {
                             deleteDir()
                         }
@@ -22,20 +28,15 @@ pipeline {
                     }
                 }
                 stage ( "mac-clean" ){
-                    try {
-                        timeout(time: 60, unit: 'SECONDS') {
-                            node('mac') {
-                                dir("build") {
-                                    deleteDir()
-                                }
-                                sh 'hostname'
-                            }
-                        }
-                    } catch(err) {
-                        // Uh-oh. welles not available, so use 'cage'.
-                        echo 'Time out on mac. Node down?'
+                    agent {
+                        label "mac"
                     }
-
+                    steps {
+                        dir("build") {
+                            deleteDir()
+                        }
+                        sh 'hostname'
+                    }
                 }
             }
         }
