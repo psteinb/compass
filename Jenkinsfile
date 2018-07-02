@@ -21,10 +21,8 @@ pipeline {
                             bat 'hostname'
                         }
                     },
-                    "mac" : {
-
-                        try
-                        {
+                    try {
+                        "mac" : {
                             timeout(time: 60, unit: 'SECONDS') {
                                 node('mac') {
                                     dir("build") {
@@ -63,10 +61,8 @@ pipeline {
                             }
                         }
                     },
-                    "mac" : {
-
-                        try
-                        {
+                    try {
+                        "mac" : {
                             timeout(time: 60, unit: 'SECONDS') {
                                 node('mac') {
                                     checkout(changelog: false, scm: scm) // Changelog to false, otherwise Jenkins shows duplicates. Only linux (the Jenkins master) has the changelog enabled.
