@@ -22,11 +22,20 @@ pipeline {
                         }
                     },
                     "mac" : {
-                        node('mac') {
-                            dir("build") {
-                                deleteDir()
+
+                        try
+                        {
+                            timeout(time: 60, unit: 'SECONDS') {
+                                node('mac') {
+                                    dir("build") {
+                                        deleteDir()
+                                    }
+                                    sh 'hostname'
+                                }
                             }
-                            sh 'hostname'
+                        } catch(err) {
+                            // Uh-oh. welles not available, so use 'cage'.
+                            echo 'Time out on mac. Node down?'
                         }
                     }
                 )
