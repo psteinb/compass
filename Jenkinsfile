@@ -1,9 +1,8 @@
 pipeline {
-    //agent { label "linux" }
-    agent any
+    agent none
     stages {
         stage ('Clean') {
-            failFast true
+            //failFast true
             parallel {
                 stage("linux-clean") {
                     agent {
