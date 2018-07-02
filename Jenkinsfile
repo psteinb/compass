@@ -9,7 +9,6 @@ pipeline {
                         node ("linux") {
                             dir("build") {
                                 deleteDir()
-                                writeFile file:'dummy', text:'' // Creates the directory
                             }
                         }
                     },
@@ -17,7 +16,6 @@ pipeline {
                         node('windows') {
                             dir("build") {
                                 deleteDir()
-                                writeFile file:'dummy', text:'' // Creates the directory
                             }
                         }
                     },
@@ -25,7 +23,6 @@ pipeline {
                         node('mac') {
                             dir("build") {
                                 deleteDir()
-                                writeFile file:'dummy', text:''  // Creates the directory
                             }
                         }
                     }
