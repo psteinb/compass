@@ -10,6 +10,7 @@ pipeline {
                             dir("build") {
                                 deleteDir()
                             }
+                            sh 'hostname'
                         }
                     },
                     "windows" : {
@@ -17,6 +18,7 @@ pipeline {
                             dir("build") {
                                 deleteDir()
                             }
+                            bat 'hostname'
                         }
                     },
                     "mac" : {
@@ -24,6 +26,7 @@ pipeline {
                             dir("build") {
                                 deleteDir()
                             }
+                            sh 'hostname'
                         }
                     }
                 )
