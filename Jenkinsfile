@@ -105,7 +105,7 @@ pipeline {
         stage ('Test'){
             //failFast true
             parallel {
-                stage("ubuntu-clean") {
+                stage("ubuntu-test") {
                     agent {
                         label "ubuntu"
                     }
@@ -115,7 +115,7 @@ pipeline {
                         }
                     }
                 }
-                stage("centos-clean") {
+                stage("centos-test") {
                     agent {
                         label "centos"
                     }
@@ -125,7 +125,7 @@ pipeline {
                         }
                     }
                 }
-                stage("win-clean") {
+                stage("win-test") {
                     agent {
                         label "windows"
                     }
@@ -135,7 +135,7 @@ pipeline {
                         }
                     }
                 }
-                stage ( "mac-clean" ){
+                stage ( "mac-test" ){
                     agent {
                         label "mac"
                     }
