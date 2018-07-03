@@ -4,9 +4,20 @@ pipeline {
         stage ('Clean') {
             //failFast true
             parallel {
-                stage("linux-clean") {
+                stage("ubunt-clean") {
                     agent {
-                        label "linux"
+                        label "ubuntu"
+                    }
+                    steps {
+                        dir("build") {
+                            deleteDir()
+                        }
+                        sh 'hostname'
+                    }
+                }
+                stage("centos-clean") {
+                    agent {
+                        label "centos"
                     }
                     steps {
                         dir("build") {
@@ -42,9 +53,21 @@ pipeline {
         stage ('Build') {
             //failFast true
             parallel {
-                stage("linux-build") {
+                stage("ubuntu-build") {
                     agent {
-                        label "linux"
+                        label "ubuntu"
+                    }
+                    steps {
+                        checkout scm
+                        dir("build") {
+                            sh 'cmake .. -DCMAKE_BUILD_TYPE=Release'
+                            sh 'make'
+                        }
+                    }
+                }
+                stage("centos-build") {
+                    agent {
+                        label "centos"
                     }
                     steps {
                         checkout scm
@@ -82,9 +105,19 @@ pipeline {
         stage ('Test'){
             //failFast true
             parallel {
-                stage("linux-clean") {
+                stage("ubuntu-clean") {
                     agent {
-                        label "linux"
+                        label "ubuntu"
+                    }
+                    steps {
+                       dir("build") {
+                            sh 'ctest'
+                        }
+                    }
+                }
+                stage("centos-clean") {
+                    agent {
+                        label "centos"
                     }
                     steps {
                        dir("build") {
