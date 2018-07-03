@@ -6,7 +6,7 @@ pipeline {
             parallel {
                 stage("linux-clean") {
                     agent {
-                        label "linux"
+                        label "ubuntu"
                     }
                     steps {
                         dir("build") {
@@ -44,7 +44,7 @@ pipeline {
             parallel {
                 stage("linux-build") {
                     agent {
-                        label "linux"
+                        label "ubuntu"
                     }
                     steps {
                         checkout scm
