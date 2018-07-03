@@ -97,6 +97,7 @@ pipeline {
                         dir("build") {
                             sh 'cmake .. -DCMAKE_BUILD_TYPE=Release'
                             sh 'make'
+                            sh 'pwd'
                         }
                     }
                 }
@@ -141,6 +142,7 @@ pipeline {
                     }
                     steps {
                         dir("build") {
+                            sh 'pwd'
                             sh 'ctest'
                         }
                     }
