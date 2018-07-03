@@ -6,7 +6,7 @@ pipeline {
             parallel {
                 stage("linux-clean") {
                     agent {
-                        label "ubuntu"
+                        label "linux"
                     }
                     steps {
                         dir("build") {
@@ -44,7 +44,7 @@ pipeline {
             parallel {
                 stage("linux-build") {
                     agent {
-                        label "ubuntu"
+                        label "linux"
                     }
                     steps {
                         checkout scm
@@ -79,7 +79,41 @@ pipeline {
                 }
             }
         }
-
+        stage ('Test'){
+            //failFast true
+            parallel {
+                stage("linux-clean") {
+                    agent {
+                        label "linux"
+                    }
+                    steps {
+                       dir("build") {
+                            sh 'ctest'
+                        }
+                    }
+                }
+                stage("win-clean") {
+                    agent {
+                        label "windows"
+                    }
+                    steps {
+                        dir("build") {
+                            bat 'ctest --config Release'
+                        }
+                    }
+                }
+                stage ( "mac-clean" ){
+                    agent {
+                        label "mac"
+                    }
+                    steps {
+                        dir("build") {
+                            sh 'ctest'
+                        }
+                    }
+                }
+            }
+        }
     //     stage ('Test') {
     //         steps {
     //             parallel (
