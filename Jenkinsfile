@@ -84,7 +84,7 @@ pipeline {
                     steps {
                         dir("build") {
                                 bat 'cmake .. -G "Visual Studio 15 2017 Win64" '
-                                bat "cmake --build . --target Release --config ALL_BUILD"
+                                bat "cmake --build . --target ALL_BUILD --config Release"
                             }
                     }
                 }
