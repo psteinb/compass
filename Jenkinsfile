@@ -111,6 +111,8 @@ pipeline {
                     }
                     steps {
                        dir("build") {
+                            sh 'cmake .. -DCMAKE_BUILD_TYPE=Release'
+                            sh 'make'
                             sh 'ctest'
                         }
                     }
@@ -121,6 +123,8 @@ pipeline {
                     }
                     steps {
                        dir("build") {
+                            sh 'cmake .. -DCMAKE_BUILD_TYPE=Release'
+                            sh 'make'
                             sh 'ctest'
                         }
                     }
@@ -131,6 +135,8 @@ pipeline {
                     }
                     steps {
                         dir("build") {
+                            bat 'cmake .. -G "Visual Studio 15 2017 Win64" '
+                            bat "cmake --build . --target ALL_BUILD --config Release"
                             bat 'ctest --config Release'
                         }
                     }
@@ -141,6 +147,8 @@ pipeline {
                     }
                     steps {
                         dir("build") {
+                            sh 'cmake .. -DCMAKE_BUILD_TYPE=Release'
+                            sh 'make'
                             sh 'ctest'
                         }
                     }
