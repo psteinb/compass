@@ -1,11 +1,14 @@
 before_script:
+  tags:
+    - linux
+  script:
     - pwd
     - hostname
 
 # a job
 build_linux:
   tags:
-    - CentOS-shared
+    - linux
   script:
     - mkdir build
     - cd build
