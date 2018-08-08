@@ -1,0 +1,73 @@
+centos_build:
+  stage: build
+  tags:
+    - centos
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+
+centos_test:
+  stage: test
+  tags:
+    - centos
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+    - ctest
+
+mac_build:
+  stage: build
+  tags:
+    - mac
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+
+mac_test:
+  stage: test
+  tags:
+    - mac
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+    - ctest
+
+ubuntu_build:
+  stage: build
+  tags:
+    - ubuntu
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+
+win_build:
+  stage: build
+  tags:
+    - windows
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - cmake --build .
+
+win_test:
+  stage: test
+  tags:
+    - windows
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - cmake --build . --config Release
+    - ctest -C Release
+

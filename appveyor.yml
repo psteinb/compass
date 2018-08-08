@@ -1,7 +1,7 @@
 version: '{build}'
 
 os:
-  - Visual Studio 2013
+#  - Visual Studio 2013
   - Visual Studio 2015
   - Visual Studio 2017
 
@@ -17,7 +17,11 @@ install: []
 build_script:
   - IF "%APPVEYOR_BUILD_WORKER_IMAGE%" == "Visual Studio 2015" ( SET GEN="Visual Studio 14 2015") ELSE (SET GEN="Visual Studio 15 2017")
   - wmic.exe cpu get
-  - cmake . -G%GEN% # -DCMAKE_CXX_FLAGS="%additional_flags%"
+  - mkdir build
+  - cd build
+  - cmake --version
+  - cmake --help
+  - cmake .. #-G%GEN% # -DCMAKE_CXX_FLAGS="%additional_flags%"
   - cmake --build . --config Release
 
 test_script:
