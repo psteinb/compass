@@ -34,7 +34,6 @@ mac_test:
   tags:
     - mac
   script:
-    - ls
     - mkdir build
     - cd build
     - cmake ..
@@ -66,10 +65,9 @@ win_test:
   tags:
     - windows
   script:
-    - dir
     - mkdir build
     - cd build
     - cmake ..
     - cmake --build . --config Release
-    - ctest --config Release
+    - ctest -C Release
 
