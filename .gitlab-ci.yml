@@ -1,14 +1,51 @@
-before_script:
-  - pwd
-  - hostname
-
-# a job
-build_linux:
+centos_build:
+  stage: build
   tags:
-    - linux
+    - centos
   script:
     - mkdir build
     - cd build
     - cmake ..
     - make
-      
+
+centos_test:
+  stage: test
+  tags:
+    - centos
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+    - ctest
+
+mac_build:
+  stage: build
+  tags:
+    - mac
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+
+ubuntu_build:
+  stage: build
+  tags:
+    - ubuntu
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+
+win_build:
+  stage: build
+  tags:
+    - windows
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - cmake --build .
+
