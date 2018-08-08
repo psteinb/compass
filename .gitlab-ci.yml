@@ -1,0 +1,12 @@
+before_script:
+    - pwd
+    - hostname
+
+# a job
+build_linux:
+    script:
+      - mkdir build
+      - cd build
+      - cmake ..
+      - make
+      - ctest
