@@ -1,9 +1,6 @@
 before_script:
-  tags:
-    - linux
-  script:
-    - pwd
-    - hostname
+  - pwd
+  - hostname
 
 # a job
 build_linux:
