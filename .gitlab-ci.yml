@@ -4,9 +4,11 @@ before_script:
 
 # a job
 build_linux:
-    script:
-      - mkdir build
-      - cd build
-      - cmake ..
-      - make
-      - ctest
+  tags:
+    - CentOS
+  script:
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+      
