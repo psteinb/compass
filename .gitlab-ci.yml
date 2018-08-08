@@ -29,6 +29,18 @@ mac_build:
     - cmake ..
     - make
 
+mac_test:
+  stage: test
+  tags:
+    - mac
+  script:
+    - ls
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make
+    - ctest
+
 ubuntu_build:
   stage: build
   tags:
@@ -48,4 +60,16 @@ win_build:
     - cd build
     - cmake ..
     - cmake --build .
+
+win_test:
+  stage: test
+  tags:
+    - windows
+  script:
+    - dir
+    - mkdir build
+    - cd build
+    - cmake ..
+    - cmake --build . --config Release
+    - ctest --config Release
 
