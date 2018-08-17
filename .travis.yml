@@ -70,6 +70,7 @@ before_install:
 
 
 script:
+  - env | egrep '^C'
   - which ${CXX} && ${CXX} --version
   - mkdir -p build && cd build
   - cmake ..
