@@ -96,6 +96,13 @@ namespace compass {
 
             struct cacheline{
 
+                static std::uint32_t levels_available(){
+
+                    using current_arch_t = ct::arch::type;
+                    return compass::runtime::detail::size::cacheline::levels_available(current_arch_t());
+
+                }
+
                 static std::uint32_t level(int _lvl){
 
                     using current_arch_t = ct::arch::type;
@@ -105,6 +112,13 @@ namespace compass {
             };
 
             struct cache{
+
+                static std::uint32_t levels_available(){
+
+                    using current_arch_t = ct::arch::type;
+                    return compass::runtime::detail::size::cache::levels_available(current_arch_t());
+
+                }
 
                 static std::uint32_t level(int _lvl){
 

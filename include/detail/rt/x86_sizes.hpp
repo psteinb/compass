@@ -60,12 +60,14 @@ namespace compass {
 
         public:
 
-            static const cacheline& get(){
-              static cacheline instance;
-              return instance;
-            }
+          static const cacheline& get(){
+            static cacheline instance;
+            return instance;
+          }
 
-
+          static std::uint32_t levels_available(ct::x86_tag){
+            return cacheline::get().ebx_data_.size();
+          }
 
           static std::uint32_t level(int _lvl, ct::x86_tag){
 
@@ -121,6 +123,10 @@ namespace compass {
           static const cache& get(){
             static cache instance;
             return instance;
+          }
+
+          static std::uint32_t levels_available(ct::x86_tag){
+            return cache::get().ebx_data_.size();
           }
 
           static std::uint32_t level(int _lvl, ct::x86_tag){
