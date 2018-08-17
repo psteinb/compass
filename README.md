@@ -57,7 +57,7 @@ int main(int argc, char** argv){
 
 ```
 
-if you want to learn more supported features, check this [test file](tests/test_build_machine.cpp).
+if you want to learn more supported features, check this [test file](tests/test_machine.cpp).
 
 ## Help needed 
 
@@ -68,7 +68,7 @@ This project is quite small, so here is your chance to boost open-source to the 
 - [ ] is thread-safety an issue of the current implementation ?
 - [ ] contribute for adding Intel compiler on x86
 - [ ] contribute for GPUs (nvcc)
-- [ ] extend support for OpenPower (gcc)
+- [ ] extend support for OpenPower (gcc) if you have according hardware available
 - [ ] contribute for ARM (gcc/clang) if you have according hardware available
 
 A good place to start and to see what is needed, is llvm [`Host.cpp`](http://llvm.org/docs/doxygen/html/Host_8cpp_source.html) file.
