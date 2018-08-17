@@ -752,12 +752,14 @@ namespace compass {
 
         public:
 
-            static const cacheline& get(){
-              static cacheline instance;
-              return instance;
-            }
+          static const cacheline& get(){
+            static cacheline instance;
+            return instance;
+          }
 
-
+          static std::uint32_t levels_available(ct::x86_tag){
+            return cacheline::get().ebx_data_.size();
+          }
 
           static std::uint32_t level(int _lvl, ct::x86_tag){
 
@@ -813,6 +815,10 @@ namespace compass {
           static const cache& get(){
             static cache instance;
             return instance;
+          }
+
+          static std::uint32_t levels_available(ct::x86_tag){
+            return cache::get().ebx_data_.size();
           }
 
           static std::uint32_t level(int _lvl, ct::x86_tag){
@@ -934,27 +940,50 @@ namespace compass {
         std::string brand_str = compass::runtime::detail::brand(ct::x86_tag());
         std::string vendor = compass::runtime::detail::vendor(ct::x86_tag());
         std::size_t find_pos = 0;
+
+        bool is_intel = false;
+        bool is_amd = false;
+
+
         if((find_pos = vendor.find("Genuine"))!=std::string::npos){
             vendor.erase(find_pos,7);
+            is_intel = true;
+        }
+
+
+        if((find_pos = vendor.find("Authentic"))!=std::string::npos){
+            vendor.erase(find_pos,9);
+            is_amd = true;
         }
 
         std::string value = "";
 
-        if(brand_str.find(vendor) != std::string::npos){
+        if((find_pos = brand_str.find(vendor)) != std::string::npos){
 
-          auto second_bracket_itr = brand_str.rfind(")");
-          auto last_at_itr = brand_str.rfind("@");
-          value = brand_str.substr(second_bracket_itr+1,last_at_itr-(second_bracket_itr+1));
+          if(is_intel){
 
-          if((find_pos = value.find(" CPU "))!=std::string::npos){
-            value.erase(find_pos,5);
+            auto second_bracket_itr = brand_str.rfind(")");
+            auto last_at_itr = brand_str.rfind("@");
+            value = brand_str.substr(second_bracket_itr+1,last_at_itr-(second_bracket_itr+1));
+
+            if((find_pos = value.find(" CPU "))!=std::string::npos){
+              value.erase(find_pos,5);
+            }
+
+
+            if((find_pos = value.find(" CPU "))!=std::string::npos){
+              value.erase(find_pos,5);
+            }
+
+            value.erase(std::remove_if(value.begin(), value.end(), isspace), value.end());
           }
 
-          if((find_pos = value.find(" CPU "))!=std::string::npos){
-            value.erase(find_pos,5);
-          }
+          if(is_amd){
 
-          value.erase(std::remove_if(value.begin(), value.end(), isspace), value.end());
+            auto end_itr = brand_str.rfind("Processor");
+            value = brand_str.substr(find_pos+4,end_itr-4);
+
+          }
         }
         return value;
 
@@ -1154,6 +1183,13 @@ namespace compass {
 
             struct cacheline{
 
+                static std::uint32_t levels_available(){
+
+                    using current_arch_t = ct::arch::type;
+                    return compass::runtime::detail::size::cacheline::levels_available(current_arch_t());
+
+                }
+
                 static std::uint32_t level(int _lvl){
 
                     using current_arch_t = ct::arch::type;
@@ -1163,6 +1199,13 @@ namespace compass {
             };
 
             struct cache{
+
+                static std::uint32_t levels_available(){
+
+                    using current_arch_t = ct::arch::type;
+                    return compass::runtime::detail::size::cache::levels_available(current_arch_t());
+
+                }
 
                 static std::uint32_t level(int _lvl){
 

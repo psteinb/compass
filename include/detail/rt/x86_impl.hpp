@@ -90,27 +90,50 @@ namespace compass {
         std::string brand_str = compass::runtime::detail::brand(ct::x86_tag());
         std::string vendor = compass::runtime::detail::vendor(ct::x86_tag());
         std::size_t find_pos = 0;
+
+        bool is_intel = false;
+        bool is_amd = false;
+
+        //remove Genuine in Vendor string if present, Intel host
         if((find_pos = vendor.find("Genuine"))!=std::string::npos){
             vendor.erase(find_pos,7);
+            is_intel = true;
+        }
+
+        //remove Authentic in Vendor string if present, AMD host, e.g. AMD EPYC 7401P 24-Core Processor
+        if((find_pos = vendor.find("Authentic"))!=std::string::npos){
+            vendor.erase(find_pos,9);
+            is_amd = true;
         }
 
         std::string value = "";
 
-        if(brand_str.find(vendor) != std::string::npos){
-        //based on the Intel chip test strings that are known
-          auto second_bracket_itr = brand_str.rfind(")");
-          auto last_at_itr = brand_str.rfind("@");
-          value = brand_str.substr(second_bracket_itr+1,last_at_itr-(second_bracket_itr+1));
+        if((find_pos = brand_str.find(vendor)) != std::string::npos){
 
-          if((find_pos = value.find(" CPU "))!=std::string::npos){
-            value.erase(find_pos,5);
+          if(is_intel){
+            //based on the Intel chip test strings that are known
+            auto second_bracket_itr = brand_str.rfind(")");
+            auto last_at_itr = brand_str.rfind("@");
+            value = brand_str.substr(second_bracket_itr+1,last_at_itr-(second_bracket_itr+1));
+
+            if((find_pos = value.find(" CPU "))!=std::string::npos){
+              value.erase(find_pos,5);
+            }
+
+            //TODO: why run this 2 times?
+            if((find_pos = value.find(" CPU "))!=std::string::npos){
+              value.erase(find_pos,5);
+            }
+
+            value.erase(std::remove_if(value.begin(), value.end(), isspace), value.end());
           }
 
-          if((find_pos = value.find(" CPU "))!=std::string::npos){
-            value.erase(find_pos,5);
-          }
+          if(is_amd){
 
-          value.erase(std::remove_if(value.begin(), value.end(), isspace), value.end());
+            auto end_itr = brand_str.rfind("Processor");
+            value = brand_str.substr(find_pos+4,end_itr-4);
+
+          }
         }
         return value;
 
