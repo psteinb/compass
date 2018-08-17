@@ -34,8 +34,12 @@ TEST_CASE( "compass_fundamentals" ){
 
   SECTION( "compass_yields_non_zero_L1size" ){
 
-    auto value = compass::runtime::size::cacheline::level(1);
-    REQUIRE(value>0u);
+    if(compass::runtime::size::cache::levels_available()){
+      auto value = compass::runtime::size::cache::level(1);
+      REQUIRE(value>0u);
+    } else {
+      SUCCEED("no cache architecture available on this host");
+    }
 
   }
 
