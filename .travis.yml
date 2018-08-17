@@ -54,6 +54,7 @@ matrix:
 
 before_install:
     - eval "${MATRIX_EVAL}"
+    - ${CXX} --version
 
 script:
   - mkdir -p build && cd build
