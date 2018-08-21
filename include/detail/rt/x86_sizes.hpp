@@ -31,16 +31,14 @@ namespace compass {
         class cacheline
         {
 
-          std::vector<std::uint32_t> ebx_data_;
+          std::vector<std::uint32_t> sizes_in_bytes_;
 
-          cacheline():
-            ebx_data_()
-            {
+	  void on_intel(){
 
-              ebx_data_.reserve(3);
-              std::uint32_t maxlevel = 8;//maximum - 1 that can be mapped to 3 bits in eax[7:5]
+	    std::uint32_t maxlevel = 8;//maximum - 1 that can be mapped to 3 bits in eax[7:5]
               std::uint32_t eax = 0;
-
+	      sizes_in_bytes_.reserve(maxlevel);
+              
               for(std::uint32_t l = 0;l<maxlevel;++l)
               {
                 auto regs = cpuid(0x04,0,l);
@@ -55,8 +53,56 @@ namespace compass {
                 if(truelevel != l)//this is the wrong level
                   continue;
 
-                ebx_data_.push_back(regs[ct::ebx]);
+                		
+		std::uint32_t value = bitview(regs[ct::ebx]).range(0,11);
+		sizes_in_bytes_.push_back(value);
+
               }
+
+	  }
+
+	  void on_amd(){
+
+	    sizes_in_bytes_.reserve(3);
+	      
+	    auto regs = cpuid(0x80000005);
+
+	    std::uint32_t ecx = regs[ct::ecx];
+	    auto bv = bitview(ecx);//L1data cache
+	    std::uint32_t linesize = bv.range(0,7);
+	    if(!linesize)//this is not a data cache, as the L1 cacheline size is 0
+	      return;
+
+	    sizes_in_bytes_.push_back(linesize);
+
+	    auto l23regs = cpuid(0x80000006);
+	    ecx = l23regs[ct::ecx];
+	    auto bv2 = bitview(ecx);//L2 cache
+	    linesize = bv2.range(0,7);
+	    
+	    sizes_in_bytes_.push_back(linesize);
+
+	    auto bv3 = bitview(l23regs[ct::edx]);//L3 cache
+	    linesize = bv3.range(0,7);
+	    
+	    sizes_in_bytes_.push_back(linesize);
+
+	  }
+
+          cacheline():
+            sizes_in_bytes_()
+            {
+
+              
+	      auto brand = compass::runtime::detail::vendor( current_arch_t() );
+
+	      if(brand.find("AMD") != std::string::npos){
+		on_amd();
+	      }
+
+	      if(brand.find("Intel") != std::string::npos){
+		on_intel();
+	      }
 
             }
 
@@ -68,16 +114,14 @@ namespace compass {
           }
 
           static std::uint32_t levels_available(ct::x86_tag){
-            return cacheline::get().ebx_data_.size();
+            return cacheline::get().sizes_in_bytes_.size();
           }
 
           static std::uint32_t level(int _lvl, ct::x86_tag){
 
-            auto reg = cacheline::get().ebx_data_.at(_lvl-1);
+            auto value = cacheline::get().sizes_in_bytes_.at(_lvl-1);
 
-            std::uint32_t value = bitview(reg).range(0,11);
-
-            return value + 1;
+            return value;
           }
         };
 
@@ -91,7 +135,8 @@ namespace compass {
 	    
               std::uint32_t eax = 0;
               std::uint32_t maxlevel = 8;//maximum - 1 that can be mapped to 3 bits in eax[7:5]
-
+	      sizes_in_bytes_.reserve(8);
+	      
               for(std::uint32_t l = 0;l<maxlevel;++l)
               {
                 auto regs = cpuid(0x04,0,l);
@@ -124,9 +169,8 @@ namespace compass {
 
 	  void on_amd(){
 
-	    
-	    std::uint32_t maxlevel = 8;//maximum - 1 that can be mapped to 3 bits in eax[7:5]
-
+	    sizes_in_bytes_.reserve(3);
+	      
 	    auto regs = cpuid(0x80000005);
 
 	    std::uint32_t ecx = regs[ct::ecx];
@@ -157,7 +201,6 @@ namespace compass {
 	    sizes_in_bytes_()
             {
 
-	      sizes_in_bytes_.reserve(8);
 	      
 	      auto brand = compass::runtime::detail::vendor( current_arch_t() );
 
