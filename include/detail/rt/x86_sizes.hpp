@@ -5,7 +5,8 @@
 #include "detail/ct/detect_compiler.hpp"
 #include "detail/ct/detect_arch.hpp"
 
-#include "detail/rt/x86_impl.hpp"
+#include "detail/rt/x86_meta.hpp"
+#include "detail/rt/x86_cpuid.hpp"
 #include "detail/tags.hpp"
 #include "detail/bit_view.hpp"
 #include "detail/definitions.hpp"
@@ -122,7 +123,33 @@ namespace compass {
 	  }
 
 	  void on_amd(){
-	    return;
+
+	    
+	    std::uint32_t maxlevel = 8;//maximum - 1 that can be mapped to 3 bits in eax[7:5]
+
+	    auto regs = cpuid(0x80000005);
+
+	    std::uint32_t ecx = regs[ct::ecx];
+	    auto bv = bitview(ecx);//L1data cache
+	    std::uint32_t test_linesize = bv.range(0,7);
+	    if(!test_linesize)//this is not a data cache, as the L1 cacheline size is 0
+	      return;
+
+	    sizes_in_bytes_.push_back(bv.range(24,31)*1024);//AMD puts the numbers in kB
+
+	    auto l23regs = cpuid(0x80000006);
+	    ecx = l23regs[ct::ecx];
+	    auto bv2 = bitview(ecx);//L2 cache
+	    auto l2size = bv2.range(16,31);
+	    l2size &= 0xffff;
+
+	    sizes_in_bytes_.push_back(l2size*1024);//AMD puts the numbers in kB
+
+	    auto bv3 = bitview(l23regs[ct::edx]);
+	    auto l3size = bv3.range(19,31);//AMD manual says bits [18,31], experiments on a Ryzen Threadripper 1900X showed that [19,31] gives the right result
+	    l3size *= 512*1024;
+	    sizes_in_bytes_.push_back(l3size);//AMD puts the numbers in kB
+
 	  }
 
 
@@ -132,14 +159,14 @@ namespace compass {
 
 	      sizes_in_bytes_.reserve(8);
 	      
-	      auto brand = compass::runtime::detail::vendor( ct::x86_tag() );
+	      auto brand = compass::runtime::detail::vendor( current_arch_t() );
 
 	      if(brand.find("AMD") != std::string::npos){
-		on_amd():
+		on_amd();
 	      }
 
 	      if(brand.find("Intel") != std::string::npos){
-		on_intel():
+		on_intel();
 	      }
 		  
             }
@@ -160,7 +187,7 @@ namespace compass {
 
             if(_lvl <= 0){
               std::cerr << "compass::size::cache requested invalid cache level (received: "<<
-                _lvl << ", found on this host: [1," << cache::get().ebx_data_.size() + 1 << "]\n";
+                _lvl << ", found on this host: [1," << cache::get().sizes_in_bytes_.size() + 1 << "]\n";
               return 0;
             }
 
@@ -168,13 +195,11 @@ namespace compass {
 
             if(!(index < cache::get().sizes_in_bytes_.size())){
               std::cerr << "compass::size::cache requested invalid cache level (received: "<<
-                _lvl << ", found on this host: [1," << cache::get().ebx_data_.size() + 1 << "]\n";
+                _lvl << ", found on this host: [1," << cache::get().sizes_in_bytes_.size() + 1 << "]\n";
               return 0;
             }
 
-
-
-            return sizes_in_bytes_[index];
+            return cache::get().sizes_in_bytes_[index];
           }
         };
 
