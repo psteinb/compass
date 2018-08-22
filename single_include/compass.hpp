@@ -360,6 +360,74 @@ namespace compass {
 #endif
 #ifndef COMPASS_RT_X86_IMPL_H_
 #define COMPASS_RT_X86_IMPL_H_
+#ifndef COMPASS_BIT_VIEW_H
+#define COMPASS_BIT_VIEW_H
+
+#include <climits>
+#include <type_traits>
+
+namespace compass {
+
+    namespace utility
+    {
+
+        template <typename T>
+        struct bit_view{
+
+            T& value_;
+
+            static const int width = sizeof(T)*CHAR_BIT;
+            static_assert(std::is_integral<T>::value, "compass bitview used with non-integral type (not supported)");
+
+            bit_view(T& _val):
+                value_(_val){}
+
+
+            bool test(int offset) const {
+
+                bool value = false;
+                if(offset>(width-1))
+                    return value;
+
+                const int mask = 1 << offset;
+                value = value_ & mask;
+
+                return value;
+            }
+
+            void set(int offset) {
+
+                if(offset>(width-1))
+                    return ;
+
+                const int mask = 1 << offset;
+                value_ = value_ | mask;
+
+                return;
+            }
+
+            T range(std::uint32_t _begin, std::uint32_t _end) const {
+
+                T value = 0;
+                if(_begin >= width || _end <= _begin)
+                    return value;
+
+                const T mask = ~(~0 << (_end - _begin));
+                value = (value_ >> _begin) & mask;
+                return value;
+
+
+            }
+
+
+        };
+
+    }
+
+
+}
+
+#endif
 #ifndef COMPASS_RT_X86_CPUID_H
 
 
@@ -622,246 +690,15 @@ namespace compass {
 #endif
 
 #endif
-#ifndef COMPASS_BIT_VIEW_H
-#define COMPASS_BIT_VIEW_H
+#ifndef COMPASS_RT_X86_META_H_
+#define COMPASS_RT_X86_META_H_
 
-#include <climits>
-#include <type_traits>
 
-namespace compass {
 
-    namespace utility
-    {
 
-        template <typename T>
-        struct bit_view{
 
-            T& value_;
 
-            static const int width = sizeof(T)*CHAR_BIT;
-            static_assert(std::is_integral<T>::value, "compass bitview used with non-integral type (not supported)");
 
-            bit_view(T& _val):
-                value_(_val){}
-
-
-            bool test(int offset) const {
-
-                bool value = false;
-                if(offset>(width-1))
-                    return value;
-
-                const int mask = 1 << offset;
-                value = value_ & mask;
-
-                return value;
-            }
-
-            void set(int offset) {
-
-                if(offset>(width-1))
-                    return ;
-
-                const int mask = 1 << offset;
-                value_ = value_ | mask;
-
-                return;
-            }
-
-            T range(std::uint32_t _begin, std::uint32_t _end) const {
-
-                T value = 0;
-                if(_begin >= width || _end <= _begin)
-                    return value;
-
-                const T mask = ~(~0 << (_end - _begin));
-                value = (value_ >> _begin) & mask;
-                return value;
-
-
-            }
-
-
-        };
-
-    }
-
-
-}
-
-#endif
-#ifndef COMPASS_RT_X86_SIZES_H_
-#define COMPASS_RT_X86_SIZES_H_
-
-
-
-
-
-
-
-
-
-
-#include <iostream>
-#include <string>
-#include <algorithm>
-#include <vector>
-
-namespace compass {
-
-  namespace runtime {
-
-    namespace detail {
-
-      using bitview = compass::utility::bit_view<std::uint32_t>;
-
-      namespace size{
-
-
-        class cacheline
-        {
-
-          std::vector<std::uint32_t> ebx_data_;
-
-          cacheline():
-            ebx_data_()
-            {
-
-              ebx_data_.reserve(3);
-              std::uint32_t maxlevel = 8;
-              std::uint32_t eax = 0;
-
-              for(std::uint32_t l = 0;l<maxlevel;++l)
-              {
-                auto regs = cpuid(0x04,0,l);
-
-                eax = regs[ct::eax];
-                auto bv = bitview(eax);
-
-                if(!bv.test(1))
-                  continue;
-
-                auto truelevel = bv.range(5,8);
-                if(truelevel != l)
-                  continue;
-
-                ebx_data_.push_back(regs[ct::ebx]);
-              }
-
-            }
-
-        public:
-
-          static const cacheline& get(){
-            static cacheline instance;
-            return instance;
-          }
-
-          static std::uint32_t levels_available(ct::x86_tag){
-            return cacheline::get().ebx_data_.size();
-          }
-
-          static std::uint32_t level(int _lvl, ct::x86_tag){
-
-            auto reg = cacheline::get().ebx_data_.at(_lvl-1);
-
-            std::uint32_t value = bitview(reg).range(0,11);
-
-            return value + 1;
-          }
-        };
-
-        class cache
-        {
-
-          std::vector<std::uint32_t> ebx_data_;
-          std::vector<std::uint32_t> ecx_data_;
-
-          cache():
-            ebx_data_(),
-            ecx_data_()
-            {
-
-              ebx_data_.reserve(3);
-              ecx_data_.reserve(3);
-
-              std::uint32_t maxlevel = 8;
-              std::uint32_t eax = 0;
-
-              for(std::uint32_t l = 0;l<maxlevel;++l)
-              {
-                auto regs = cpuid(0x04,0,l);
-
-                eax = regs[ct::eax];
-                auto bv = bitview(eax);
-
-                if(!bv.test(1))
-                  continue;
-
-                auto truelevel = bv.range(5,8);
-                if(truelevel != l)
-                  continue;
-
-                ebx_data_.push_back(regs[ct::ebx]);
-                ecx_data_.push_back(regs[ct::ecx]);
-
-              }
-
-            }
-
-
-        public:
-
-          static const cache& get(){
-            static cache instance;
-            return instance;
-          }
-
-          static std::uint32_t levels_available(ct::x86_tag){
-            return cache::get().ebx_data_.size();
-          }
-
-          static std::uint32_t level(int _lvl, ct::x86_tag){
-
-            if(_lvl <= 0){
-              std::cerr << "compass::size::cache requested invalid cache level (received: "<<
-                _lvl << ", found on this host: [1," << cache::get().ebx_data_.size() + 1 << "]\n";
-              return 0;
-            }
-
-            std::uint32_t index = _lvl - 1;
-
-            if(!(index < cache::get().ebx_data_.size())){
-              std::cerr << "compass::size::cache requested invalid cache level (received: "<<
-                _lvl << ", found on this host: [1," << cache::get().ebx_data_.size() + 1 << "]\n";
-              return 0;
-            }
-
-
-            std::uint32_t ebx = cache::get().ebx_data_[index];
-            const bitview bv_ebx = bitview(ebx);
-            const std::uint32_t ecx = cache::get().ecx_data_[index];
-
-            std::uint32_t ways = 1 + bv_ebx.range(22,31);
-            std::uint32_t partitions = 1 + bv_ebx.range(12,21);
-            std::uint32_t line_size = 1 + bv_ebx.range(0,11);
-            std::uint32_t sets = 1 + ecx;
-
-            std::uint32_t value = ways*partitions*line_size*sets;
-
-            return value;
-          }
-        };
-
-
-
-      };
-    };
-
-  };
-
-};
-#endif
 #include <iostream>
 #include <string>
 #include <algorithm>
@@ -872,20 +709,6 @@ namespace compass {
   namespace runtime {
 
     namespace detail {
-
-      using bitview = compass::utility::bit_view<std::uint32_t>;
-
-      static bool works(ct::x86_tag) {
-
-        auto regs = rt::cpuid(0);
-
-        if(regs.size())
-          return true;
-        else
-          return false;
-
-      }
-
 
       static std::string vendor(ct::x86_tag) {
 
@@ -988,6 +811,294 @@ namespace compass {
         return value;
 
       }
+
+    };
+
+  };
+
+};
+#endif
+#ifndef COMPASS_RT_X86_SIZES_H_
+#define COMPASS_RT_X86_SIZES_H_
+
+
+
+
+
+
+
+
+
+
+
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <vector>
+
+namespace compass {
+
+  namespace runtime {
+
+    namespace detail {
+
+      using bitview = compass::utility::bit_view<std::uint32_t>;
+      using current_arch_t = ct::arch::type;
+
+      namespace size{
+
+
+        class cacheline
+        {
+
+          std::vector<std::uint32_t> sizes_in_bytes_;
+
+          void on_intel(){
+
+            std::uint32_t maxlevel = 8;
+            std::uint32_t eax = 0;
+            sizes_in_bytes_.reserve(maxlevel);
+
+            for(std::uint32_t l = 0;l<maxlevel;++l)
+            {
+              auto regs = cpuid(0x04,0,l);
+
+              eax = regs[ct::eax];
+              auto bv = bitview(eax);
+
+              if(!bv.test(1))
+                continue;
+
+              auto truelevel = bv.range(5,8);
+              if(truelevel != l)
+                continue;
+
+
+              std::uint32_t value = bitview(regs[ct::ebx]).range(0,11);
+              sizes_in_bytes_.push_back(value+1);
+
+            }
+
+          }
+
+          void on_amd(){
+
+            sizes_in_bytes_.reserve(3);
+
+            auto regs = cpuid(0x80000005);
+
+            std::uint32_t ecx = regs[ct::ecx];
+            auto bv = bitview(ecx);
+            std::uint32_t linesize = bv.range(0,7);
+            if(!linesize)
+              return;
+
+            sizes_in_bytes_.push_back(linesize);
+
+            auto l23regs = cpuid(0x80000006);
+            ecx = l23regs[ct::ecx];
+            auto bv2 = bitview(ecx);
+            linesize = bv2.range(0,7);
+
+            sizes_in_bytes_.push_back(linesize);
+
+            auto bv3 = bitview(l23regs[ct::edx]);
+            linesize = bv3.range(0,7);
+
+            sizes_in_bytes_.push_back(linesize);
+
+          }
+
+          cacheline():
+            sizes_in_bytes_()
+            {
+
+
+              auto brand = compass::runtime::detail::vendor( current_arch_t() );
+
+              if(brand.find("AMD") != std::string::npos){
+                on_amd();
+              }
+
+              if(brand.find("Intel") != std::string::npos){
+                on_intel();
+              }
+
+            }
+
+        public:
+
+          static const cacheline& get(){
+            static cacheline instance;
+            return instance;
+          }
+
+          static std::uint32_t levels_available(ct::x86_tag){
+            return cacheline::get().sizes_in_bytes_.size();
+          }
+
+          static std::uint32_t level(int _lvl, ct::x86_tag){
+
+            auto value = cacheline::get().sizes_in_bytes_.at(_lvl-1);
+
+            return value;
+          }
+        };
+
+        class cache
+        {
+
+          std::vector<std::uint32_t> sizes_in_bytes_;
+
+
+          void on_intel() {
+
+            std::uint32_t eax = 0;
+            std::uint32_t maxlevel = 8;
+            sizes_in_bytes_.reserve(8);
+
+            for(std::uint32_t l = 0;l<maxlevel;++l)
+            {
+              auto regs = cpuid(0x04,0,l);
+
+              eax = regs[ct::eax];
+              auto bv = bitview(eax);
+
+              if(!bv.test(1))
+                continue;
+
+              auto truelevel = bv.range(5,8);
+              if(truelevel != l)
+                continue;
+
+              std::uint32_t ebx = regs[ct::ebx];
+              const bitview bv_ebx = bitview(ebx);
+              const std::uint32_t ecx = regs[ct::ecx];
+
+              std::uint32_t ways = 1 + bv_ebx.range(22,31);
+              std::uint32_t partitions = 1 + bv_ebx.range(12,21);
+              std::uint32_t line_size = 1 + bv_ebx.range(0,11);
+              std::uint32_t sets = 1 + ecx;
+
+              std::uint32_t value = ways*partitions*line_size*sets;
+
+              sizes_in_bytes_.push_back(value);
+            }
+
+          }
+
+          void on_amd(){
+
+            sizes_in_bytes_.reserve(3);
+
+            auto regs = cpuid(0x80000005);
+
+            std::uint32_t ecx = regs[ct::ecx];
+            auto bv = bitview(ecx);
+            std::uint32_t test_linesize = bv.range(0,7);
+            if(!test_linesize)
+              return;
+
+            sizes_in_bytes_.push_back(bv.range(24,31)*1024);
+
+            auto l23regs = cpuid(0x80000006);
+            ecx = l23regs[ct::ecx];
+            auto bv2 = bitview(ecx);
+            auto l2size = bv2.range(16,31);
+            l2size &= 0xffff;
+
+            sizes_in_bytes_.push_back(l2size*1024);
+
+            auto bv3 = bitview(l23regs[ct::edx]);
+            auto l3size = bv3.range(19,31);
+            l3size *= 512*1024;
+            sizes_in_bytes_.push_back(l3size);
+
+          }
+
+
+          cache():
+            sizes_in_bytes_()
+            {
+
+
+              auto brand = compass::runtime::detail::vendor( current_arch_t() );
+
+              if(brand.find("AMD") != std::string::npos){
+                on_amd();
+              }
+
+              if(brand.find("Intel") != std::string::npos){
+                on_intel();
+              }
+
+            }
+
+
+        public:
+
+          static const cache& get(){
+            static cache instance;
+            return instance;
+          }
+
+          static std::uint32_t levels_available(ct::x86_tag){
+            return cache::get().sizes_in_bytes_.size();
+          }
+
+          static std::uint32_t level(int _lvl, ct::x86_tag){
+
+            if(_lvl <= 0){
+              std::cerr << "compass::size::cache requested invalid cache level (received: "<<
+                _lvl << ", found on this host: [1," << cache::get().sizes_in_bytes_.size() + 1 << "]\n";
+              return 0;
+            }
+
+            std::uint32_t index = _lvl - 1;
+
+            if(!(index < cache::get().sizes_in_bytes_.size())){
+              std::cerr << "compass::size::cache requested invalid cache level (received: "<<
+                _lvl << ", found on this host: [1," << cache::get().sizes_in_bytes_.size() + 1 << "]\n";
+              return 0;
+            }
+
+            return cache::get().sizes_in_bytes_[index];
+          }
+        };
+
+
+
+      };
+    };
+
+  };
+
+};
+#endif
+#include <iostream>
+#include <string>
+#include <algorithm>
+#include <thread>
+
+namespace compass {
+
+  namespace runtime {
+
+    namespace detail {
+
+      using bitview = compass::utility::bit_view<std::uint32_t>;
+
+      static bool works(ct::x86_tag) {
+
+        auto regs = rt::cpuid(0);
+
+        if(regs.size())
+          return true;
+        else
+          return false;
+
+      }
+
 
 
 
