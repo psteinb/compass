@@ -33,76 +33,76 @@ namespace compass {
 
           std::vector<std::uint32_t> sizes_in_bytes_;
 
-	  void on_intel(){
+          void on_intel(){
 
-	    std::uint32_t maxlevel = 8;//maximum - 1 that can be mapped to 3 bits in eax[7:5]
-              std::uint32_t eax = 0;
-	      sizes_in_bytes_.reserve(maxlevel);
-              
-              for(std::uint32_t l = 0;l<maxlevel;++l)
-              {
-                auto regs = cpuid(0x04,0,l);
+            std::uint32_t maxlevel = 8;//maximum - 1 that can be mapped to 3 bits in eax[7:5]
+            std::uint32_t eax = 0;
+            sizes_in_bytes_.reserve(maxlevel);
 
-                eax = regs[ct::eax];
-                auto bv = bitview(eax);
+            for(std::uint32_t l = 0;l<maxlevel;++l)
+            {
+              auto regs = cpuid(0x04,0,l);
 
-                if(!bv.test(1))//this is not a data cache
-                  continue;
+              eax = regs[ct::eax];
+              auto bv = bitview(eax);
 
-                auto truelevel = bv.range(5,8);
-                if(truelevel != l)//this is the wrong level
-                  continue;
+              if(!bv.test(1))//this is not a data cache
+                continue;
 
-                		
-		std::uint32_t value = bitview(regs[ct::ebx]).range(0,11);
-		sizes_in_bytes_.push_back(value);
+              auto truelevel = bv.range(5,8);
+              if(truelevel != l)//this is the wrong level
+                continue;
 
-              }
 
-	  }
+              std::uint32_t value = bitview(regs[ct::ebx]).range(0,11);
+              sizes_in_bytes_.push_back(value+1);
 
-	  void on_amd(){
+            }
 
-	    sizes_in_bytes_.reserve(3);
-	      
-	    auto regs = cpuid(0x80000005);
+          }
 
-	    std::uint32_t ecx = regs[ct::ecx];
-	    auto bv = bitview(ecx);//L1data cache
-	    std::uint32_t linesize = bv.range(0,7);
-	    if(!linesize)//this is not a data cache, as the L1 cacheline size is 0
-	      return;
+          void on_amd(){
 
-	    sizes_in_bytes_.push_back(linesize);
+            sizes_in_bytes_.reserve(3);
 
-	    auto l23regs = cpuid(0x80000006);
-	    ecx = l23regs[ct::ecx];
-	    auto bv2 = bitview(ecx);//L2 cache
-	    linesize = bv2.range(0,7);
-	    
-	    sizes_in_bytes_.push_back(linesize);
+            auto regs = cpuid(0x80000005);
 
-	    auto bv3 = bitview(l23regs[ct::edx]);//L3 cache
-	    linesize = bv3.range(0,7);
-	    
-	    sizes_in_bytes_.push_back(linesize);
+            std::uint32_t ecx = regs[ct::ecx];
+            auto bv = bitview(ecx);//L1data cache
+            std::uint32_t linesize = bv.range(0,7);
+            if(!linesize)//this is not a data cache, as the L1 cacheline size is 0
+              return;
 
-	  }
+            sizes_in_bytes_.push_back(linesize);
+
+            auto l23regs = cpuid(0x80000006);
+            ecx = l23regs[ct::ecx];
+            auto bv2 = bitview(ecx);//L2 cache
+            linesize = bv2.range(0,7);
+
+            sizes_in_bytes_.push_back(linesize);
+
+            auto bv3 = bitview(l23regs[ct::edx]);//L3 cache
+            linesize = bv3.range(0,7);
+
+            sizes_in_bytes_.push_back(linesize);
+
+          }
 
           cacheline():
             sizes_in_bytes_()
             {
 
-              
-	      auto brand = compass::runtime::detail::vendor( current_arch_t() );
 
-	      if(brand.find("AMD") != std::string::npos){
-		on_amd();
-	      }
+              auto brand = compass::runtime::detail::vendor( current_arch_t() );
 
-	      if(brand.find("Intel") != std::string::npos){
-		on_intel();
-	      }
+              if(brand.find("AMD") != std::string::npos){
+                on_amd();
+              }
+
+              if(brand.find("Intel") != std::string::npos){
+                on_intel();
+              }
 
             }
 
@@ -128,90 +128,90 @@ namespace compass {
         class cache
         {
 
-	  std::vector<std::uint32_t> sizes_in_bytes_;
-          
-	  //TODO: refactor this sooner than later
-	  void on_intel() {
-	    
-              std::uint32_t eax = 0;
-              std::uint32_t maxlevel = 8;//maximum - 1 that can be mapped to 3 bits in eax[7:5]
-	      sizes_in_bytes_.reserve(8);
-	      
-              for(std::uint32_t l = 0;l<maxlevel;++l)
-              {
-                auto regs = cpuid(0x04,0,l);
+          std::vector<std::uint32_t> sizes_in_bytes_;
 
-                eax = regs[ct::eax];
-                auto bv = bitview(eax);
+          //TODO: refactor this sooner than later
+          void on_intel() {
 
-                if(!bv.test(1))//this is not a data cache
-                  continue;
+            std::uint32_t eax = 0;
+            std::uint32_t maxlevel = 8;//maximum - 1 that can be mapped to 3 bits in eax[7:5]
+            sizes_in_bytes_.reserve(8);
 
-                auto truelevel = bv.range(5,8);
-                if(truelevel != l)//this is the wrong level
-                  continue;
+            for(std::uint32_t l = 0;l<maxlevel;++l)
+            {
+              auto regs = cpuid(0x04,0,l);
 
-		std::uint32_t ebx = regs[ct::ebx];
-		const bitview bv_ebx = bitview(ebx);
-		const std::uint32_t ecx = regs[ct::ecx];
+              eax = regs[ct::eax];
+              auto bv = bitview(eax);
 
-		std::uint32_t ways = 1 + bv_ebx.range(22,31);
-		std::uint32_t partitions = 1 + bv_ebx.range(12,21);
-		std::uint32_t line_size = 1 + bv_ebx.range(0,11);
-		std::uint32_t sets = 1 + ecx;
+              if(!bv.test(1))//this is not a data cache
+                continue;
 
-		std::uint32_t value = ways*partitions*line_size*sets;
+              auto truelevel = bv.range(5,8);
+              if(truelevel != l)//this is the wrong level
+                continue;
 
-		sizes_in_bytes_.push_back(value);
-              }
+              std::uint32_t ebx = regs[ct::ebx];
+              const bitview bv_ebx = bitview(ebx);
+              const std::uint32_t ecx = regs[ct::ecx];
 
-	  }
+              std::uint32_t ways = 1 + bv_ebx.range(22,31);
+              std::uint32_t partitions = 1 + bv_ebx.range(12,21);
+              std::uint32_t line_size = 1 + bv_ebx.range(0,11);
+              std::uint32_t sets = 1 + ecx;
 
-	  void on_amd(){
+              std::uint32_t value = ways*partitions*line_size*sets;
 
-	    sizes_in_bytes_.reserve(3);
-	      
-	    auto regs = cpuid(0x80000005);
+              sizes_in_bytes_.push_back(value);
+            }
 
-	    std::uint32_t ecx = regs[ct::ecx];
-	    auto bv = bitview(ecx);//L1data cache
-	    std::uint32_t test_linesize = bv.range(0,7);
-	    if(!test_linesize)//this is not a data cache, as the L1 cacheline size is 0
-	      return;
+          }
 
-	    sizes_in_bytes_.push_back(bv.range(24,31)*1024);//AMD puts the numbers in kB
+          void on_amd(){
 
-	    auto l23regs = cpuid(0x80000006);
-	    ecx = l23regs[ct::ecx];
-	    auto bv2 = bitview(ecx);//L2 cache
-	    auto l2size = bv2.range(16,31);
-	    l2size &= 0xffff;
+            sizes_in_bytes_.reserve(3);
 
-	    sizes_in_bytes_.push_back(l2size*1024);//AMD puts the numbers in kB
+            auto regs = cpuid(0x80000005);
 
-	    auto bv3 = bitview(l23regs[ct::edx]);
-	    auto l3size = bv3.range(19,31);//AMD manual says bits [18,31], experiments on a Ryzen Threadripper 1900X showed that [19,31] gives the right result
-	    l3size *= 512*1024;
-	    sizes_in_bytes_.push_back(l3size);//AMD puts the numbers in kB
+            std::uint32_t ecx = regs[ct::ecx];
+            auto bv = bitview(ecx);//L1data cache
+            std::uint32_t test_linesize = bv.range(0,7);
+            if(!test_linesize)//this is not a data cache, as the L1 cacheline size is 0
+              return;
 
-	  }
+            sizes_in_bytes_.push_back(bv.range(24,31)*1024);//AMD puts the numbers in kB
+
+            auto l23regs = cpuid(0x80000006);
+            ecx = l23regs[ct::ecx];
+            auto bv2 = bitview(ecx);//L2 cache
+            auto l2size = bv2.range(16,31);
+            l2size &= 0xffff;
+
+            sizes_in_bytes_.push_back(l2size*1024);//AMD puts the numbers in kB
+
+            auto bv3 = bitview(l23regs[ct::edx]);
+            auto l3size = bv3.range(19,31);//AMD manual says bits [18,31], experiments on a Ryzen Threadripper 1900X showed that [19,31] gives the right result
+            l3size *= 512*1024;
+            sizes_in_bytes_.push_back(l3size);//AMD puts the numbers in kB
+
+          }
 
 
           cache():
-	    sizes_in_bytes_()
+            sizes_in_bytes_()
             {
 
-	      
-	      auto brand = compass::runtime::detail::vendor( current_arch_t() );
 
-	      if(brand.find("AMD") != std::string::npos){
-		on_amd();
-	      }
+              auto brand = compass::runtime::detail::vendor( current_arch_t() );
 
-	      if(brand.find("Intel") != std::string::npos){
-		on_intel();
-	      }
-		  
+              if(brand.find("AMD") != std::string::npos){
+                on_amd();
+              }
+
+              if(brand.find("Intel") != std::string::npos){
+                on_intel();
+              }
+
             }
 
 
