@@ -1,0 +1,7 @@
+set(COMPASS_VERSION @COMPASS_VERSION@)
+...
+@PACKAGE_INIT@
+...
+set_and_check(COMPASS_INCLUDE_DIR "@PACKAGE_INCLUDE_INSTALL_DIR@")
+
+check_required_components(Compass)
