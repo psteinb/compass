@@ -32,6 +32,13 @@ IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
   message(STATUS "vendor found: ${VENDOR_TITLE}")
   set(CPU_VENDOR "${VENDOR_TITLE}" CACHE STRING "cpu vendor")
 
+  ##FIND VENDOR
+  STRING(FIND ${CPUINFO} "family" FAMILY_TITLE_OFFSET)
+  STRING(SUBSTRING ${CPUINFO} ${FAMILY_TITLE_OFFSET} 50 GUESSED_FAMILY_LINE)
+  STRING(REGEX REPLACE "^family.*: ([0-9]+)\n.*" "\\1" FAMILY_TITLE ${GUESSED_FAMILY_LINE})
+  message(STATUS "family found: ${FAMILY_TITLE}")
+  set(CPU_FAMILY "${FAMILY_TITLE}" CACHE STRING "cpu family")
+
   ##FIND MODEL NAME
   STRING(FIND ${CPUINFO} "model name" MODEL_NAME_OFFSET)
   STRING(SUBSTRING ${CPUINFO} ${MODEL_NAME_OFFSET} 100 GUESSED_MODEL_NAME_LINE)
@@ -108,6 +115,12 @@ IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
     set(AVX2_FOUND false CACHE BOOL "AVX2 available on host")
   endif()
 
+  if("${CPUINFO}" MATCHES ".*avx512f .*")
+    set(AVX512F_FOUND true CACHE BOOL "AVX512F available on host")
+  else()
+    set(AVX512F_FOUND false CACHE BOOL "AVX512F available on host")
+  endif()
+
 #
   if(EXISTS "/sys/devices/system/cpu/cpu0/cache/index2/size")
     EXEC_PROGRAM(cat ARGS "/sys/devices/system/cpu/cpu0/cache/index2/size" OUTPUT_VARIABLE L2_SIZE_KB_STRING)
@@ -138,6 +151,9 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 
   EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.leaf7_features" OUTPUT_VARIABLE
     LEAF7_CPUINFO)
+
+  EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.family" OUTPUT_VARIABLE
+    CPUINFO_FAMILY)
 
   EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.vendor" OUTPUT_VARIABLE
     VENDOR_TITLE)
@@ -223,6 +239,16 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     endif()
   endif()
 
+  if("${CPUINFO}" MATCHES ".*AVX512F .*")
+    set(AVX512F_FOUND true CACHE BOOL "AVX512F available on host")
+  else()
+    if("${LEAF7_CPUINFO}" MATCHES ".*AVX512F .*")
+      set(AVX512F_FOUND true CACHE BOOL "AVX512F available on host")
+    else()
+      set(AVX512F_FOUND false CACHE BOOL "AVX512F available on host")
+    endif()
+  endif()
+
 ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
   #as an alternative to wmic, use
@@ -267,6 +293,7 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
   list(FIND _available_vector_units_list "sse4.2" SSE4_2_INDEX)
   list(FIND _available_vector_units_list "avx" AVX_INDEX)
   list(FIND _available_vector_units_list "avx2" AVX2_INDEX)
+  list(FIND _available_vector_units_list "avx512f" AVX512F_INDEX)
 
   if(${SSE_INDEX} GREATER -1)
     set(SSE_FOUND    true  CACHE BOOL "SSE available on host")
@@ -293,6 +320,10 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
     set(AVX2_FOUND    true  CACHE BOOL "AVX2 available on host")
   endif()
 
+  if(${AVX512F_INDEX} GREATER -1)
+    set(AVX512F_FOUND    true  CACHE BOOL "AVX512F available on host")
+  endif()
+
   set(SSE_FOUND    true  CACHE BOOL "SSE available on host")
   set(SSE2_FOUND   false  CACHE BOOL "SSE2 available on host")
   set(SSE3_FOUND   false CACHE BOOL "SSE3 available on host")
@@ -301,6 +332,7 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
   set(SSE4_2_FOUND false CACHE BOOL "SSE4.2 available on host")
   set(AVX_FOUND false CACHE BOOL "AVX available on host")
   set(AVX2_FOUND false CACHE BOOL "AVX2 available on host")
+  set(AVX512F_FOUND false CACHE BOOL "AVX512F available on host")
 
 ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
@@ -332,6 +364,10 @@ if( AVX2_FOUND)
 list(APPEND FOUND_FEATURES "avx2")
 endif( AVX2_FOUND)
 
+if( AVX512F_FOUND)
+list(APPEND FOUND_FEATURES "avx512f")
+endif( AVX512F_FOUND)
+
 message(STATUS "found hardware features: ${FOUND_FEATURES}")
 
-mark_as_advanced(SSE_FOUND SSE2_FOUND SSE3_FOUND SSSE3_FOUND SSE4_1_FOUND SSE4_2_FOUND AVX_FOUND AVX2_FOUND CPU_VENDOR CPU_MODEL_NAME CPU_L2_SIZE_KB)
+mark_as_advanced(SSE_FOUND SSE2_FOUND SSE3_FOUND SSSE3_FOUND SSE4_1_FOUND SSE4_2_FOUND AVX_FOUND AVX2_FOUND AVX512F_FOUND CPU_VENDOR CPU_FAMILY CPU_MODEL_NAME CPU_L2_SIZE_KB)
