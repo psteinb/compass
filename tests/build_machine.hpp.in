@@ -13,6 +13,7 @@ struct host_reference
 
   std::string   expected_vendor         ;
   std::string   expected_brand          ;
+  std::uint32_t expected_family         ;
   std::string   expected_device_name    ;
 
   bool      expected_has_sse	;
@@ -36,6 +37,7 @@ struct host_reference
   host_reference():
     hostname(""),
     expected_vendor  (""),
+    expected_faimly  (0),
     expected_brand   (""),
     expected_device_name   (""),
     expected_has_sse (false),
@@ -56,6 +58,7 @@ struct host_reference
 
       expected_vendor = "@CPU_VENDOR@";
       expected_brand  = "@CPU_MODEL_NAME@";
+      expected_family  = @CPU_FAMILY@;
       expected_device_name = "";
 
       expected_has_sse= @SSE_FOUND@ ;
@@ -65,6 +68,7 @@ struct host_reference
 
       expected_has_avx = @AVX_FOUND@ ;
       expected_has_avx2= @AVX2_FOUND@ ;
+      expected_has_avx512f = @AVX512F_FOUND@ ;
 
       //check by `cat /sys/devices/system/cpu/cpu0/cache/index0/coherency_line_size`
       // expected_L1d_linesize= 64 ;

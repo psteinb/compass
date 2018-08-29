@@ -35,6 +35,16 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   }
 
+  SECTION( "vendor_right" ){
+
+    auto value = compass::runtime::vendor();
+
+    REQUIRE(value.empty()!=true);
+    REQUIRE_THAT(value, Catch::Matchers::Contains(expected_vendor) );
+
+  }
+
+
   SECTION( "device_name_right" ){
 
     auto value = compass::runtime::device_name();
@@ -96,6 +106,9 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
     if(expected_has_sse3)
       REQUIRE(compass::compiletime::has<compass::feature::sse3>::enabled==expected_has_sse3);
 
+    value = compass::runtime::has(compass::feature::ssse3());
+    REQUIRE(value==expected_has_sse3);
+
   }
 
   SECTION( "has_sse4_right" ){
@@ -108,11 +121,29 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   }
 
+  SECTION( "has_sse4_1_right" ){
+
+    auto value = compass::runtime::has(compass::feature::sse4_1());
+
+    REQUIRE(value==expected_has_sse4);
+    if(expected_has_sse4)
+      REQUIRE(compass::compiletime::has<compass::feature::sse4>::enabled==expected_has_sse4);
+
+  }
+
   SECTION( "has_avx_right" ){
 
     auto value = compass::runtime::has(compass::feature::avx());
 
     REQUIRE(value==expected_has_avx);
+
+  }
+
+  SECTION( "has_avx512f_right" ){
+
+    auto value = compass::runtime::has(compass::feature::avx512f());
+
+    REQUIRE(value==expected_has_avx512f);
 
   }
 
