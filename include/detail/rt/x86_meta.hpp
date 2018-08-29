@@ -5,6 +5,7 @@
 #include "detail/ct/detect_compiler.hpp"
 #include "detail/ct/detect_arch.hpp"
 
+#include "detail/bit_view.hpp"
 #include "detail/rt/x86_cpuid.hpp"
 
 #include <iostream>
@@ -65,6 +66,12 @@ namespace compass {
 
       }
 
+      //for details, see https://en.wikipedia.org/wiki/CPUID#EAX=80000002h,80000003h,80000004h:_Processor_Brand_String
+      static std::uint32_t family(ct::x86_tag) {
+        auto regs = rt::cpuid(1);
+        std::uint32_t value = compass::utility::bit_view<std::uint32_t>(regs[ct::eax]).range(8,11);
+        return value;
+      }
 
       static std::string device_name(ct::x86_tag) {
 

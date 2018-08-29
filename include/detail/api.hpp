@@ -35,6 +35,13 @@ namespace compass {
 
         }
 
+        static std::uint32_t family() {
+
+            using current_arch_t = ct::arch::type;
+            return detail::family(current_arch_t());
+
+        }
+
         static std::string device_name() {
 
             using current_arch_t = ct::arch::type;
