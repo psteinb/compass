@@ -153,7 +153,7 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Darwin")
     LEAF7_CPUINFO)
 
   EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.family" OUTPUT_VARIABLE
-    CPUINFO_FAMILY)
+    CPU_FAMILY)
 
   EXEC_PROGRAM("/usr/sbin/sysctl -n machdep.cpu.vendor" OUTPUT_VARIABLE
     VENDOR_TITLE)
@@ -261,6 +261,9 @@ ELSEIF(CMAKE_SYSTEM_NAME MATCHES "Windows")
 
   wmic_get("Manufacturer" MODEL_VENDOR)
   set(CPU_VENDOR "${MODEL_VENDOR}" CACHE STRING "cpu model vendor")
+
+  wmic_get("Family" MODEL_FAMILY)
+  set(CPU_FAMILY "${MODEL_FAMILY}" CACHE STRING "cpu model family")
 
   wmic_get("L2CacheSize" L2_CACHE_SIZE)
   wmic_get("NumberOfCores" CPU_NPHYS_CORES)
