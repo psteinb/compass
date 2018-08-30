@@ -37,7 +37,7 @@ struct host_reference
   host_reference():
     hostname(""),
     expected_vendor  (""),
-    expected_faimly  (0),
+    expected_family  (0),
     expected_brand   (""),
     expected_device_name   (""),
     expected_has_sse (false),
