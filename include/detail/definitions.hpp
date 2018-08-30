@@ -13,6 +13,7 @@ namespace compass {
 
         struct unsupported_tag { static int dummy; };
         struct through_os_tag {};
+
     };
 
     namespace runtime {
