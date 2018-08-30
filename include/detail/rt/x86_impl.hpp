@@ -55,7 +55,7 @@ namespace compass {
       // }
 
 
-      static bool has(feature::sse , ct::x86_tag){
+      static bool has(x86::feature::sse , ct::x86_tag){
 
         auto regs = rt::cpuid(1);
 
@@ -67,7 +67,7 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::sse2 , ct::x86_tag){
+      static bool has(x86::feature::sse2 , ct::x86_tag){
 
         auto regs = rt::cpuid(1);
 
@@ -79,7 +79,7 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::sse3 , ct::x86_tag){
+      static bool has(x86::feature::sse3 , ct::x86_tag){
 
         auto regs = rt::cpuid(1);
 
@@ -93,7 +93,7 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::sse4_1 , ct::x86_tag){
+      static bool has(x86::feature::sse4_1 , ct::x86_tag){
 
         auto regs = rt::cpuid(1);
 
@@ -106,7 +106,7 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::sse4_2 , ct::x86_tag){
+      static bool has(x86::feature::sse4_2 , ct::x86_tag){
 
         auto regs = rt::cpuid(1);
 
@@ -119,13 +119,13 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::sse4 , ct::x86_tag){
+      static bool has(x86::feature::sse4 , ct::x86_tag){
 
-        bool value = has(feature::sse4_1(), ct::x86_tag()) && has(feature::sse4_2(), ct::x86_tag());
+        bool value = has(x86::feature::sse4_1(), ct::x86_tag()) && has(x86::feature::sse4_2(), ct::x86_tag());
         return value;
       }
 
-      static bool has(feature::avx , ct::x86_tag){
+      static bool has(x86::feature::avx , ct::x86_tag){
 
         auto regs = rt::cpuid(1);
 
@@ -138,7 +138,7 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::avx2 , ct::x86_tag){
+      static bool has(x86::feature::avx2 , ct::x86_tag){
 
         auto regs = rt::cpuid(7,0,0,0);
         bool value = bitview(regs[ct::ebx]).test(5);
@@ -146,130 +146,130 @@ namespace compass {
         return value;
       }
 
-      static bool has(feature::avx512f , ct::x86_tag){
+      static bool has(x86::feature::avx512f , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ebx]).test(16);
         return value;
       }
 
-      static bool has(feature::avx512cd , ct::x86_tag){
+      static bool has(x86::feature::avx512cd , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ebx]).test(28);
         return value;
       }
 
-      static bool has(feature::avx512er , ct::x86_tag){
+      static bool has(x86::feature::avx512er , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ebx]).test(27);
         return value;
       }
 
-      static bool has(feature::avx512pf , ct::x86_tag){
+      static bool has(x86::feature::avx512pf , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ebx]).test(26);
         return value;
       }
 
-      static bool has(feature::avx512bw , ct::x86_tag){
+      static bool has(x86::feature::avx512bw , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ebx]).test(30);
         return value;
       }
 
-      static bool has(feature::avx512dq , ct::x86_tag){
+      static bool has(x86::feature::avx512dq , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ebx]).test(17);
         return value;
       }
 
-      static bool has(feature::avx512vl , ct::x86_tag){
+      static bool has(x86::feature::avx512vl , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ebx]).test(31);
         return value;
       }
 
-      static bool has(feature::avx512ifma , ct::x86_tag){
+      static bool has(x86::feature::avx512ifma , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ebx]).test(21);
         return value;
       }
 
-      static bool has(feature::avx512vbmi , ct::x86_tag){
+      static bool has(x86::feature::avx512vbmi , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ecx]).test(1);
         return value;
       }
 
-      static bool has(feature::avx512vbmi2 , ct::x86_tag){
+      static bool has(x86::feature::avx512vbmi2 , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ecx]).test(6);
         return value;
       }
 
-      static bool has(feature::avx512vnni , ct::x86_tag){
+      static bool has(x86::feature::avx512vnni , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ecx]).test(11);
         return value;
       }
 
-      static bool has(feature::avx512bitalg , ct::x86_tag){
+      static bool has(x86::feature::avx512bitalg , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ecx]).test(12);
         return value;
       }
 
-      static bool has(feature::avx512vpopcntdq , ct::x86_tag){
+      static bool has(x86::feature::avx512vpopcntdq , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::ecx]).test(14);
         return value;
       }
 
-      static bool has(feature::avx512_4vnniw , ct::x86_tag){
+      static bool has(x86::feature::avx512_4vnniw , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::edx]).test(2);
         return value;
       }
 
-      static bool has(feature::avx512_4vbmi2 , ct::x86_tag){
+      static bool has(x86::feature::avx512_4vbmi2 , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = bitview(regs[ct::edx]).test(3);
         return value;
       }
 
-      static bool has(feature::avx512 , ct::x86_tag){
+      static bool has(x86::feature::avx512 , ct::x86_tag){
 
         auto regs = rt::cpuid(7);
         bool value = true;
-        value &= has(feature::avx512f        () , ct::x86_tag());
-        value &= has(feature::avx512cd       () , ct::x86_tag());
-        value &= has(feature::avx512er       () , ct::x86_tag());
-        value &= has(feature::avx512pf       () , ct::x86_tag());
-        value &= has(feature::avx512bw       () , ct::x86_tag());
-        value &= has(feature::avx512dq       () , ct::x86_tag());
-        value &= has(feature::avx512vl       () , ct::x86_tag());
-        value &= has(feature::avx512ifma     () , ct::x86_tag());
-        value &= has(feature::avx512vbmi     () , ct::x86_tag());
-        value &= has(feature::avx512vbmi2    () , ct::x86_tag());
-        value &= has(feature::avx512vnni     () , ct::x86_tag());
-        value &= has(feature::avx512bitalg   () , ct::x86_tag());
-        value &= has(feature::avx512vpopcntdq() , ct::x86_tag());
-        value &= has(feature::avx512_4vnniw  () , ct::x86_tag());
-        value &= has(feature::avx512_4vbmi2  () , ct::x86_tag());
+        value &= has(x86::feature::avx512f        () , ct::x86_tag());
+        value &= has(x86::feature::avx512cd       () , ct::x86_tag());
+        value &= has(x86::feature::avx512er       () , ct::x86_tag());
+        value &= has(x86::feature::avx512pf       () , ct::x86_tag());
+        value &= has(x86::feature::avx512bw       () , ct::x86_tag());
+        value &= has(x86::feature::avx512dq       () , ct::x86_tag());
+        value &= has(x86::feature::avx512vl       () , ct::x86_tag());
+        value &= has(x86::feature::avx512ifma     () , ct::x86_tag());
+        value &= has(x86::feature::avx512vbmi     () , ct::x86_tag());
+        value &= has(x86::feature::avx512vbmi2    () , ct::x86_tag());
+        value &= has(x86::feature::avx512vnni     () , ct::x86_tag());
+        value &= has(x86::feature::avx512bitalg   () , ct::x86_tag());
+        value &= has(x86::feature::avx512vpopcntdq() , ct::x86_tag());
+        value &= has(x86::feature::avx512_4vnniw  () , ct::x86_tag());
+        value &= has(x86::feature::avx512_4vbmi2  () , ct::x86_tag());
 
         return value;
       }

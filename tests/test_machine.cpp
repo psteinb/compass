@@ -62,7 +62,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_sse_right" ){
 
-    auto value = compass::runtime::has(compass::feature::sse());
+    auto value = compass::runtime::has(compass::x86::feature::sse());
 
     REQUIRE(value==expected_has_sse);
 
@@ -70,7 +70,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_sse2_right" ){
 
-    auto value = compass::runtime::has(compass::feature::sse2());
+    auto value = compass::runtime::has(compass::x86::feature::sse2());
 
     REQUIRE(value==expected_has_sse2);
 
@@ -78,7 +78,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_sse3_right" ){
 
-    auto value = compass::runtime::has(compass::feature::sse3());
+    auto value = compass::runtime::has(compass::x86::feature::sse3());
 
     REQUIRE(value==expected_has_sse3);
 
@@ -86,7 +86,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_sse4_right" ){
 
-    auto value = compass::runtime::has(compass::feature::sse4());
+    auto value = compass::runtime::has(compass::x86::feature::sse4());
 
     REQUIRE(value==expected_has_sse4);
 
@@ -94,7 +94,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_avx_right" ){
 
-    auto value = compass::runtime::has(compass::feature::avx());
+    auto value = compass::runtime::has(compass::x86::feature::avx());
 
     REQUIRE(value==expected_has_avx);
 
@@ -103,7 +103,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_avx2_right" ){
 
-    auto value = compass::runtime::has(compass::feature::avx2());
+    auto value = compass::runtime::has(compass::x86::feature::avx2());
 
     REQUIRE(value==expected_has_avx2);
 

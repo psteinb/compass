@@ -72,7 +72,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_sse_right_at_ct" ){
 
-    auto value = compass::compiletime::has<compass::feature::sse()>::enabled;
+    auto value = compass::compiletime::has<compass::x86::feature::sse()>::enabled;
 
     REQUIRE(true);//this just needs to compile
 
@@ -80,7 +80,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_sse_right" ){
 
-    auto value = compass::runtime::has(compass::feature::sse());
+    auto value = compass::runtime::has(compass::x86::feature::sse());
 
     REQUIRE(value==expected_has_sse);
 
@@ -89,51 +89,51 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_sse2_right" ){
 
-    auto value = compass::runtime::has(compass::feature::sse2());
+    auto value = compass::runtime::has(compass::x86::feature::sse2());
 
     REQUIRE(value==expected_has_sse2);
     if(expected_has_sse2){
-      REQUIRE(compass::compiletime::has<compass::feature::sse2>::enabled==expected_has_sse2);
+      REQUIRE(compass::compiletime::has<compass::x86::feature::sse2>::enabled==expected_has_sse2);
     }
 
   }
 
   SECTION( "has_sse3_right" ){
 
-    auto value = compass::runtime::has(compass::feature::sse3());
+    auto value = compass::runtime::has(compass::x86::feature::sse3());
 
     REQUIRE(value==expected_has_sse3);
     if(expected_has_sse3)
-      REQUIRE(compass::compiletime::has<compass::feature::sse3>::enabled==expected_has_sse3);
+      REQUIRE(compass::compiletime::has<compass::x86::feature::sse3>::enabled==expected_has_sse3);
 
-    value = compass::runtime::has(compass::feature::ssse3());
+    value = compass::runtime::has(compass::x86::feature::ssse3());
     REQUIRE(value==expected_has_sse3);
 
   }
 
   SECTION( "has_sse4_right" ){
 
-    auto value = compass::runtime::has(compass::feature::sse4());
+    auto value = compass::runtime::has(compass::x86::feature::sse4());
 
     REQUIRE(value==expected_has_sse4);
     if(expected_has_sse4)
-      REQUIRE(compass::compiletime::has<compass::feature::sse4>::enabled==expected_has_sse4);
+      REQUIRE(compass::compiletime::has<compass::x86::feature::sse4>::enabled==expected_has_sse4);
 
   }
 
   SECTION( "has_sse4_1_right" ){
 
-    auto value = compass::runtime::has(compass::feature::sse4_1());
+    auto value = compass::runtime::has(compass::x86::feature::sse4_1());
 
     REQUIRE(value==expected_has_sse4);
     if(expected_has_sse4)
-      REQUIRE(compass::compiletime::has<compass::feature::sse4>::enabled==expected_has_sse4);
+      REQUIRE(compass::compiletime::has<compass::x86::feature::sse4>::enabled==expected_has_sse4);
 
   }
 
   SECTION( "has_avx_right" ){
 
-    auto value = compass::runtime::has(compass::feature::avx());
+    auto value = compass::runtime::has(compass::x86::feature::avx());
 
     REQUIRE(value==expected_has_avx);
 
@@ -141,7 +141,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_avx512f_right" ){
 
-    auto value = compass::runtime::has(compass::feature::avx512f());
+    auto value = compass::runtime::has(compass::x86::feature::avx512f());
 
     REQUIRE(value==expected_has_avx512f);
 
@@ -149,7 +149,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_multiple_features" ){
 
-    auto value = compass::runtime::accumulate(compass::feature::avx(),compass::feature::sse4(),compass::feature::sse3());
+    auto value = compass::runtime::accumulate(compass::x86::feature::avx(),compass::x86::feature::sse4(),compass::x86::feature::sse3());
 
     const bool expected = (expected_has_avx || expected_has_sse4 || expected_has_sse3 );
     REQUIRE(bool(value) == expected );
@@ -164,7 +164,7 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
   SECTION( "has_avx2_right" ){
 
-    auto value = compass::runtime::has(compass::feature::avx2());
+    auto value = compass::runtime::has(compass::x86::feature::avx2());
 
     REQUIRE(value==expected_has_avx2);
 

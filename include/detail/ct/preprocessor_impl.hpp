@@ -47,7 +47,7 @@ namespace compass {
     };
 
     template<>
-    struct has<feature::sse2>{
+    struct has<x86::feature::sse2>{
       static const bool enabled=
 #ifdef COMPASS_CT_HAS_SSE2
      true;
@@ -58,7 +58,7 @@ namespace compass {
     };
 
     template<>
-    struct has<feature::sse3>{
+    struct has<x86::feature::sse3>{
       static const bool enabled=
 #ifdef COMPASS_CT_HAS_SSE3
      true;
@@ -69,7 +69,7 @@ namespace compass {
     };
 
     template<>
-    struct has<feature::sse4>{
+    struct has<x86::feature::sse4>{
       static const bool enabled=
 #ifdef COMPASS_CT_HAS_SSE4
      true;
