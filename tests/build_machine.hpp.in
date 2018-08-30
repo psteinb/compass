@@ -22,6 +22,8 @@ struct host_reference
   bool      expected_has_sse4	;
   bool      expected_has_avx	;
   bool      expected_has_avx2	;
+  bool      expected_has_avx512f	;
+
   std::uint32_t       expected_L1d_linesize		;
   std::uint32_t       expected_L2_linesize		;
   std::uint32_t       expected_L3_linesize		;
@@ -46,6 +48,7 @@ struct host_reference
     expected_has_sse4(false),
     expected_has_avx (false),
     expected_has_avx2(false),
+    expected_has_avx512f(false),
     expected_L1d_linesize(0) ,
     expected_L2_linesize(0) ,
     expected_L3_linesize(0) ,
