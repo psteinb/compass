@@ -17,7 +17,7 @@ centos_test:
     - cd build
     - cmake ..
     - make
-    - ctest
+    - ctest -V
 
 mac_build:
   stage: build
@@ -38,7 +38,7 @@ mac_test:
     - cd build
     - cmake ..
     - make
-    - ctest
+    - ctest -V
 
 ubuntu_build:
   stage: build
@@ -69,5 +69,5 @@ win_test:
     - cd build
     - cmake ..
     - cmake --build . --config Release
-    - ctest -C Release
+    - ctest -V -C Release
 
