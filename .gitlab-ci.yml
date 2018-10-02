@@ -5,7 +5,8 @@ centos_build:
   script:
     - mkdir build
     - cd build
-    - cmake .. && cat tests/build_machine.hpp
+    - cmake .. 
+    - cat tests/build_machine.hpp
     - make VERBOSE=1
 
 centos_test:
@@ -15,7 +16,8 @@ centos_test:
   script:
     - mkdir build
     - cd build
-    - cmake .. && cat tests/build_machine.hpp
+    - cmake .. 
+    - cat tests/build_machine.hpp
     - make VERBOSE=1
     - ctest -V
 
@@ -26,7 +28,8 @@ mac_build:
   script:
     - mkdir build
     - cd build
-    - cmake .. && cat tests/build_machine.hpp
+    - cmake .. 
+    - cat tests/build_machine.hpp
     - make VERBOSE=1
 
 mac_test:
@@ -36,7 +39,8 @@ mac_test:
   script:
     - mkdir build
     - cd build
-    - cmake .. && cat tests/build_machine.hpp
+    - cmake .. 
+    - cat tests/build_machine.hpp
     - make VERBOSE=1
     - ctest -V
 
@@ -47,7 +51,8 @@ ubuntu_build:
   script:
     - mkdir build
     - cd build
-    - cmake .. && cat tests/build_machine.hpp
+    - cmake .. 
+    - cat tests/build_machine.hpp
     - make VERBOSE=1
 
 win_build:
@@ -57,7 +62,8 @@ win_build:
   script:
     - mkdir build
     - cd build
-    - cmake .. && type tests/build_machine.hpp
+    - cmake ..
+    - type tests/build_machine.hpp
     - cmake --build .
 
 win_test:
@@ -67,7 +73,8 @@ win_test:
   script:
     - mkdir build
     - cd build
-    - cmake .. && type tests/build_machine.hpp
+    - cmake ..
+    - type tests/build_machine.hpp
     - cmake --build . --config Release
     - ctest -V -C Release
 
