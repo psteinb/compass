@@ -63,7 +63,7 @@ win_build:
     - mkdir build
     - cd build
     - cmake ..
-    - type tests/build_machine.hpp
+    - type tests\build_machine.hpp
     - cmake --build .
 
 win_test:
@@ -74,7 +74,7 @@ win_test:
     - mkdir build
     - cd build
     - cmake ..
-    - type tests/build_machine.hpp
+    - type tests\build_machine.hpp
     - cmake --build . --config Release
     - ctest -V -C Release
 
