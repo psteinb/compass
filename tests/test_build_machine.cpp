@@ -39,7 +39,9 @@ TEST_CASE_METHOD( host_reference, "machine_specific" ){
 
     auto value = compass::runtime::device_name();
 
-    REQUIRE(value.empty()!=true);
+    if(expected_device_name.size() > 0){
+        REQUIRE(value.empty()!=true);}
+
     REQUIRE_THAT(value, Catch::Matchers::Contains(expected_device_name) );
 
   }
