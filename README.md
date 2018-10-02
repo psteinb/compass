@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/psteinb/compass.svg?branch=master)](https://travis-ci.org/psteinb/compass)
 [![Build status](https://ci.appveyor.com/api/projects/status/dvgk88ynuuvx1ldi/branch/master?svg=true)](https://ci.appveyor.com/project/psteinb/compass/branch/master)
+[![pipeline status](https://git.mpi-cbg.de/steinbac/compass-github-pull/badges/master/pipeline.svg)](https://git.mpi-cbg.de/steinbac/compass-github-pull/commits/master)
 
 # compass 
 
